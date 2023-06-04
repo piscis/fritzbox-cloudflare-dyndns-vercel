@@ -1,7 +1,7 @@
 import Cloudflare from 'cloudflare'
 import { first, select } from 'radash'
 
-interface DnsRecord { id: string; proxied: boolean; ttl: number; zone_id: string; name: string; type: cloudflare.RecordTypes; content: string }
+interface DnsRecord { id: string; proxied: boolean; ttl: number; zone_id: string; name: string; type: Cloudflare.RecordTypes; content: string }
 
 export default defineEventHandler(async (event) => {
   const token = getQuery(event).token as string
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         proxied: aRecord.proxied,
         ttl: aRecord.ttl,
         content: `${ipv4}`,
-      } as cloudflare.DnsRecordWithoutPriority)
+      } as Cloudflare.DnsRecordWithoutPriority)
     }
 
     if (ipv6 && aaaaRecord && aaaaRecord?.content !== ipv6) {
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
         proxied: aaaaRecord.proxied,
         ttl: aaaaRecord.ttl,
         content: `${ipv6}`,
-      } as cloudflare.DnsRecordWithoutPriority)
+      } as Cloudflare.DnsRecordWithoutPriority)
     }
   }
   catch (e) {
