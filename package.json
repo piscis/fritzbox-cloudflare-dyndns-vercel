@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "packageManager": "pnpm@8.5.1",
+  "engines": {
+    "node": "18.x",
+    "pnpm": "8.x"
+  },
+  "browserslist": [
+    "last 2 version",
+    "> 2%"
+  ],
+  "scripts": {
+    "clean": "rimraf node_modules .nuxt .output dist",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "analyze": "nuxi analyze",
+    "postinstall": "nuxt prepare",
+    "test": "nuxi test",
+    "test:watch": "nuxi test --dev --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.39.3",
+    "@nuxt/test-utils": "^3.5.1",
+    "@types/cloudflare": "^2.7.9",
+    "@types/node": "^18",
+    "autoprefixer": "^10.4.14",
+    "cloudflare": "^2.9.1",
+    "eslint": "^8.41.0",
+    "nuxt": "^3.5.2",
+    "playwright": "^1.34.3",
+    "postcss": "^8.4.23",
+    "radash": "^10.8.1",
+    "sass": "1.62.1",
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.1"
+  }
+}

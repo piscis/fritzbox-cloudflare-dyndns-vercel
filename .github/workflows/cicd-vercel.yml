@@ -1,0 +1,165 @@
+name: Build & Deploy (Vercel)
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+concurrency:
+  group: 'workflow = ${{ github.workflow }}, ref = ${{ github.event.ref }}, pr = ${{ github.event.pull_request.id }}'
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  setup-stage:
+    outputs:
+      env-name: ${{ steps.env-name.outputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup environment name
+        id: env-name
+        run: |
+          if [[ ${GITHUB_HEAD_REF} == dev/* || ${GITHUB_HEAD_REF} == renovate/* ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+          elif [[ "${{github.ref}}" == "refs/heads/main" && "${{github.event_name}}" == "push" ]]; then
+            echo "env=production" >> $GITHUB_OUTPUT
+          else
+            echo "env=develop" >> $GITHUB_OUTPUT
+          fi
+
+  lint:
+    name: Lint ✅
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Lint App
+        shell: bash
+        run: |
+          pnpm i
+          pnpm nuxi prepare
+          pnpm run lint
+
+  test:
+    name: Test 🧪
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Test App
+        shell: bash
+        run: |
+          pnpm i
+          pnpm nuxi prepare
+          pnpm run test
+
+  build-deploy:
+    name: Build 🏗️ & Deploy  🚀
+    needs: [setup-stage, lint, test]
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel@latest
+
+      - name: Install Deps
+        run: pnpm install
+
+      - name: Pull Vercel Environment Information (Stage)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
+
+      - name: Build Project Artifacts (Stage)
+        run: |
+          export NITRO_PRESET="vercel"
+          export NODE_ENV="production"
+          pnpm run build
+          vercel build --debug --token=${{ secrets.VERCEL_TOKEN }}
+        if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
+
+      - name: Pull Vercel Environment Information (Prod)
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
+
+      - name: Build Project Artifacts (Prod)
+        run: |
+          export NITRO_PRESET="vercel"
+          export NODE_ENV="production"
+          pnpm run build
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
+
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        run: |
+          if [[ "${{ needs.setup-stage.outputs.env-name }}" == "production" ]]; then
+            echo "url=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
+          fi
+
+  preview:
+    name: Preview 🔎
+    needs: [setup-stage, lint, test, build-deploy]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.setup-stage.outputs.env-name }}
+      url: ${{ needs.build-deploy.outputs.url }}
+    steps:
+      - run: |
+          echo "Env: ${{ needs.setup-stage.outputs.env-name }}"
+          echo "Url: ${{ needs.build-deploy.outputs.url }}"
