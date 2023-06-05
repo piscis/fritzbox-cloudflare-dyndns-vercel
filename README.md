@@ -79,6 +79,7 @@ The AAAA-Record will be used to update your FRtIZ!Box IPv6 address in Cloudflare
 
 ![Example for an AAAA-Record configured on Cloudflare](./docs/images/docs-aaaa-record-example.png "Example for an AAAA-Record configured on Cloudflare")
 
+----
 
 ### Use the service
 
