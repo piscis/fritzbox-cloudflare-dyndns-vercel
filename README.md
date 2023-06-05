@@ -2,6 +2,15 @@
 
 This is a DynDNS Service that can be used to update the IP address of a Fritz!Box to a Cloudflare DNS record. It supports updates of A- and AAAA-records. Every time your IP Address changes the service will be called by your Fritz!Box and the IP address will be updated.
 
+✅ Key features:
+1️⃣ Automatic Cloudflare DNS updates 🔄
+2️⃣ Effortless deployment on Vercel with One-Click 🚀
+3️⃣ Powered by Nuxt.js 🎨
+4️⃣ Open-source for community collaboration 🌍
+5️⃣ Supports both IPv4 and IPv6
+6️⃣ Utilizes DNS A-Records and AAAA-Records instead of CNAME-Records (e.g., via Fritz.net)
+7️⃣ Runs on the cloud in a serverless environment
+
 ## Setup Service and configure Fritz!Box
 
 ### Create a Cloudflare API token
