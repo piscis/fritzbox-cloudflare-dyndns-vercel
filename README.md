@@ -12,7 +12,7 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 - PNPM
 - Configure TakeOver Mode for VS Code (see below)
 
-## Setup
+### Setup
 
 Make sure to install the dependencies:
 
@@ -21,7 +21,7 @@ Make sure to install the dependencies:
 pnpm install
 ```
 
-## Development Server
+### Development Server
 
 Start the development server on `http://localhost:3000`
 
@@ -29,7 +29,7 @@ Start the development server on `http://localhost:3000`
 pnpm dev
 ```
 
-## Production
+### Production
 
 Build the application for production:
 
@@ -46,6 +46,6 @@ pnpm preview
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
 
-#### Customizations
+### Customizations
 
 Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
