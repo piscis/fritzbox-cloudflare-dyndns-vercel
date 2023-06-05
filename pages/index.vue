@@ -1,0 +1,25 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+import githubIcon from '@iconify-icons/devicon/github'
+</script>
+
+<template>
+  <NuxtLayout name="default">
+    <div
+      class="flex justify-center w-[95vw] lg:w-[80vw] 2xl:w-[60vw] max-w-1200 mx-auto h-screen items-center flex-col"
+    >
+      <div class="mb-5">
+        Beep Boop ... I'm a robot
+      </div>
+      <div class="mb-5">
+        <audio controls autoplay>
+          <source src="/sounds/modem-dial-up.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+
+      <NuxtLink class="flex justify-center cursor-pointer font-light" href="https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/" target="_blank">
+        Found out more about this service on: <Icon :icon="githubIcon" class="inline-block h-5 w-5 mx-2" />
+      </NuxtLink>
+    </div>
+  </NuxtLayout>
+</template>
