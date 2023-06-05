@@ -120,5 +120,5 @@ Original port for Vercel from: https://github.com/L480/cloudflare-dyndns
 
 ## ToDo`s
 
-- [] A couple more tests for the API part
-- [] Add more e2e tests for error handling on the frontend
+- [ ] A couple more tests for the API part
+- [ ] Add more e2e tests for error handling on the frontend
