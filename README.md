@@ -116,3 +116,9 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ## Credits
 
 Original port for Vercel from: https://github.com/L480/cloudflare-dyndns
+
+
+## ToDo`s
+
+- [] A couple more tests for the API part
+- [] Add more e2e tests for error handling on the frontend
