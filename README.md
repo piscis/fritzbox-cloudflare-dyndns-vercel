@@ -3,12 +3,10 @@
 
 This is a 
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
 ### Prerequisites 
 
 
-- NodeJS 18.x
+- NodeJS 18+
 - PNPM
 - Configure TakeOver Mode for VS Code (see below)
 
@@ -48,4 +46,5 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ### Customizations
 
-Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
+- Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
+- Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
