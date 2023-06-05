@@ -1,5 +1,3 @@
 <template>
-  <div>
-    Beep Boop
-  </div>
+  <NuxtPage />
 </template>
