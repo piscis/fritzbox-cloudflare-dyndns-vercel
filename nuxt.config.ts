@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/image-edge',
   ],
+  plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
   googleFonts: {
     download: true,
     base64: true,
