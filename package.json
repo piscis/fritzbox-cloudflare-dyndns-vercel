@@ -2,6 +2,14 @@
   "name": "nuxt-app",
   "private": true,
   "packageManager": "pnpm@8.5.1",
+  "author": {
+    "name": "Alexander Pirsig",
+    "email": "me@piscis.io"
+  },
+  "homepage": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel",
+  "repository": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel.git",
+  "issues": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues",
+  "licens": "MIT",
   "engines": {
     "node": "18.x",
     "pnpm": "8.x"
@@ -24,19 +32,27 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.39.3",
-    "@nuxt/test-utils": "^3.5.1",
+    "@antfu/eslint-config": "^0.39.5",
+    "@iconify-icons/devicon": "^1.2.9",
+    "@iconify/vue": "^4.1.1",
+    "@nuxt/image-edge": "1.0.0-28094923.e859bba",
+    "@nuxt/test-utils": "^3.5.2",
+    "@nuxtjs/google-fonts": "^3.0.1",
+    "@nuxtjs/tailwindcss": "^6.7.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/cloudflare": "^2.7.9",
-    "@types/node": "^18",
+    "@types/node": "^20.2.5",
     "autoprefixer": "^10.4.14",
     "cloudflare": "^2.9.1",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "nuxt": "^3.5.2",
     "playwright": "^1.34.3",
-    "postcss": "^8.4.23",
+    "postcss": "^8.4.24",
     "radash": "^10.8.1",
     "sass": "1.62.1",
-    "typescript": "^5.0.4",
-    "vitest": "^0.31.1"
+    "tailwindcss": "^3.3.2",
+    "tailwindcss-debug-screens": "^2.2.1",
+    "typescript": "^5.1.3",
+    "vitest": "^0.31.4"
   }
 }
