@@ -66,7 +66,7 @@ https://fritzdns.vico.li/api/fritz-dyndns/?token=<pass>&record=fritz.example.com
 | Username          | admin                                                                                                                            | You can choose whatever value you want.                                                                                                  |
 | Password          | ●●●●●●                                                                                                                           | The API token you’ve created earlier.                                                                                                    |
 
-Please note, if your use a Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>`
+Please note, if you use a custom Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` service endpoint when configuring your FITZ!Box DynDNS settings
 
 ```
 
