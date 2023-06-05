@@ -1,7 +1,8 @@
 # Fritz!Box Cloudflare DynDNS Updater via Vercel
 
+This is a DynDNS Service that can be used to update the IP address of a Fritz!Box to a Cloudflare DNS record.
 
-This is a 
+## Development
 
 ### Prerequisites 
 
