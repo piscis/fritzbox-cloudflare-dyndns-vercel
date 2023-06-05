@@ -2,57 +2,6 @@
 
 This is a DynDNS Service that can be used to update the IP address of a Fritz!Box to a Cloudflare DNS record.
 
-## Development
-
-### Prerequisites for Development
-
-- NodeJS 18+
-- PNPM
-- Configure TakeOver Mode for VS Code (see below)
-
-### Setup
-
-Make sure to install the dependencies:
-
-```bash
-# Install dependencies via pnpm
-pnpm install
-```
-
-### Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
-# Run development server
-pnpm dev
-```
-
-### Production
-
-Build the application for production:
-
-```bash
-# Run production build
-pnpm build
-```
-
-Locally preview production build:
-
-```bash
-# Run production build locally
-pnpm preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-### Sources
-
-  - Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
-  - Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-----
-
 ## Setup Service and configure Fritz!Box
 
 ### Create a Cloudflare API token
@@ -108,6 +57,58 @@ https://fritzdns.vico.li/api/fritz-dyndns/?token=<pass>&record=fritz.example.com
 | Username          | admin                                                                                                                            | You can choose whatever value you want.                                                                                                  |
 | Password          | ●●●●●●                                                                                                                           | The API token you’ve created earlier.                                                                                                    |
 
+----
+
+## Development
+
+### Prerequisites for Development
+
+- NodeJS 18+
+- PNPM
+- Configure TakeOver Mode for VS Code (see below)
+
+### Setup
+
+Make sure to install the dependencies:
+
+```bash
+# Install dependencies via pnpm
+pnpm install
+```
+
+### Development Server
+
+Start the development server on `http://localhost:3000`
+
+```bash
+# Run development server
+pnpm dev
+```
+
+### Production
+
+Build the application for production:
+
+```bash
+# Run production build
+pnpm build
+```
+
+Locally preview production build:
+
+```bash
+# Run production build locally
+pnpm preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+### Sources
+
+  - Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
+  - Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+----
 
 ## Credits
 
