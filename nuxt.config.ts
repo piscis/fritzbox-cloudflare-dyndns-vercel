@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/google-fonts',
     '@nuxtjs/tailwindcss',
-    '@nuxt/image-edge',
+    '@nuxt/image',
   ],
   plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
   googleFonts: {
