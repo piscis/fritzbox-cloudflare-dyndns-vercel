@@ -26,6 +26,9 @@ devDependencies:
   '@nuxtjs/tailwindcss':
     specifier: ^6.7.0
     version: 6.7.0(webpack@5.86.0)
+  '@nuxtjs/web-vitals':
+    specifier: ^0.2.6
+    version: 0.2.6
   '@tailwindcss/aspect-ratio':
     specifier: ^0.4.2
     version: 0.4.2(tailwindcss@3.3.2)
@@ -1160,6 +1163,19 @@ packages:
       - supports-color
       - ts-node
       - webpack
+    dev: true
+
+  /@nuxtjs/web-vitals@0.2.6:
+    resolution: {integrity: sha512-hoLo/Lcl63rDEm1gR/VN3sSG7mO4UKzJF69lyKjm+cSWtnSinSQo4n/8V0qmDqVgC3GPfvC1X/IqZx5FaRSS/g==}
+    dependencies:
+      '@nuxt/kit': 3.5.3
+      defu: 6.1.2
+      pathe: 1.1.1
+      ufo: 1.1.2
+      web-vitals: 3.3.2
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
     dev: true
 
   /@rollup/plugin-alias@5.0.0(rollup@3.24.0):
@@ -8036,6 +8052,10 @@ packages:
   /web-streams-polyfill@3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
     engines: {node: '>= 8'}
+    dev: true
+
+  /web-vitals@3.3.2:
+    resolution: {integrity: sha512-qRkpmSeKfEWAzNhtX541xA8gCJ+pqCqBmUlDVkVDSCSYUvfvNqF+k9g8I+uyreRcDBdfiJrd0/aLbTy5ydo49Q==}
     dev: true
 
   /webidl-conversions@3.0.1:
