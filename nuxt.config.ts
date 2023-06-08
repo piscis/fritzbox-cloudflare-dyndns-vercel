@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxtjs/tailwindcss',
     '@nuxt/image',
-    '@nuxtjs/web-vitals'
+    '@nuxtjs/web-vitals',
   ],
   plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
   googleFonts: {
