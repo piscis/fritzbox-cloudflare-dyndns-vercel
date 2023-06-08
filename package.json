@@ -35,7 +35,7 @@
     "@antfu/eslint-config": "^0.39.5",
     "@iconify-icons/devicon": "^1.2.9",
     "@iconify/vue": "^4.1.1",
-    "@nuxt/image": "rc",
+    "@nuxt/image": "1.0.0-rc.1",
     "@nuxt/test-utils": "^3.5.3",
     "@nuxtjs/google-fonts": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.7.0",
