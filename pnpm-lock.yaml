@@ -1772,7 +1772,7 @@ packages:
     resolution: {integrity: sha512-S+xhPoBxBXDrsW9ltcF9Cv3cntMbSx+dfSmE7RNyDhogqHd3+lDEV2dnQpHKWTGjujwwMCALV5SADunAn785bw==}
     dependencies:
       hookable: 5.5.3
-      zhead: 2.0.4
+      zhead: 2.0.7
     dev: true
 
   /@unhead/shared@1.1.27:
@@ -2394,7 +2394,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.9
-      caniuse-lite: 1.0.30001507
+      caniuse-lite: 1.0.30001508
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -2469,7 +2469,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001507
+      caniuse-lite: 1.0.30001508
       electron-to-chromium: 1.4.440
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.9)
@@ -2563,13 +2563,13 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.21.9
-      caniuse-lite: 1.0.30001507
+      caniuse-lite: 1.0.30001508
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: true
 
-  /caniuse-lite@1.0.30001507:
-    resolution: {integrity: sha512-SFpUDoSLCaE5XYL2jfqe9ova/pbQHEmbheDf5r4diNwbAgR3qxM9NQtfsiSscjqoya5K7kFcHPUQ+VsUkIJR4A==}
+  /caniuse-lite@1.0.30001508:
+    resolution: {integrity: sha512-sdQZOJdmt3GJs1UMNpCCCyeuS2IEGLXnHyAo9yIO5JJDjbjoVRij4M1qep6P6gFpptD1PqIYgzM+gwJbOi92mw==}
 
   /capture-stack-trace@1.0.2:
     resolution: {integrity: sha512-X/WM2UQs6VMHUtjUDnZTRI+i1crWteJySFzr9UpGoQa4WQffXVTTXuekjl7TjZRlcF2XfjgITT0HxZ9RnxeT0w==}
@@ -8487,8 +8487,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /zhead@2.0.4:
-    resolution: {integrity: sha512-V4R94t3ifk9AURym6OskbKcnowzgp5Z88tkoL/NF67vyryNxC62u6mx5F1Ux4oh4+YN7FFmKYEyWy6m5kfPH6g==}
+  /zhead@2.0.7:
+    resolution: {integrity: sha512-q9iCCXBWndfYNMGCN7S970+e3ILAPzmX78Skblx7+SGlo6x6SXW0GJ5mJzigYsq2mkHCGqEUhe0QGDEDZauw8g==}
     dev: true
 
   /zip-stream@4.1.0:
