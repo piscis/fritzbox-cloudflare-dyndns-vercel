@@ -62,8 +62,8 @@ devDependencies:
     specifier: ^8.4.24
     version: 8.4.24
   radash:
-    specifier: ^10.9.0
-    version: 10.9.0
+    specifier: ^11.0.0
+    version: 11.0.0
   sass:
     specifier: 1.63.6
     version: 1.63.6
@@ -6742,8 +6742,8 @@ packages:
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  /radash@10.9.0:
-    resolution: {integrity: sha512-0pijGuxnF5CgEdRwrCEHjx4onaXWpmVligyKzfn7hIjpOl11n+9x8le6R3gFjAs2e6d7WT39vcZw1AWHt3w9Jw==}
+  /radash@11.0.0:
+    resolution: {integrity: sha512-CRWxTFTDff0IELGJ/zz58yY4BDgyI14qSM5OLNKbCItJrff7m7dXbVF0kWYVCXQtPb3SXIVhXvAImH6eT7VLSg==}
     engines: {node: '>=14.18.0'}
     dev: true
 
