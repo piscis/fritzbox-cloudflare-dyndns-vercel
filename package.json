@@ -19,6 +19,9 @@
     "> 2%"
   ],
   "scripts": {
+    "release:patch": "release-it -i patch --only-version",
+    "release:minor": "release-it -i minor --only-version",
+    "release:major": "release-it -i major --only-version",
     "clean": "rimraf node_modules .nuxt .output dist",
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -35,6 +38,8 @@
     "@nuxtjs/web-vitals": "^0.2.6"
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^7.0.1",
+    "release-it": "^16.1.5",
     "@antfu/eslint-config": "0.43.0-beta.1",
     "@iconify-icons/devicon": "^1.2.14",
     "@iconify/vue": "^4.1.1",
