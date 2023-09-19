@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.1...1.1.2) (2023-09-19)
+
+
+### Features
+
+* autogenerate release logs ([bf0fdc6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/bf0fdc602f272503071947a24feab6be0e3143f0))
+
 ## [1.1.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.0...1.1.1) (2023-09-19)
 
 
