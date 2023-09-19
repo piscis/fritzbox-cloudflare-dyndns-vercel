@@ -19,6 +19,9 @@
     "> 2%"
   ],
   "scripts": {
+    "release:patch": "release-it -i patch --only-version",
+    "release:minor": "release-it -i minor --only-version",
+    "release:major": "release-it -i major --only-version",
     "clean": "rimraf node_modules .nuxt .output dist",
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -42,6 +45,7 @@
     "@nuxt/test-utils": "^3.7.3",
     "@nuxtjs/google-fonts": "^3.0.2",
     "@nuxtjs/tailwindcss": "^6.8.0",
+    "@release-it/conventional-changelog": "^7.0.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/cloudflare": "^2.7.11",
     "@types/node": "^20.6.2",
@@ -53,6 +57,7 @@
     "playwright": "^1.38.0",
     "postcss": "^8.4.30",
     "radash": "^11.0.0",
+    "release-it": "^16.1.5",
     "sass": "1.67.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-debug-screens": "^2.2.1",
