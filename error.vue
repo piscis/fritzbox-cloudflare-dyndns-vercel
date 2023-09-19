@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import process from 'node:process'
+
 const bodyCls = computed(() => {
   const classList = ['antialiased']
   if (process.env.NODE_ENV === 'development') {

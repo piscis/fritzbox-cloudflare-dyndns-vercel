@@ -1,4 +1,6 @@
+import process from 'node:process'
 import type { Config } from 'tailwindcss'
+
 
 const config = {
   darkMode: 'class',
