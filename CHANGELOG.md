@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.3...1.1.4) (2023-09-19)
+
+
+### Bug Fixes
+
+* removes invaled config ([7cef6c9](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7cef6c981951e45787fcdcb9e9387eff5e0c6392))
+
 ## [1.1.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.2...1.1.3) (2023-09-19)
 
 
