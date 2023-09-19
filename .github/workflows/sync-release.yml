@@ -3,7 +3,7 @@ name: Sync release branch
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*.*.*'
 
 jobs:
   update-cms-master:
