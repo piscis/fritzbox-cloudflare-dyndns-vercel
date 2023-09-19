@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.0.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.0.0...1.0.1) (2023-09-19)
+
 ## 1.0.0 (2023-09-19)
 
 
