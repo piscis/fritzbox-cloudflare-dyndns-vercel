@@ -17,5 +17,5 @@ jobs:
         id: merge
         with:
           github_token: ${{ github.token }}
-          source: 'main'
-          target: 'release'
+          source: main
+          target: release
