@@ -24,7 +24,7 @@ jobs:
         run: |
           if [[ ${GITHUB_HEAD_REF} == dev/* || ${GITHUB_HEAD_REF} == renovate/* ]]; then
             echo "env=staging" >> $GITHUB_OUTPUT
-          elif [[ "${{github.ref}}" == "refs/heads/main" && "${{github.event_name}}" == "push" ]]; then
+          elif [[ "${{github.ref}}" == "refs/heads/release" && "${{github.event_name}}" == "push" ]]; then
             echo "env=production" >> $GITHUB_OUTPUT
           else
             echo "env=develop" >> $GITHUB_OUTPUT
