@@ -18,7 +18,7 @@ import githubIcon from '@iconify-icons/devicon/github'
       </div>
 
       <NuxtLink class="flex justify-center cursor-pointer font-light" href="https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/" target="_blank">
-        Found out more about this service on: <Icon :icon="githubIcon" class="inline-block h-5 w-5 mx-2" />
+        Learn more about this service: <Icon :icon="githubIcon" class="inline-block h-5 w-5 mx-2" />
       </NuxtLink>
     </div>
   </NuxtLayout>
