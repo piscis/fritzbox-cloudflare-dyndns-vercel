@@ -4,8 +4,6 @@
   },
   "github": {
     "release": true,
-    "web": true,
-    "autoGenerate": true,
     "releaseName": "v${version}"
   },
   "npm": {
