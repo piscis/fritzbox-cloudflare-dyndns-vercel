@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.0...1.1.1) (2023-09-19)
+
+
+### Features
+
+* adds new release strategy ([c931f57](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/c931f5785739345d8a91220fb228f10d5eae6a51))
+
 ## [1.1.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.0.4...1.1.0) (2023-09-19)
 
 ## [1.0.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.0.3...1.0.4) (2023-09-19)
