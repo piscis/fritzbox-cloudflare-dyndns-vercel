@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.0.2...1.0.3) (2023-09-19)
+
+
+### Bug Fixes
+
+* sync script ([ff3abef](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/ff3abefd3abf630fe735777f13ea23728413c6f5))
+
 ## [1.0.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.0.1...1.0.2) (2023-09-19)
 
 
