@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.4...1.2.0) (2023-10-11)
+
+
+### Features
+
+* limit the amount of time a job can run ([b99a6d9](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b99a6d9714c70f51d9756bd877f11164c7520d5d))
+
 ## [1.1.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.3...1.1.4) (2023-09-19)
 
 
