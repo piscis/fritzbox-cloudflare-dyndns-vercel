@@ -3,10 +3,9 @@ import { defineConfig, presetAttributify, presetIcons, presetUno, transformerDir
 
 export default defineConfig({
   presets: [
-    presetAttributify({ /* preset options */}),
+    presetAttributify(),
     presetUno(),
     presetIcons(),
-    // ...custom presets
   ],
   transformers: [
     transformerDirectives(),
