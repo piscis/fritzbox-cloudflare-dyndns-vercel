@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.2.0...1.3.0) (2023-10-11)
+
+
+### Features
+
+* migrate app to unocss remove tailwind dependencies ([bd41ea6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/bd41ea61071b441d84e8820c38a669aa4e8e0dc1))
+
+
+### Bug Fixes
+
+* cleanup uno.config.tss ([51c2ad5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/51c2ad5ebb631b5baabe88a67e8f667a4061044d))
+
 ## [1.2.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.1.4...1.2.0) (2023-10-11)
 
 
