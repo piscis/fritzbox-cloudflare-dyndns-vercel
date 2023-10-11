@@ -1,12 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
+    '@unocss/nuxt',
     '@nuxtjs/google-fonts',
-    '@nuxtjs/tailwindcss',
     '@nuxt/image',
     '@nuxtjs/web-vitals',
   ],
-  plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
+  css: [
+    '@unocss/reset/tailwind-compat.css',
+  ],
   googleFonts: {
     download: true,
     base64: true,
