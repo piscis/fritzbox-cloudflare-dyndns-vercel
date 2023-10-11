@@ -17,6 +17,7 @@ on:
     branches: [main]
 jobs:
   setup-stage:
+    timeout-minutes: 1
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
     runs-on: ubuntu-latest
@@ -33,6 +34,7 @@ jobs:
           fi
 
   lint:
+    timeout-minutes: 5
     name: Lint ✅
     needs: [setup-stage]
     runs-on: ubuntu-latest
@@ -62,6 +64,7 @@ jobs:
           pnpm run lint
 
   test:
+    timeout-minutes: 8
     name: Test 🧪
     needs: [setup-stage]
     runs-on: ubuntu-latest
@@ -91,6 +94,7 @@ jobs:
           pnpm run test
 
   build-deploy:
+    timeout-minutes: 10
     name: Build 🏗️ & Deploy  🚀
     needs: [setup-stage, lint, test]
     runs-on: ubuntu-latest
@@ -155,6 +159,7 @@ jobs:
           fi
 
   preview:
+    timeout-minutes: 1
     name: Preview 🔎
     needs: [setup-stage, lint, test, build-deploy]
     runs-on: ubuntu-latest
