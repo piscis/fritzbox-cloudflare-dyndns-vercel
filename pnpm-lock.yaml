@@ -23,7 +23,7 @@ devDependencies:
     specifier: 1.0.0
     version: 1.0.0
   '@nuxt/test-utils':
-    specifier: ^3.7.4
+    specifier: ^3.8.0
     version: 3.8.0(vitest@0.34.6)(vue@3.3.6)
   '@nuxtjs/google-fonts':
     specifier: ^3.0.2
@@ -53,7 +53,7 @@ devDependencies:
     specifier: ^8.52.0
     version: 8.52.0
   nuxt:
-    specifier: ^3.7.4
+    specifier: ^3.8.0
     version: 3.8.0(@types/node@20.8.9)(eslint@8.52.0)(sass@1.69.5)(typescript@5.2.2)(vite@4.5.0)
   playwright:
     specifier: ^1.39.0
