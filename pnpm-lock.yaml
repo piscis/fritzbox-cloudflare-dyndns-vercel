@@ -23,7 +23,7 @@ devDependencies:
     specifier: 1.0.0
     version: 1.0.0
   '@nuxt/test-utils':
-    specifier: ^3.8.0
+    specifier: ^3.8.1
     version: 3.8.1(vitest@0.34.6)(vue@3.3.8)
   '@nuxtjs/google-fonts':
     specifier: ^3.0.2
@@ -53,7 +53,7 @@ devDependencies:
     specifier: ^8.52.0
     version: 8.53.0
   nuxt:
-    specifier: ^3.8.0
+    specifier: ^3.8.1
     version: 3.8.1(@types/node@20.9.0)(eslint@8.53.0)(sass@1.69.5)(typescript@5.2.2)(vite@4.5.0)
   playwright:
     specifier: ^1.39.0
@@ -1714,6 +1714,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: true
     bundledDependencies:
       - napi-wasm
@@ -7174,6 +7175,11 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+    requiresBuild: true
+    dev: true
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
