@@ -54,7 +54,7 @@
     "@vercel/analytics": "^1.1.1",
     "cloudflare": "^2.9.1",
     "eslint": "^8.53.0",
-    "nuxt": "^3.8.1",
+    "nuxt": "^3.8.2",
     "playwright": "^1.39.0",
     "radash": "^11.0.0",
     "release-it": "^16.2.1",
