@@ -46,7 +46,7 @@
     "@nuxt/image": "1.0.0",
     "@nuxt/test-utils": "^3.11.0",
     "@nuxtjs/google-fonts": "^3.0.2",
-    "@release-it/conventional-changelog": "^7.0.2",
+    "@release-it/conventional-changelog": "^8.0.1",
     "@types/cloudflare": "^2.7.13",
     "@types/node": "^20.9.0",
     "@unocss/nuxt": "^0.57.4",
