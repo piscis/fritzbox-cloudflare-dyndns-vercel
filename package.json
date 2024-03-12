@@ -56,7 +56,7 @@
     "eslint": "^8.53.0",
     "nuxt": "^3.10.3",
     "playwright": "^1.39.0",
-    "radash": "^11.0.0",
+    "radash": "^12.1.0",
     "release-it": "^16.2.1",
     "sass": "1.69.5",
     "typescript": "^5.2.2",

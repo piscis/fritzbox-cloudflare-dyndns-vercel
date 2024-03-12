@@ -59,8 +59,8 @@ devDependencies:
     specifier: ^1.39.0
     version: 1.42.1
   radash:
-    specifier: ^11.0.0
-    version: 11.0.0
+    specifier: ^12.1.0
+    version: 12.1.0
   release-it:
     specifier: ^16.2.1
     version: 16.3.0(typescript@5.4.2)
@@ -9026,8 +9026,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /radash@11.0.0:
-    resolution: {integrity: sha512-CRWxTFTDff0IELGJ/zz58yY4BDgyI14qSM5OLNKbCItJrff7m7dXbVF0kWYVCXQtPb3SXIVhXvAImH6eT7VLSg==}
+  /radash@12.1.0:
+    resolution: {integrity: sha512-b0Zcf09AhqKS83btmUeYBS8tFK7XL2e3RvLmZcm0sTdF1/UUlHSsjXdCcWNxe7yfmAlPve5ym0DmKGtTzP6kVQ==}
     engines: {node: '>=14.18.0'}
     dev: true
 
