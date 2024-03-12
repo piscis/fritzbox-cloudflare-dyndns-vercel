@@ -60,6 +60,6 @@
     "release-it": "^16.2.1",
     "sass": "1.69.5",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^1.3.1"
   }
 }
