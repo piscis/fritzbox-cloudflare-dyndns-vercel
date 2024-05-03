@@ -53,7 +53,7 @@
     "@unocss/reset": "^0.57.4",
     "@vercel/analytics": "^1.1.1",
     "cloudflare": "^2.9.1",
-    "eslint": "^8.53.0",
+    "eslint": "^9.2.0",
     "nuxt": "^3.10.3",
     "playwright": "^1.39.0",
     "radash": "^12.1.0",
