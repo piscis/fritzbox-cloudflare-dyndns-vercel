@@ -10,9 +10,6 @@
   "prettier.enable": false,
   "eslint.packageManager": "pnpm",
   "eslint.trace.server": "off",
-
-  // Visuals
-  "workbench.activityBar.visible": true,
   "workbench.colorTheme": "Monokai Vibrant",
   "workbench.editor.tabCloseButton": "left",
   "workbench.fontAliasing": "antialiased",
@@ -46,9 +43,9 @@
   // "eslint.codeActionsOnSave.mode": "problems",
   "typescript.tsserver.trace": "verbose",
   "editor.codeActionsOnSave": {
-    "source.fixAll": false,
-    "source.fixAll.eslint": true, // this allows ESLint to auto fix on saved
-    "source.organizeImports": false
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
   },
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
@@ -143,6 +140,7 @@
   "volar.autoCompleteRefs": false,
   "volar.codeLens.pugTools": false,
   "volar.completion.preferredTagNameCase": "pascal",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.editor.tabActionLocation": "left"
 
 }
