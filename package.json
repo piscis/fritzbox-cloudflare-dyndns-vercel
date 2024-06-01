@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.4.0",
   "private": true,
-  "packageManager": "pnpm@8.10.5",
+  "packageManager": "pnpm@8.15.8",
   "author": {
     "name": "Alexander Pirsig",
     "email": "me@piscis.io"
@@ -13,8 +13,8 @@
   "issues": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues",
   "licens": "MIT",
   "engines": {
-    "node": "20.x",
-    "pnpm": "8.x"
+    "node": "20.14.0",
+    "pnpm": "8.15.8"
   },
   "browserslist": [
     "last 2 version",
@@ -47,7 +47,7 @@
     "@nuxt/test-utils": "^3.13.1",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@release-it/conventional-changelog": "^8.0.1",
-    "@types/cloudflare": "^2.7.13",
+    "@types/cloudflare": "^2.7.14",
     "@types/node": "^20.13.0",
     "@unocss/nuxt": "^0.60.4",
     "@unocss/reset": "^0.60.4",
