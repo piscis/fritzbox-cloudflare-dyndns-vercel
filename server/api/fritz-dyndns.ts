@@ -1,7 +1,7 @@
 import Cloudflare from 'cloudflare'
 import { first, select } from 'radash'
 
-interface DnsRecord { id: string; proxied: boolean; ttl: number; zone_id: string; name: string; type: Cloudflare.RecordTypes; content: string }
+interface DnsRecord { id: string, proxied: boolean, ttl: number, zone_id: string, name: string, type: Cloudflare.RecordTypes, content: string }
 
 export default defineEventHandler(async (event) => {
   const token = getQuery(event).token as string
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 
   const cf = new Cloudflare({ token })
 
-  const { result: zones } = await cf.zones.browse() as { result: { id: string; name: string }[] }
+  const { result: zones } = await cf.zones.browse() as { result: { id: string, name: string }[] }
 
   if (!zones || zones.length <= 0) {
     throw createError({
