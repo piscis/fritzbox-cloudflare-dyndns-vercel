@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: The version of nodejs
     required: false
-    default: '18'
+    default: '20'
   package-manager:
     description: Name of the package manager
     required: false
