@@ -8,7 +8,6 @@
     "strings": true
   },
   "prettier.enable": false,
-  "eslint.packageManager": "pnpm",
   "eslint.trace.server": "off",
   "workbench.colorTheme": "Monokai Vibrant",
   "workbench.editor.tabCloseButton": "left",
