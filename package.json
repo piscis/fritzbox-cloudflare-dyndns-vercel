@@ -21,6 +21,7 @@
     "> 2%"
   ],
   "scripts": {
+    "start": "node .output/server/index.mjs",
     "release:patch": "release-it -i patch --only-version",
     "release:minor": "release-it -i minor --only-version",
     "release:major": "release-it -i major --only-version",
