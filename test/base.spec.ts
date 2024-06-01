@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { $fetch, fetch, isDev } from '@nuxt/test-utils'
+import { $fetch, fetch, isDev, setup } from '@nuxt/test-utils/e2e'
 
-describe('base', () => {
+describe('base', async () => {
+  await setup()
+
   it('index page is callable', async () => {
     const doc = await $fetch('/')
     expect(doc).toContain('DOCTYPE')
