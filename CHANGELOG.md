@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.3.2...1.4.0) (2024-06-01)
+
+
+### Features
+
+* adds startup script ([9986a73](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/9986a7313728830ab061eef8b68ae7331db647f3))
+* adjust linting rules ([70d67a2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/70d67a2747bf49c07305fa740ccdaef06e50e659))
+* bump node version to 20.x ([e360701](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/e360701410af2a904613b639f9b82bc195f24359))
+
+
+### Bug Fixes
+
+* fixes formatation issues ([3f866cf](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/3f866cffdb5777c2046ab1ae844ce413c1726840))
+* fixes unit tests ([b9455e6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b9455e6d558ae41db7c1e00f04fbfb9989083b15))
+* remove deprecated option for eslint packageManager ([2fac162](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/2fac162cf78daca5f36a9f6284e1c1adf3ca2be1))
+* remove deprecated settings in vscode settings.json ([a88d10c](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/a88d10cbf7bd92b8942e9222fa11c95bd6506599))
+
 ## [1.3.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.3.1...1.3.2) (2023-10-11)
 
 ## [1.3.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.3.0...1.3.1) (2023-10-11)
