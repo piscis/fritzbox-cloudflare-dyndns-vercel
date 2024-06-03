@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.4.0...1.4.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* downgrade cloudflare to 2.9.1 ([3d20423](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/3d20423781cefdb9cf3db8071985b95976891d5a))
+
 ## [1.4.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.3.2...1.4.0) (2024-06-01)
 
 
