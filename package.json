@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.4.2",
   "private": true,
-  "packageManager": "pnpm@8.15.8",
+  "packageManager": "pnpm@9.10.0",
   "author": {
     "name": "Alexander Pirsig",
     "email": "me@piscis.io"
@@ -14,7 +14,7 @@
   "licens": "MIT",
   "engines": {
     "node": "20.14.0",
-    "pnpm": "8.15.8"
+    "pnpm": "9.10.0"
   },
   "browserslist": [
     "last 2 version",
