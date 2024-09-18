@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { $fetch, fetch, isDev, setup } from '@nuxt/test-utils/e2e'
+import { describe, expect, it } from 'vitest'
 
 describe('base', async () => {
   await setup()
