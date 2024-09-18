@@ -83,8 +83,7 @@ jobs:
           pnpm nuxi prepare
           pnpm run test
 
-  # build-deploy:
-  build:
+  build-deploy:
     timeout-minutes: 10
     name: Build 🏗️ & Deploy  🚀
     needs: [setup-stage, lint, test]
