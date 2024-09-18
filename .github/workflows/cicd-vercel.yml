@@ -38,9 +38,6 @@ jobs:
     name: Lint ✅
     needs: [setup-stage]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,8 +50,6 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup-node
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Lint App
         shell: bash
@@ -68,9 +63,6 @@ jobs:
     name: Test 🧪
     needs: [setup-stage]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,8 +75,6 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup-node
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Test App
         shell: bash
@@ -100,9 +90,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.deploy.outputs.url }}
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
       - name: Checkout
@@ -116,8 +103,6 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup-node
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
