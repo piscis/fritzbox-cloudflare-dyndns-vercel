@@ -83,7 +83,8 @@ jobs:
           pnpm nuxi prepare
           pnpm run test
 
-  build-deploy:
+  # build-deploy:
+  build:
     timeout-minutes: 10
     name: Build 🏗️ & Deploy  🚀
     needs: [setup-stage, lint, test]
@@ -109,49 +110,52 @@ jobs:
 
       - name: Install Deps
         run: pnpm install
+      
+      - name: Build
+        run: pnpm build
 
-      - name: Pull Vercel Environment Information (Stage)
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
+      # - name: Pull Vercel Environment Information (Stage)
+      #   run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      #   if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
 
-      - name: Build Project Artifacts (Stage)
-        run: |
-          export NITRO_PRESET="vercel"
-          export NODE_ENV="production"
-          pnpm run build
-          vercel build --debug --token=${{ secrets.VERCEL_TOKEN }}
-        if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
+      # - name: Build Project Artifacts (Stage)
+      #   run: |
+      #     export NITRO_PRESET="vercel"
+      #     export NODE_ENV="production"
+      #     pnpm run build
+      #     vercel build --debug --token=${{ secrets.VERCEL_TOKEN }}
+      #   if: contains(fromJson('["staging"]'), needs.setup-stage.outputs.env-name)
 
-      - name: Pull Vercel Environment Information (Prod)
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
+      # - name: Pull Vercel Environment Information (Prod)
+      #   run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      #   if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
 
-      - name: Build Project Artifacts (Prod)
-        run: |
-          export NITRO_PRESET="vercel"
-          export NODE_ENV="production"
-          pnpm run build
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
+      # - name: Build Project Artifacts (Prod)
+      #   run: |
+      #     export NITRO_PRESET="vercel"
+      #     export NODE_ENV="production"
+      #     pnpm run build
+      #     vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      #   if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
 
-      - name: Deploy Project Artifacts to Vercel
-        id: deploy
-        run: |
-          if [[ "${{ needs.setup-stage.outputs.env-name }}" == "production" ]]; then
-            echo "url=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
-          else
-            echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
-          fi
+      # - name: Deploy Project Artifacts to Vercel
+      #   id: deploy
+      #   run: |
+      #     if [[ "${{ needs.setup-stage.outputs.env-name }}" == "production" ]]; then
+      #       echo "url=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
+      #     else
+      #       echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
+      #     fi
 
-  preview:
-    timeout-minutes: 1
-    name: Preview 🔎
-    needs: [setup-stage, lint, test, build-deploy]
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ needs.setup-stage.outputs.env-name }}
-      url: ${{ needs.build-deploy.outputs.url }}
-    steps:
-      - run: |
-          echo "Env: ${{ needs.setup-stage.outputs.env-name }}"
-          echo "Url: ${{ needs.build-deploy.outputs.url }}"
+  # preview:
+  #   timeout-minutes: 1
+  #   name: Preview 🔎
+  #   needs: [setup-stage, lint, test, build-deploy]
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: ${{ needs.setup-stage.outputs.env-name }}
+  #     url: ${{ needs.build-deploy.outputs.url }}
+  #   steps:
+  #     - run: |
+  #         echo "Env: ${{ needs.setup-stage.outputs.env-name }}"
+  #         echo "Url: ${{ needs.build-deploy.outputs.url }}"
