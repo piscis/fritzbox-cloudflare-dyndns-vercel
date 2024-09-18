@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
     }
   }), undefined)?.id || ''
 
-  const dnsRecords = await cf.dnsRecords.browse(zoneId) as { result: DnsRecord[] }
+  const dnsRecords = await cf.dnsRecords.browse(zoneId) as any as { result: DnsRecord[] }
 
   const aRecord = first(select(
     dnsRecords.result,
