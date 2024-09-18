@@ -109,6 +109,7 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (e) {
+    console.error(e)
     throw createError({
       statusCode: 500,
       statusMessage: `Error updating record "${record}".`,
