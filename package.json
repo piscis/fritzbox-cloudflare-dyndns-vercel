@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@nuxtjs/web-vitals": "^0.2.7",
-    "cloudflare": "^2.9.1"
+    "cloudflare": "^3.5.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "3.6.2",
