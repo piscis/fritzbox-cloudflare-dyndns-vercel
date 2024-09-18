@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.4.2...1.5.0) (2024-09-18)
+
+
+### Features
+
+* simplify github workflow ([e80e106](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/e80e10687951c8a29b49947c5c18d66b2ef013b1))
+
+
+### Bug Fixes
+
+* fixes linter issue ([5f29fca](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/5f29fcacd8a134b49816daf1cfc108359dc0521a))
+
 ## [1.4.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.4.1...1.4.2) (2024-06-03)
 
 ## [1.4.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.4.0...1.4.1) (2024-06-03)
