@@ -52,7 +52,7 @@ Deploy this project to your Vercel account and use it as a service for your FRIT
 If you don't want to host "FRITZ!Box cloudflare DynDNS" yourself, feel free to use my cloud service. Just use this Update URL in your FRITZ!Box:
 
 ```
-https://fritzdns.vico.li/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
+https://fritzdns.vicoli.de/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
 ```
 
 ### Configure your FRITZ!Box DynDNS Settings
@@ -61,7 +61,7 @@ https://fritzdns.vico.li/api/fritz-dyndns/?token=<pass>&record=fritz.example.com
 
 | FRITZ!Box Setting | Value                                                                                                                            | Description                                                                                                                              |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Update URL        | `https://fritzdns.vico.li/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
+| Update URL        | `https://fritzdns.vicoli.de/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
 | Domain Name       | fritz.example.com                                                                                                                | The FQDN from the URL parameter `record` and `zone`.                                                                                     |
 | Username          | admin                                                                                                                            | You can choose whatever value you want.                                                                                                  |
 | Password          | ●●●●●●                                                                                                                           | The API token you’ve created earlier.                                                                                                    |
