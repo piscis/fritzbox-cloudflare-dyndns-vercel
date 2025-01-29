@@ -17,7 +17,7 @@ importers:
     devDependencies:
       '@antfu/eslint-config':
         specifier: 3.9.1
-        version: 3.9.1(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(@vue/compiler-sfc@3.5.13)(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))
+        version: 3.9.1(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(@vue/compiler-sfc@3.5.13)(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))
       '@iconify-icons/devicon':
         specifier: ^1.2.17
         version: 1.2.17
@@ -29,7 +29,7 @@ importers:
         version: 1.8.1(db0@0.2.1)(ioredis@5.4.2)(magicast@0.3.5)(rollup@4.32.0)
       '@nuxt/test-utils':
         specifier: ^3.14.4
-        version: 3.15.4(@types/node@22.10.10)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
+        version: 3.15.4(@types/node@22.10.10)(happy-dom@16.7.3)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
       '@nuxtjs/google-fonts':
         specifier: ^3.2.0
         version: 3.2.0(magicast@0.3.5)(rollup@4.32.0)
@@ -55,8 +55,8 @@ importers:
         specifier: ^9.15.0
         version: 9.19.0(jiti@2.4.2)
       happy-dom:
-        specifier: ^15.11.6
-        version: 15.11.7
+        specifier: ^16.7.3
+        version: 16.7.3
       nuxt:
         specifier: ^3.15.4
         version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.10.10)(db0@0.2.1)(eslint@9.19.0(jiti@2.4.2))(ioredis@5.4.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vite@5.4.14(@types/node@22.10.10)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
@@ -74,7 +74,7 @@ importers:
         version: 5.7.3
       vitest:
         specifier: ^2.1.5
-        version: 2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0)
+        version: 2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0)
 
 packages:
 
@@ -3201,8 +3201,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@15.11.7:
-    resolution: {integrity: sha512-KyrFvnl+J9US63TEzwoiJOQzZBJY7KgBushJA8X61DMbNsH+2ONkDuLDnCnwUiPTF42tLoEmrPyoqbenVA5zrg==}
+  happy-dom@16.7.3:
+    resolution: {integrity: sha512-76uiE9jCpC849cOyYZ8YBROpPcstW/hwCKoQYd3aiZaxHeR9zdjpup4z7qYEWbt+lY8Rb3efW2gmrckyoBftKg==}
     engines: {node: '>=18.0.0'}
 
   has-flag@4.0.0:
@@ -5828,7 +5828,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@antfu/eslint-config@3.9.1(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(@vue/compiler-sfc@3.5.13)(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))':
+  '@antfu/eslint-config@3.9.1(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(@vue/compiler-sfc@3.5.13)(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))':
     dependencies:
       '@antfu/install-pkg': 0.4.1
       '@clack/prompts': 0.7.0
@@ -5837,7 +5837,7 @@ snapshots:
       '@stylistic/eslint-plugin': 2.13.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
       '@typescript-eslint/eslint-plugin': 8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
       '@typescript-eslint/parser': 8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
-      '@vitest/eslint-plugin': 1.1.25(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))
+      '@vitest/eslint-plugin': 1.1.25(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))
       eslint: 9.19.0(jiti@2.4.2)
       eslint-config-flat-gitignore: 0.3.0(eslint@9.19.0(jiti@2.4.2))
       eslint-flat-config-utils: 0.4.0
@@ -6732,7 +6732,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@nuxt/test-utils@3.15.4(@types/node@22.10.10)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)':
+  '@nuxt/test-utils@3.15.4(@types/node@22.10.10)(happy-dom@16.7.3)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)':
     dependencies:
       '@nuxt/kit': 3.15.3(magicast@0.3.5)(rollup@4.32.0)
       '@nuxt/schema': 3.15.3
@@ -6758,11 +6758,11 @@ snapshots:
       unenv: 1.10.0
       unplugin: 2.1.2
       vite: 6.0.11(@types/node@22.10.10)(jiti@2.4.2)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
-      vitest-environment-nuxt: 1.0.1(@types/node@22.10.10)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
+      vitest-environment-nuxt: 1.0.1(@types/node@22.10.10)(happy-dom@16.7.3)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
       vue: 3.5.13(typescript@5.7.3)
     optionalDependencies:
-      happy-dom: 15.11.7
-      vitest: 2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0)
+      happy-dom: 16.7.3
+      vitest: 2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -7573,13 +7573,13 @@ snapshots:
       vite: 6.0.11(@types/node@22.10.10)(jiti@2.4.2)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0)
       vue: 3.5.13(typescript@5.7.3)
 
-  '@vitest/eslint-plugin@1.1.25(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))':
+  '@vitest/eslint-plugin@1.1.25(@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))':
     dependencies:
       '@typescript-eslint/utils': 8.21.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.19.0(jiti@2.4.2)
     optionalDependencies:
       typescript: 5.7.3
-      vitest: 2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0)
+      vitest: 2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0)
 
   '@vitest/expect@2.1.8':
     dependencies:
@@ -9439,9 +9439,8 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@15.11.7:
+  happy-dom@16.7.3:
     dependencies:
-      entities: 4.5.0
       webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
 
@@ -12240,9 +12239,9 @@ snapshots:
       tsx: 4.19.2
       yaml: 2.7.0
 
-  vitest-environment-nuxt@1.0.1(@types/node@22.10.10)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0):
+  vitest-environment-nuxt@1.0.1(@types/node@22.10.10)(happy-dom@16.7.3)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0):
     dependencies:
-      '@nuxt/test-utils': 3.15.4(@types/node@22.10.10)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
+      '@nuxt/test-utils': 3.15.4(@types/node@22.10.10)(happy-dom@16.7.3)(jiti@2.4.2)(magicast@0.3.5)(rollup@4.32.0)(sass@1.81.0)(terser@5.37.0)(tsx@4.19.2)(typescript@5.7.3)(vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0))(yaml@2.7.0)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
@@ -12270,7 +12269,7 @@ snapshots:
       - vitest
       - yaml
 
-  vitest@2.1.8(@types/node@22.10.10)(happy-dom@15.11.7)(sass@1.81.0)(terser@5.37.0):
+  vitest@2.1.8(@types/node@22.10.10)(happy-dom@16.7.3)(sass@1.81.0)(terser@5.37.0):
     dependencies:
       '@vitest/expect': 2.1.8
       '@vitest/mocker': 2.1.8(vite@5.4.14(@types/node@22.10.10)(sass@1.81.0)(terser@5.37.0))
@@ -12294,7 +12293,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.10.10
-      happy-dom: 15.11.7
+      happy-dom: 16.7.3
     transitivePeerDependencies:
       - less
       - lightningcss
