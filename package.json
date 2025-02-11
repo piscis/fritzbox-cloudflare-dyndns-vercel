@@ -13,7 +13,7 @@
   "issues": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues",
   "licens": "MIT",
   "engines": {
-    "node": "20.18.0"
+    "node": "22.14.0"
   },
   "browserslist": [
     "last 2 version",
