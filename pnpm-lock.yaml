@@ -37,8 +37,8 @@ importers:
         specifier: ^8.0.2
         version: 8.0.2(release-it@17.11.0(typescript@5.8.3))
       '@types/cloudflare':
-        specifier: ^2.7.15
-        version: 2.7.15
+        specifier: ^3.0.0
+        version: 3.0.0
       '@types/node':
         specifier: ^22.9.0
         version: 22.14.1
@@ -1441,8 +1441,9 @@ packages:
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
 
-  '@types/cloudflare@2.7.15':
-    resolution: {integrity: sha512-DfJa5h84Vl9LdTFYzpeG8KLgcqJfywNfbIyr+ktFxYB6fOWWHbunu0W7pDH1fy4vzP4/RgQ6TZL62pxP8pv9GQ==}
+  '@types/cloudflare@3.0.0':
+    resolution: {integrity: sha512-OaXscUmrUA3RrDzeCYoa51KH4r9jN6sLWGti3TXsO8R59qCHmHbd5sbe/p1yECzFhUxjcZYA2pIWRpImiyBE+A==}
+    deprecated: This is a stub types definition. cloudflare provides its own type definitions, so you do not need this installed.
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -7255,7 +7256,11 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@types/cloudflare@2.7.15': {}
+  '@types/cloudflare@3.0.0':
+    dependencies:
+      cloudflare: 2.9.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@types/debug@4.1.12':
     dependencies:
