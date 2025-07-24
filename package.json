@@ -40,7 +40,7 @@
     "cloudflare": "^2.9.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "3.9.1",
+    "@antfu/eslint-config": "4.19.0",
     "@iconify-icons/devicon": "^1.2.17",
     "@iconify/vue": "^4.1.2",
     "@nuxt/image": "1.8.1",
