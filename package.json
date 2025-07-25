@@ -11,7 +11,7 @@
   "homepage": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel",
   "repository": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel.git",
   "issues": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues",
-  "licens": "MIT",
+  "license": "MIT",
   "browserslist": [
     "last 2 version",
     "> 2%"
