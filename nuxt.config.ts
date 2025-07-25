@@ -40,6 +40,7 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
+    sourceMap: true,
     routeRules: {
       '/': { static: true },
       '/_chunks/**': {
