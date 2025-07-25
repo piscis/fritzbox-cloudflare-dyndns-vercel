@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const bodyCls = computed(() => {
   const cls = [
     'font-nunito text-base text-black dark:text-white dark:bg-slate-900 antialiased',
@@ -63,5 +62,7 @@ useHead({
 </script>
 
 <template>
-  <slot />
+  <div class="w-full">
+    <slot />
+  </div>
 </template>
