@@ -56,6 +56,6 @@
     "release-it": "^17.10.0",
     "sass": "1.81.0",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.5"
+    "vitest": "^3.2.4"
   }
 }
