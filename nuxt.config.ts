@@ -20,6 +20,11 @@ export default defineNuxtConfig({
       Nunito: true,
     },
   },
+  webVitals: {
+    provider: 'log',
+    debug: true, // debug enable metrics reporting on dev environments
+    disabled: false
+  },
   app: {
     buildAssetsDir: '/_chunks/',
     head: {
