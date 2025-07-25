@@ -105,3 +105,4 @@ jobs:
           CF_ROUTE_ZONE_NAME: ${{ secrets.CF_ROUTE_ZONE_NAME }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_LOG_ENABLED: 'true'
