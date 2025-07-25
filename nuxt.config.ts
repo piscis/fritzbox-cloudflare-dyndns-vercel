@@ -35,6 +35,11 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
     routeRules: {
       '/': { static: true },
       '/_chunks/**': {
