@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.1.0...2.2.0) (2025-07-25)
+
+### Features
+
+* enable CF loging by default since tokens will be redacted from log stream ([d4ae74e](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/d4ae74eed2543b16ed4a899face796d9fd7957fa))
+* Enable cloudflare logging via deployment config ([7a2d79f](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7a2d79f0e654984fb7d64e0f526125441ea43acc))
+
 ## [2.1.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.0.0...2.1.0) (2025-07-25)
 
 ### Features
