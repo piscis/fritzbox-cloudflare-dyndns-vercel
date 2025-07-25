@@ -1,4 +1,4 @@
-# Fritz!Box Cloudflare DynDNS Updater via Vercel (Nuxt4 /VueJS / ORPC)
+# Fritz!Box Cloudflare DynDNS Updater via Vercel / Cloudflare / etc. (Nuxt4 /VueJS / ORPC)
 
 This is a DynDNS Service that can be used to update the IP address of a Fritz!Box to a Cloudflare DNS record. It supports updates of A- and AAAA-records. Every time your IP Address changes the service will be called by your Fritz!Box and the IP address will be updated.
 
@@ -59,10 +59,12 @@ Deploy this project to your Vercel account and use it as a service for your FRIT
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpiscis%2Ffritzbox-cloudflare-dyndns-vercel&project-name=fritzbox-cloudflare-dyndns-vercel&repository-name=fritzbox-cloudflare-dyndns-vercel)
 
-#### :cloud: Option 3: Use my ~~Vercel~~ cloudflare cloud service for free
+#### :cloud: Option 3: Use my ~~Vercel~~ Cloudflare cloud service for free
 
-If you don't want to host "FRITZ!Box cloudflare DynDNS" yourself, feel free to use my cloud service. Just use this Update URL in your FRITZ!Box:
-Please note that this service is provided for free and without any warranty. Since this service is provided for free, I can't guarantee that it will always be available. If you need a more reliable service, please consider self-hosting.
+If you don't want to host "FRITZ!Box Cloudflare DynDNS" yourself, feel free to use my cloud service. Just use this Update URL in your FRITZ!Box:
+This service is provided for free and without any warranty. Since this service is provided for free, I can't guarantee that it will always be available. If you need a more reliable service, please consider self-hosting.
+
+**Please note** that this option is not secure due to the fact that the API token is visible in the URL. Although cloudflare REDACTS the API token in the logs it is still possible to get your API token by inspecting the network traffic. If you need a more secure option, please consider self-hosting.
 
 ```
 https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
