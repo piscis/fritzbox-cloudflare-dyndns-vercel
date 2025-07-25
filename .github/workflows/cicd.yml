@@ -1,0 +1,98 @@
+name: Build & Deploy
+
+concurrency:
+  group: 'workflow = ${{ github.workflow }}, ref = ${{ github.event.ref }}, pr = ${{ github.event.pull_request.id }}'
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  release:
+    types: [created]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  setup-stage:
+    timeout-minutes: 1
+    outputs:
+      env-name: ${{ steps.env-name.outputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup environment name
+        id: env-name
+        run: |
+          if [[ ${GITHUB_HEAD_REF} == dev/* || ${GITHUB_HEAD_REF} == renovate/* ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+          elif [[ "${{github.event_name}}" == "release" && "${{github.event.action}}" == "created" ]]; then
+            echo "env=production" >> $GITHUB_OUTPUT
+          else
+            echo "env=develop" >> $GITHUB_OUTPUT
+          fi
+
+  lint:
+    timeout-minutes: 5
+    name: Lint ✅
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Lint App
+        shell: bash
+        run: |
+          pnpm i
+          pnpm nuxi prepare
+          pnpm run lint
+
+  test:
+    timeout-minutes: 8
+    name: Test 🧪
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Test App
+        shell: bash
+        run: |
+          pnpm i
+          pnpm nuxi prepare
+          pnpm run test
+
+  build-deploy:
+    timeout-minutes: 10
+    name: Build 🏗️ & ~~Deploy~~  🚀
+    needs: [setup-stage, lint, test]
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Build
+        run: pnpm build
