@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.1.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.0.0...2.1.0) (2025-07-25)
+
+### Features
+
+* implements noCacheHeaders middleware ([97b457f](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/97b457f062764d1085906f397494896349a874ca))
+
+### Bug Fixes
+
+* adds workaround for nixpacks deployment ([77b42c5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/77b42c5e8d871b55de78d2ab641a7ea72130b5cf))
+* fix deprecation warning for nativeEnum ([d150936](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/d150936b97089bab49b3a09138469357b7386486))
+
 ## [2.0.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.5.0...2.0.0) (2025-07-25)
 
 ### Features
