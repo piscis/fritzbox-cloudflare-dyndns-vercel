@@ -4,7 +4,7 @@
   "schedule": [
     "every 14 day"
   ],
-  "automergeSchedule": "every monday",
+  "automergeSchedule": "every 14 day",
   "extends": [
     "github>nuxt/renovate-config-nuxt",
     ":labels(dependencies,devops)",
