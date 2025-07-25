@@ -26,7 +26,11 @@ export const fritzDynDnsRoute = os
     tags: ['DNS'],
     successStatus: 200,
     summary: 'Update Cloudflare DNS record',
-    description: 'Route to update a Cloudflare DNS record',
+    description: `
+This endpoints updates the **A-** and **AAAA-** records of a Cloudflare DNS zone. 
+It is used to update the IP address of a Fritz!Box to a **Cloudflare DNS record**. 
+Please make sure to provide one value for **ipv4** or **ipv6**.
+    `,
     inputStructure: 'detailed',
     outputStructure: 'detailed',
   })
@@ -34,7 +38,7 @@ export const fritzDynDnsRoute = os
     query: querySchema,
   }))
   .output(z.object({
-    status: z.literal(200).describe('If we could update the Cloudflare DNS record'),
+    status: z.literal(200).describe('If the update was successful'),
     body: responseBodySchema,
   }))
   .errors({
