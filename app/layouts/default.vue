@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import process from 'node:process'
 
 const bodyCls = computed(() => {
   const cls = [
     'font-nunito text-base text-black dark:text-white dark:bg-slate-900 antialiased',
   ]
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.dev) {
     cls.push('debug-screens')
   }
   return cls
