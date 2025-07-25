@@ -59,7 +59,7 @@ export default defineNuxtConfig({
         workers_dev: false,
         upload_source_maps: true,
         observability: {
-          enabled: false,
+          enabled: true,
           head_sampling_rate: 1,
         },
         placement: {
