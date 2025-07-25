@@ -34,6 +34,9 @@ export default defineNuxtConfig({
       ],
     },
   },
+  experimental: {
+    asyncContext: true,
+  },
   nitro: {
     esbuild: {
       options: {
@@ -41,8 +44,32 @@ export default defineNuxtConfig({
       },
     },
     sourceMap: true,
+    compressPublicAssets: { gzip: true, brotli: true },
     experimental: {
       wasm: true,
+    },
+    preset: import.meta.env.NITRO_PRESET || 'node-server',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+      wrangler: {
+        name: import.meta.env.CF_WORKER_NAME || '',
+        preview_urls: false,
+        workers_dev: false,
+        upload_source_maps: true,
+        observability: {
+          enabled: false,
+          head_sampling_rate: 1,
+        },
+        placement: {
+          mode: 'smart',
+        },
+        route: {
+          pattern: import.meta.env.CF_ROUTE_PATTERN || '',
+          zone_name: import.meta.env.CF_ROUTE_ZONE_NAME || '',
+          custom_domain: true,
+        },
+      },
     },
     routeRules: {
       '/': { static: true },
