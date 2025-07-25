@@ -1,36 +1,11 @@
 {
   "recommendations": [
-    "antfu.browse-lite",
     "antfu.iconify",
-    "antfu.slidev",
     "antfu.unocss",
-    "antfu.vite",
-    "antfu.where-am-i",
-    "antfu.open-in-github-button",
-    "lokalise.i18n-ally",
-
-    "antfu.icons-carbon",
-    "antfu.theme-vitesse",
-    "file-icons.file-icons",
-    "sainnhe.gruvbox-material",
-
+    "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
     "Vue.volar",
-    "GitHub.copilot",
-    "usernamehw.errorlens",
-    "streetsidesoftware.code-spell-checker",
-    "Prisma.prisma",
-
-    "amodio.tsl-problem-matcher",
-    "eamodio.gitlens",
-    "EditorConfig.EditorConfig",
-    "GitHub.vscode-pull-request-github",
-    "mpontus.tab-cycle",
-    "naumovs.color-highlight",
-    "richie5um2.vscode-sort-json",
-    "unional.vscode-sort-package-json",
-    "voorjaar.windicss-intellisense",
-    "WakaTime.vscode-wakatime",
-    "znck.grammarly"
+    "vitest.explorer",
+    "ms-playwright.playwright"
   ]
 }
