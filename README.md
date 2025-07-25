@@ -43,14 +43,13 @@ The AAAA-Record will be used to update your FRtIZ!Box IPv6 address in Cloudflare
 
 #### :rocket: Option 1: Self-host on Cloudflare
 
-Deploy this project to your Cloudflare account and use it as a service for your FRITZ!Box. 
+Deploy this project to your Cloudflare account and use it as a service for your FRITZ!Box.
 
 ```bash
 cp .env.example .env
 pnpm build:cf
-pnpm deploy:cf 
+pnpm deploy:cf
 ````
-
 
 #### :rocket: Option 2: Self-host on Vercel
 
