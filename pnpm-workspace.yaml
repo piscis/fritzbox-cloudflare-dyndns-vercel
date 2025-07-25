@@ -2,4 +2,5 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
   - sharp
+  - workerd
   - unrs-resolver
