@@ -50,7 +50,7 @@
     "@unocss/reset": "^66.3.3",
     "@vercel/analytics": "^1.4.0",
     "eslint": "^9.31.0",
-    "happy-dom": "^15.11.6",
+    "happy-dom": "^18.0.1",
     "nuxt": "^3.17.7",
     "radash": "^12.1.1",
     "release-it": "^17.10.0",
