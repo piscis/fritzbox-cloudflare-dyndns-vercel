@@ -41,6 +41,9 @@ export default defineNuxtConfig({
       },
     },
     sourceMap: true,
+    experimental: {
+      wasm: true,
+    },
     routeRules: {
       '/': { static: true },
       '/_chunks/**': {
