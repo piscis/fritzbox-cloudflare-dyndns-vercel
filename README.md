@@ -41,30 +41,42 @@ The AAAA-Record will be used to update your FRtIZ!Box IPv6 address in Cloudflare
 
 ### Use the service
 
-#### :rocket: Option 1: Self-host on Vercel
+#### :rocket: Option 1: Self-host on Cloudflare
+
+Deploy this project to your Cloudflare account and use it as a service for your FRITZ!Box. 
+
+```bash
+cp .env.example .env
+pnpm build:cf
+pnpm deploy:cf 
+````
+
+
+#### :rocket: Option 2: Self-host on Vercel
 
 Deploy this project to your Vercel account and use it as a service for your FRITZ!Box.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpiscis%2Ffritzbox-cloudflare-dyndns-vercel&project-name=fritzbox-cloudflare-dyndns-vercel&repository-name=fritzbox-cloudflare-dyndns-vercel)
 
-#### :cloud: Option 2: Use my Vercel cloud service for free
+#### :cloud: Option 3: Use my ~~Vercel~~ cloudflare cloud service for free
 
 If you don't want to host "FRITZ!Box cloudflare DynDNS" yourself, feel free to use my cloud service. Just use this Update URL in your FRITZ!Box:
+Please note that this service is provided for free and without any warranty. Since this service is provided for free, I can't guarantee that it will always be available. If you need a more reliable service, please consider self-hosting.
 
 ```
-https://fritzdns.vicoli.de/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
+https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
 ```
 
 ### Configure your FRITZ!Box DynDNS Settings
 
 ![Configure DynDNS settings](./docs/images/docs-fritzbox-dyndns.png "Configure DynDNS settings in your FRITZ!Box Admin interface")
 
-| FRITZ!Box Setting | Value                                                                                                                            | Description                                                                                                                              |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Update URL        | `https://fritzdns.vicoli.de/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
-| Domain Name       | fritz.example.com                                                                                                                | The FQDN from the URL parameter `record` and `zone`.                                                                                     |
-| Username          | admin                                                                                                                            | You can choose whatever value you want.                                                                                                  |
-| Password          | ●●●●●●                                                                                                                           | The API token you’ve created earlier.                                                                                                    |
+| FRITZ!Box Setting | Value                                                                                                                               | Description                                                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Update URL        | `https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
+| Domain Name       | fritz.example.com                                                                                                                   | The FQDN from the URL parameter `record` and `zone`.                                                                                     |
+| Username          | admin                                                                                                                               | You can choose whatever value you want.                                                                                                  |
+| Password          | ●●●●●●                                                                                                                              | The API token you’ve created earlier.                                                                                                    |
 
 Please note, if you use a custom Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` service endpoint when configuring your FITZ!Box DynDNS settings
 
@@ -76,9 +88,8 @@ Please note, if you use a custom Vercel deployment your service URL will be diff
 
 ### Prerequisites for Development
 
-- NodeJS 18+
+- NodeJS 22+
 - PNPM
-- Configure TakeOver Mode for VS Code (see below)
 
 ### Setup
 
@@ -117,8 +128,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ### Sources
 
-  - Configure "take over" mode for volar in VS code: https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
-  - Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+  - Look at the [Nuxt 4 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ----
 
