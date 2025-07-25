@@ -9,10 +9,8 @@ env:
   DO_NOT_TRACK: 1
 
 on:
-  release:
-    types: [created]
   push:
-    branches: [main]
+    branches: [main, released]
   pull_request:
     branches: [main]
 jobs:
