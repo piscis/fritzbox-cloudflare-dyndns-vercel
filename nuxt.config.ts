@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/google-fonts',
     '@nuxt/image',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
   ],
   css: [
     '@unocss/reset/tailwind-compat.css',
@@ -42,6 +42,11 @@ export default defineNuxtConfig({
           'cache-control': `public, max-age=${THIRTY_DAYS_IN_SECONDS}, stale-if-error=900, stale-while-revalidate=900, s-maxage=${THIRTY_DAYS_IN_SECONDS}`,
         },
       },
+    },
+  },
+  eslint: {
+    config: {
+      standalone: false,
     },
   },
 })
