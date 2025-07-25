@@ -1,5 +1,7 @@
+import type { H3Event } from 'h3'
 import { os } from '@orpc/server'
 import { z } from 'zod'
+import noCacheHeaders from '~~/server/router/middlewares/noCacheHeaders'
 
 export enum HealthCheckStatusCodes {
   OKAY = 'ok',
@@ -12,6 +14,8 @@ const HealthCheckSchema = z.object({
 })
 
 export const healthCheck = os
+  .$context<{ nitroContext: H3Event }>()
+  .use(noCacheHeaders)
   .route({
     method: 'GET',
     path: '/health-check',
