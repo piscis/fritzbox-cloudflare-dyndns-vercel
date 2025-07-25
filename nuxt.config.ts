@@ -8,11 +8,16 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/google-fonts',
     '@nuxt/image',
-    '@nuxt/eslint',
+    '@nuxt/eslint'
   ],
   css: [
     '@unocss/reset/tailwind-compat.css',
   ],
+  icon: {
+    serverBundle: {
+      collections: ['devicon']
+    }
+  },
   googleFonts: {
     download: true,
     base64: true,
