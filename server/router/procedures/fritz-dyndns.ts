@@ -1,7 +1,9 @@
+import type { H3Event } from 'h3'
 import { ORPCError, os } from '@orpc/server'
 import Cloudflare from 'cloudflare'
 import { first, select } from 'radash'
 import { z } from 'zod'
+import noCacheHeaders from '~~/server/router/middlewares/noCacheHeaders'
 import useLogger from '~~/server/utils/useLogger'
 
 const responseBodySchema = z.object({
@@ -20,6 +22,8 @@ const querySchema = z.object({
 })
 
 export const fritzDynDnsRoute = os
+  .$context<{ nitroContext: H3Event }>()
+  .use(noCacheHeaders)
   .route({
     method: 'GET',
     path: '/fritz-dyndns',
