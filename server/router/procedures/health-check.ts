@@ -9,7 +9,7 @@ export enum HealthCheckStatusCodes {
 }
 
 const HealthCheckSchema = z.object({
-  state: z.nativeEnum(HealthCheckStatusCodes),
+  state: z.enum(HealthCheckStatusCodes),
   timestamp: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
 })
 
