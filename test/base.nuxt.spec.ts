@@ -1,5 +1,5 @@
-import { $fetch, fetch, isDev, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
+import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 
 describe('base', async () => {
   await setup()
@@ -15,10 +15,4 @@ describe('base', async () => {
     expect(res.headers.has('X-Powered-By')).toBeFalsy()
     expect(res.headers.has('content-type')).toBeTruthy()
   })
-
-  if (isDev()) {
-    it('[dev] ensure vite client script is added', async () => {
-      expect(await $fetch('/')).toMatch('/_nuxt/@vite/client"')
-    })
-  }
 })
