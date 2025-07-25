@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.0.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.5.0...2.0.0) (2025-07-25)
+
+### Features
+
+* add cloudflare build and deployment steps ([44ff19d](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/44ff19d93882a56ef4a0c5212dcc6f5d57fbe59d))
+* add nuxt icon collections config ([9fd7003](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/9fd70030556625c9a8acd484bffda565b66e2747))
+* add updated version for x-powered-by middleware ([965d166](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/965d16626d23426fc67715d4287c5ef1da97f182))
+* adds cloudflare deployment config ([cf070e3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/cf070e3d1a493522921af6af12500ba4310f4a8b))
+* adds implementation via orpc ([dfda9b8](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/dfda9b86b9421001b9f3700c990d5a10b4477157))
+* adds logger utility ([bcb8ce9](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/bcb8ce9d25446ada190fe92a44bf92f96e936fa9))
+* adds middleware to handle favicon requests ([11d60f0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/11d60f071049133b1d647f57a47a3ca78f4d0136))
+* adds middleware to remove xpowerdby header ([fb8e9de](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/fb8e9deba1f50cf5dd874cbf74d0628f5502fbfa))
+* adds nuxt icon config ([bcc3166](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/bcc3166804f93c131367dbcc5d56e66e3d2db9d7))
+* bump tailwind unocss integration to tailwind4 ([beacacf](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/beacacf59694f3f62164207ec99bb43436d1b612))
+* cleanup readme ([abba704](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/abba704befe17388fd793f4e9a1a80905e49167a))
+* cleanup vscode settings ([7a40702](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7a407023f8b54875ff461ba928c7e13987b60dae))
+* configure nuxt + eslint ([315c341](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/315c3412019ffeda33e57e7c4068e8cf3c72341c))
+* convert app to nuxt4 ([4c85d3c](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/4c85d3c6c5ef14c823fa083b780008220f85b39f))
+* enable nuxt test utils ([f80ecb0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/f80ecb02136c088246f0814c7be5c1d9325d6461))
+* enable server source maps ([6edcc6e](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/6edcc6e3bfeb9221b18fe08b951efdfb9d1ca0d8))
+* ignore build directories ([554b393](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/554b3931f46649dc3aafdac17af8d98e7f526eca))
+* integrate with nuxt eslint ([6eeb6dc](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/6eeb6dcb937873df00f5e872721058cadb98dc5d))
+* modernize nuxt config ([b903639](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b903639d310b59cfa3a4aeedf8ecf8575a14d8d4))
+* use nuxt icon integration ([a9ce909](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/a9ce909553cab8ebe0b1692b243f64191ffc83ea))
+
+### Bug Fixes
+
+* **deps:** add additonal test utils ([6a221f7](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/6a221f773f5678e2dc036e953b2af1bbb21b2cb4))
+* **deps:** Approve pnpm builds ([11d3e38](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/11d3e389fa840c3814cc7b7e92b387ed5f49e6bf))
+* **deps:** bump packages ([00d130e](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/00d130e0037a962afa48b011286e658b53184d8d))
+* fix lisense attribute ([8b48ff9](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/8b48ff98e734a21e3217b9c145cb077ca2b654a4))
+* fixes linter integration ([a062c3e](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/a062c3e9e85c1716182bd4da504999ec0207efcb))
+* fixes typescript errors and tests ([8833010](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/883301002d888ad05279dcf9a284726edbf9c4be))
+* use NuxtLayout to wrapp pages ([b13948f](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b13948f7565a355c5379ecc4ac4b7d815e6471da))
+
 ## [1.5.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/1.4.2...1.5.0) (2024-09-18)
 
 
