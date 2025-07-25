@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxt/image',
     '@nuxt/eslint',
-    '@nuxtjs/web-vitals',
   ],
   css: [
     '@unocss/reset/tailwind-compat.css',
@@ -20,11 +19,6 @@ export default defineNuxtConfig({
     families: {
       Nunito: true,
     },
-  },
-  webVitals: {
-    provider: 'log',
-    debug: true, // debug enable metrics reporting on dev environments
-    disabled: false
   },
   app: {
     buildAssetsDir: '/_chunks/',
