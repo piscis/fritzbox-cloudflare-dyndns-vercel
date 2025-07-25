@@ -15,8 +15,8 @@ export default defineNuxtConfig({
   ],
   icon: {
     serverBundle: {
-      collections: ['devicon']
-    }
+      collections: ['devicon'],
+    },
   },
   googleFonts: {
     download: true,
