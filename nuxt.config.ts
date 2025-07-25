@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@nuxtjs/google-fonts',
     '@nuxt/image',
+    '@nuxt/eslint',
     '@nuxtjs/web-vitals',
   ],
   css: [
