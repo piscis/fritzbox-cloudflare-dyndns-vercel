@@ -4,6 +4,10 @@ concurrency:
   group: 'workflow = ${{ github.workflow }}, ref = ${{ github.event.ref }}, pr = ${{ github.event.pull_request.id }}'
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+env:
+  WRANGLER_SEND_METRICS: false
+  DO_NOT_TRACK: 1
+
 on:
   release:
     types: [created]
@@ -22,11 +26,13 @@ jobs:
         id: env-name
         run: |
           if [[ ${GITHUB_HEAD_REF} == dev/* || ${GITHUB_HEAD_REF} == renovate/* ]]; then
+            echo "env=development" >> $GITHUB_OUTPUT
+          elif [[ "${{github.ref}}" == "refs/heads/main" && "${{github.event_name}}" == "push" ]]; then
             echo "env=staging" >> $GITHUB_OUTPUT
-          elif [[ "${{github.event_name}}" == "release" && "${{github.event.action}}" == "created" ]]; then
+          elif [[ "${{github.ref}}" == "refs/heads/released" && "${{github.event_name}}" == "push" ]]; then
             echo "env=production" >> $GITHUB_OUTPUT
           else
-            echo "env=develop" >> $GITHUB_OUTPUT
+            echo "env=development" >> $GITHUB_OUTPUT
           fi
 
   lint:
@@ -48,8 +54,6 @@ jobs:
       - name: Lint App
         shell: bash
         run: |
-          pnpm i
-          pnpm nuxi prepare
           pnpm run lint
 
   test:
@@ -71,17 +75,15 @@ jobs:
       - name: Test App
         shell: bash
         run: |
-          pnpm i
-          pnpm nuxi prepare
           pnpm run test
 
   build-deploy:
     timeout-minutes: 10
-    name: Build 🏗️ & ~~Deploy~~  🚀
+    name: Build 🏗️ & Deploy 🚀
+    environment: ${{ needs.setup-stage.outputs.env-name }}
     needs: [setup-stage, lint, test]
+    if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
     runs-on: ubuntu-latest
-    outputs:
-      url: ${{ steps.deploy.outputs.url }}
 
     steps:
       - name: Checkout
@@ -95,4 +97,13 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Build
-        run: pnpm build
+        run: |
+          pnpm build:cf
+          pnpm deploy:cf
+        env:
+          NITRO_PRESET: cloudflare_module
+          CF_WORKER_NAME: ${{ secrets.CF_WORKER_NAME }}
+          CF_ROUTE_PATTERN: ${{ secrets.CF_ROUTE_PATTERN }}
+          CF_ROUTE_ZONE_NAME: ${{ secrets.CF_ROUTE_ZONE_NAME }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
