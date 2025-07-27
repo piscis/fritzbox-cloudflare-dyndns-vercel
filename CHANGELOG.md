@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.2.0...2.2.1) (2025-07-27)
+
+### Features
+
+* adds NuxtRouteAnnouncer ([aeff0e7](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/aeff0e798730816d22610bea79ad8b37ac6d247e))
+* configure type checks ([eb1b189](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/eb1b18949c68ff9a7e776e96588f837b751e0f95))
+* update Typescript configuration to align with nuxt4 ([258eda7](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/258eda743e3dde7d18693699151718299b85d987))
+
+### Bug Fixes
+
+* removes unnessesary NuxtLayout ([46e2662](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/46e26625a87f1d8ea8acc71bffe670b91da49b0b))
+
 ## [2.2.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.1.0...2.2.0) (2025-07-25)
 
 ### Features
