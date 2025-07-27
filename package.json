@@ -32,7 +32,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/devicon": "^1.2.33",
+    "@iconify-json/devicon": "^1.2.34",
     "@nuxt/eslint": "^1.7.1",
     "@nuxt/icon": "^1.15.0",
     "@nuxt/image": "1.10.0",
