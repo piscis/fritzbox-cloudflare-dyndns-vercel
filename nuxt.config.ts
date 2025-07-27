@@ -4,11 +4,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-06-06',
   devtools: { enabled: true },
   modules: [
-    '@unocss/nuxt',
     '@nuxt/icon',
+    '@nuxt/image',
+    '@unocss/nuxt',
     '@nuxtjs/google-fonts',
     '@nuxt/test-utils/module',
-    '@nuxt/image',
     '@nuxt/eslint',
   ],
   css: [
