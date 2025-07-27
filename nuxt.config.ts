@@ -8,8 +8,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@unocss/nuxt',
     '@nuxtjs/google-fonts',
-    '@nuxt/test-utils/module',
     '@nuxt/eslint',
+    '@nuxt/test-utils/module',
+
   ],
   css: [
     '@unocss/reset/tailwind-compat.css',
