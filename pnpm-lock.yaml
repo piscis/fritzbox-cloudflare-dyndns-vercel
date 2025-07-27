@@ -8911,7 +8911,7 @@ snapshots:
 
   '@types/node-fetch@2.6.12':
     dependencies:
-      '@types/node': 18.19.120
+      '@types/node': 24.1.0
       form-data: 4.0.4
 
   '@types/node@18.19.120':
