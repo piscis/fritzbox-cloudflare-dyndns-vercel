@@ -42,7 +42,7 @@
     "@orpc/zod": "^1.8.8",
     "@unocss/nuxt": "^66.5.1",
     "@unocss/reset": "^66.5.1",
-    "cloudflare": "^4.5.0",
+    "cloudflare": "^5.1.0",
     "consola": "^3.4.2",
     "nuxt": "^4.0.3",
     "radash": "^12.1.1",
