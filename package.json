@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.2.1",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.16.1",
   "author": {
     "name": "Alexander Pirsig",
     "email": "me@piscis.dev"
@@ -32,37 +32,37 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/devicon": "^1.2.41",
-    "@nuxt/eslint": "^1.8.0",
+    "@iconify-json/devicon": "^1.2.43",
+    "@nuxt/eslint": "^1.9.0",
     "@nuxt/icon": "^1.15.0",
     "@nuxt/image": "1.11.0",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@orpc/openapi": "^1.8.1",
-    "@orpc/server": "^1.8.1",
-    "@orpc/zod": "^1.8.1",
-    "@unocss/nuxt": "^66.4.2",
-    "@unocss/reset": "^66.4.2",
+    "@orpc/openapi": "^1.8.8",
+    "@orpc/server": "^1.8.8",
+    "@orpc/zod": "^1.8.8",
+    "@unocss/nuxt": "^66.5.1",
+    "@unocss/reset": "^66.5.1",
     "cloudflare": "^4.5.0",
     "consola": "^3.4.2",
     "nuxt": "^4.0.3",
     "radash": "^12.1.1",
-    "zod": "^4.0.17"
+    "zod": "^4.1.8"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "5.2.1",
+    "@antfu/eslint-config": "5.3.0",
     "@nuxt/test-utils": "^3.19.2",
     "@release-it/conventional-changelog": "^10.0.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
     "dotenv-cli": "^10.0.0",
     "happy-dom": "^18.0.1",
-    "playwright-core": "^1.54.2",
+    "playwright-core": "^1.55.0",
     "release-it": "^19.0.4",
     "rimraf": "^6.0.1",
-    "sass": "1.90.0",
+    "sass": "1.92.1",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.5",
-    "wrangler": "^4.30.0"
+    "vue-tsc": "^3.0.7",
+    "wrangler": "^4.37.0"
   }
 }
