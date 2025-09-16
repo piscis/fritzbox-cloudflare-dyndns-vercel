@@ -34,7 +34,7 @@
   "dependencies": {
     "@iconify-json/devicon": "^1.2.43",
     "@nuxt/eslint": "^1.9.0",
-    "@nuxt/icon": "^1.15.0",
+    "@nuxt/icon": "^2.0.0",
     "@nuxt/image": "1.11.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@orpc/openapi": "^1.8.8",
