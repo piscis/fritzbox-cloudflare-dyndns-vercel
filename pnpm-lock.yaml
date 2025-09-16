@@ -39,8 +39,8 @@ importers:
         specifier: ^66.5.1
         version: 66.5.1
       cloudflare:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.1.0
+        version: 5.1.0
       consola:
         specifier: ^3.4.2
         version: 3.4.2
@@ -2859,8 +2859,8 @@ packages:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
 
-  cloudflare@4.5.0:
-    resolution: {integrity: sha512-fPcbPKx4zF45jBvQ0z7PCdgejVAPBBCZxwqk1k7krQNfpM07Cfj97/Q6wBzvYqlWXx/zt1S9+m8vnfCe06umbQ==}
+  cloudflare@5.1.0:
+    resolution: {integrity: sha512-J2vT90WHio8VSbGUmuHckJr9pabH6N+nQKQsgjfwydgV2bgyQoV/KqWw1Df+YKZ5T/QqP7KadKr4bxh+WiRafg==}
 
   cluster-key-slot@1.1.2:
     resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
@@ -8327,7 +8327,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.124
+      '@types/node': 24.4.0
       form-data: 4.0.4
 
   '@types/node@18.19.124':
@@ -9414,7 +9414,7 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
 
-  cloudflare@4.5.0:
+  cloudflare@5.1.0:
     dependencies:
       '@types/node': 18.19.124
       '@types/node-fetch': 2.6.13
