@@ -26,8 +26,8 @@ const openAPIHandler = new OpenAPIHandler(router, {
       ],
       specGenerateOptions: {
         info: {
-          title: appName || 'Fritzbox Cloudflare DynDNS',
-          version: appVersion || '0.0.0',
+          title: appName as string || 'Fritzbox Cloudflare DynDNS',
+          version: appVersion as string || '0.0.0',
         },
       },
     }),
