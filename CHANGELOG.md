@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.2.1...2.3.0) (2025-09-23)
+
+### Bug Fixes
+
+* bump license date ([b85bc18](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b85bc18e9a8a465286f4ebc27201f4ec34ee39e1))
+
 ## [2.2.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.2.0...2.2.1) (2025-07-27)
 
 ### Features
