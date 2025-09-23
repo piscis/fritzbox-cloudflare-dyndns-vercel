@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.3.0...2.3.1) (2025-09-23)
+
+### Bug Fixes
+
+* fixes minor type conversion error ([b4458c0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b4458c06ee60832f71288ea6729c9b4b194e5b02))
+
 ## [2.3.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.2.1...2.3.0) (2025-09-23)
 
 ### Bug Fixes
