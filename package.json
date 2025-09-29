@@ -32,14 +32,14 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/devicon": "^1.2.44",
+    "@iconify-json/devicon": "^1.2.45",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/icon": "^2.0.0",
     "@nuxt/image": "1.11.0",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@orpc/openapi": "^1.9.0",
-    "@orpc/server": "^1.9.0",
-    "@orpc/zod": "^1.9.0",
+    "@orpc/openapi": "^1.9.1",
+    "@orpc/server": "^1.9.1",
+    "@orpc/zod": "^1.9.1",
     "@unocss/nuxt": "^66.5.2",
     "@unocss/reset": "^66.5.2",
     "cloudflare": "^5.1.0",
@@ -59,10 +59,10 @@
     "playwright-core": "^1.55.1",
     "release-it": "^19.0.5",
     "rimraf": "^6.0.1",
-    "sass": "1.93.1",
+    "sass": "1.93.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.8",
-    "wrangler": "^4.38.0"
+    "vue-tsc": "^3.1.0",
+    "wrangler": "^4.40.2"
   }
 }
