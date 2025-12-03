@@ -54,7 +54,7 @@
     "@release-it/conventional-changelog": "^10.0.2",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/test-utils": "^2.4.6",
-    "dotenv-cli": "^10.0.0",
+    "dotenv-cli": "^11.0.0",
     "happy-dom": "^20.0.11",
     "playwright-core": "^1.57.0",
     "release-it": "^19.0.6",
