@@ -35,7 +35,7 @@
     "@iconify-json/devicon": "^1.2.51",
     "@nuxt/eslint": "^1.11.0",
     "@nuxt/icon": "^2.1.0",
-    "@nuxt/image": "1.11.0",
+    "@nuxt/image": "2.0.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@orpc/openapi": "^1.12.1",
     "@orpc/server": "^1.12.1",
