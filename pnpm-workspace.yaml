@@ -1,8 +1,28 @@
+# pnpm 11 reads only auth/registry settings from .npmrc, so every other setting
+# lives here. Key order is enforced by @antfu/eslint-config (yaml/sort-keys).
+
+# Replaces the pnpm 10 `onlyBuiltDependencies` list.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true
+
+# pnpm 11 defaults minimumReleaseAge to 1440 (1 day); these were newer than that
+# when the lockfile was written.
+minimumReleaseAgeExclude:
+  - release-it@21.0.1
+  - wrangler@4.118.0
+
+shamefullyHoist: true
+shellEmulator: true
+trustPolicy: no-downgrade
+
+# semver@6.3.1 is Babel's own pinned transitive dep (@babel/core, @babel/generator).
+# no-downgrade flags it only because semver 7.x carries newer provenance attestation.
+trustPolicyExclude:
+  - semver@6.3.1
+
 packages:
   - .
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - sharp
-  - workerd
-  - unrs-resolver
