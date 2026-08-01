@@ -121,9 +121,15 @@ jobs:
 
     # Job-level so both phase invocations below are covered. Job containers do
     # not inherit runner host env, so this mapping is required, not decorative.
+    #
+    # Both resolve from the GitHub Environment named above, so `staging` and
+    # `production` each supply their own scoped token. PHASE_HOST accepts either a
+    # variable or a secret -- an empty value would silently fall back to Phase's
+    # cloud host instead of the self-hosted one, which fails as an auth error far
+    # from its cause.
     env:
       PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
-      PHASE_HOST: ${{ vars.PHASE_HOST }}
+      PHASE_HOST: ${{ vars.PHASE_HOST || secrets.PHASE_HOST }}
 
     steps:
       - name: Checkout
@@ -138,6 +144,16 @@ jobs:
 
       - name: Install Phase CLI
         run: curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version 2.3.1
+
+      - name: Verify Phase credentials
+        # Fail here with a clear message rather than deep inside a build, where a
+        # missing token surfaces as an unrelated-looking auth or resolution error.
+        run: |
+          test -n "$PHASE_SERVICE_TOKEN" \
+            || { echo "::error::PHASE_SERVICE_TOKEN is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
+          test -n "$PHASE_HOST" \
+            || { echo "::error::PHASE_HOST is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
+          echo "Phase host: $PHASE_HOST"
 
       - name: Build & Deploy
         run: |
