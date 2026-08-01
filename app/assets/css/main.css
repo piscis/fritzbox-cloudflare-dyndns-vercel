@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  /* @nuxt/fonts reads --font-* tokens and self-hosts the family, replacing the
+     old @nuxtjs/google-fonts download. Tailwind's preflight points
+     --default-font-family at --font-sans, so this applies document-wide. */
+  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+}
