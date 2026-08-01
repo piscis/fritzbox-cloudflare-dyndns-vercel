@@ -22,9 +22,12 @@ hosted instance at [fritzdns.piscis.dev/api](https://fritzdns.piscis.dev/api/).
 
 ## Stack
 
-- Nuxt 4 (`app/` srcDir), Vue 3, Nuxt UI v4 (Tailwind CSS v4). Nuxt UI also brings
-  `@nuxt/fonts`, `@nuxtjs/color-mode` and `@nuxt/icon` — do not register those
-  separately. Design tokens live in `app/assets/css/main.css`.
+- Nuxt 4 (`app/` srcDir), Vue 3, Nuxt UI v4 (Tailwind CSS v4). Nuxt UI depends on
+  `@nuxt/fonts`, `@nuxtjs/color-mode` and `@nuxt/icon`, so do not add those to
+  `modules` — with one deliberate exception: `@nuxt/icon` *is* listed, to keep its
+  `icon.clientBundle` config applying to the prerendered landing page. Removing the
+  entry builds and renders identically, so treat it as pinning intent rather than a
+  requirement. Design tokens live in `app/assets/css/main.css`.
 - oRPC 1.x (`@orpc/server`, `@orpc/openapi`, `@orpc/zod`) + Zod 4 on every request
   and response
 - `cloudflare` SDK v7 for zone and DNS access; `consola` logging; `radash` helpers
