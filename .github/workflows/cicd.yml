@@ -153,7 +153,9 @@ jobs:
             || { echo "::error::PHASE_SERVICE_TOKEN is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
           test -n "$PHASE_HOST" \
             || { echo "::error::PHASE_HOST is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
-          echo "Phase host: $PHASE_HOST"
+          # Deliberately not echoing the value: this repository is public, and a
+          # host sourced from `vars` would not be masked in the run log.
+          echo "Phase credentials present."
 
       - name: Build & Deploy
         run: |
