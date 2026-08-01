@@ -1,0 +1,69 @@
+name: Bug report
+description: The DynDNS update is not working
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste your Cloudflare API token.** Replace it with `REDACTED`
+        everywhere below. If you have already pasted one somewhere public,
+        revoke it in the Cloudflare dashboard first.
+
+  - type: dropdown
+    id: hosting
+    attributes:
+      label: How are you running it?
+      options:
+        - The free hosted service (fritzdns.piscis.dev)
+        - Self-hosted on Cloudflare Workers
+        - Self-hosted on Vercel
+        - Other / local
+    validations:
+      required: true
+
+  - type: dropdown
+    id: record
+    attributes:
+      label: Which record type is affected?
+      options:
+        - A (IPv4)
+        - AAAA (IPv6)
+        - Both
+    validations:
+      required: true
+
+  - type: input
+    id: fritzbox
+    attributes:
+      label: FRITZ!Box model and FRITZ!OS version
+      placeholder: 7590 / FRITZ!OS 8.10
+    validations:
+      required: true
+
+  - type: textarea
+    id: url
+    attributes:
+      label: Update URL
+      description: With the token replaced by REDACTED.
+      placeholder: https://fritzdns.piscis.dev/api/fritz-dyndns/?token=REDACTED&record=fritz.example.com&zone=example.com&ipv4=203.0.113.5
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: response
+    attributes:
+      label: Response status and body
+      description: |
+        The FRITZ!Box shows this under Internet → Permit Access → DynDNS. You can
+        also reproduce it with curl.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: false

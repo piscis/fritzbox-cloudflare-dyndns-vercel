@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "skills": {
+    "ai-review": {
+      "source": "piscis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-review/SKILL.md",
+      "computedHash": "b57cc659e74771ff7b7de614ec125160257579ca4285c8f16a9b15845d3479af"
+    },
+    "ask-me": {
+      "source": "piscis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ask-me/SKILL.md",
+      "computedHash": "6eec006b8663e34c3c0a0f091e98e9b92bef33918d94ea3859ca0efe1b765769"
+    },
+    "commit-push-pr": {
+      "source": "piscis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/commit-push-pr/SKILL.md",
+      "computedHash": "f561f8205d576d32775cf8b600fe61811400c390eccf4d5bb5a8588df41223fe"
+    },
+    "conventional-commit": {
+      "source": "piscis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/conventional-commit/SKILL.md",
+      "computedHash": "d5db299c3a594c5b1c57eb18db5132b5e460f4237e9adde6e353d6fcb103e1ba"
+    },
+    "nuxt": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/nuxt/SKILL.md",
+      "computedHash": "96dbdbfc06bf7045aeb9a463b972d5c0b5679d6dadf196d8ef6b98dc6defed2d"
+    },
+    "pnpm": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pnpm/SKILL.md",
+      "computedHash": "2ec08c851c6f901d4ed72c21b826416ed074a487db65662b36249418afd728bf"
+    },
+    "typescript-advanced-types": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/javascript-typescript/skills/typescript-advanced-types/SKILL.md",
+      "computedHash": "8cbf2bf600f392d7260e476e3202932a876e2281cda3b15a8b6a5a43f383252d"
+    },
+    "typescript-best-practices": {
+      "source": "ofershap/typescript-best-practices",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-best-practices/SKILL.md",
+      "computedHash": "4fed665a7697c420edd8e2afa18cf4ba8c86a6fe93924fc7f45cf769c693b6a7"
+    },
+    "update-issue": {
+      "source": "piscis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/update-issue/SKILL.md",
+      "computedHash": "9883c2277bbd7d58a8b5fed25ed9d727f06ae8d6940c91cf0ffb30dcbcb57a30"
+    },
+    "vitest": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/vitest/SKILL.md",
+      "computedHash": "943d436114c677802426741980146c07560bf375297666b03062444f4b98a785"
+    },
+    "vue-best-practices": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/vue-best-practices/SKILL.md",
+      "computedHash": "d7d22c8cb343583c3904692c4d1d7b50382945e433e4f6e053f4aabb9846cbc3"
+    }
+  }
+}
