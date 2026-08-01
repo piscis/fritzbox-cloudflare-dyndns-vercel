@@ -47,11 +47,20 @@ Deploy this project to your Cloudflare account and use it as a service for your 
 
 ```bash
 cp .env.example .env
-pnpm build:cf
-pnpm deploy:cf
-````
 
-If nessesary make some adjustments to `nuxt.config.ts` to match your Cloudflare account and routing patterns. (see the nitro preset config in the [nuxt.config.ts](./nuxt.config.ts) file)
+# Nuxt loads .env natively for `nuxt build`, so no extra tooling is needed.
+NITRO_PRESET=cloudflare_module pnpm exec nuxt build
+
+# wrangler does NOT read .env, so export the values for the deploy step.
+set -a && . ./.env && set +a
+pnpm exec wrangler --cwd .output deploy
+```
+
+> The `pnpm build:cf` and `pnpm deploy:cf` shortcuts are for maintainers — they pull
+> configuration from Phase (see [Secrets](#secrets-maintainers)) and will not work
+> without access to that org. The commands above are the equivalent for a fork.
+
+If necessary make some adjustments to `nuxt.config.ts` to match your Cloudflare account and routing patterns. (see the nitro preset config in the [nuxt.config.ts](./nuxt.config.ts) file)
 
 #### :rocket: Option 2: Self-host on Vercel
 
@@ -129,6 +138,51 @@ pnpm preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+### Environment variables
+
+None of these is a runtime secret. The Cloudflare API token this service uses to change
+DNS is the one your FRITZ!Box sends as the `token` query parameter on every request — it
+is never read from the environment and never stored.
+
+| Variable | Consumed by | When | Required |
+| --- | --- | --- | --- |
+| `NITRO_PRESET` | `nuxt.config.ts` → `nitro.preset` | build | Cloudflare/Vercel only |
+| `CF_WORKER_NAME` | `nuxt.config.ts` → `wrangler.name` | build | Cloudflare only |
+| `CF_ROUTE_PATTERN` | `nuxt.config.ts` → `wrangler.route.pattern` | build | Cloudflare only |
+| `CF_LOG_ENABLED` | `nuxt.config.ts` → `wrangler.observability.enabled` | build | no |
+| `CLOUDFLARE_API_TOKEN` | `wrangler deploy` | deploy | Cloudflare only |
+| `CLOUDFLARE_ACCOUNT_ID` | `wrangler deploy` | deploy | Cloudflare only |
+
+Every `CF_*` variable is consumed at **build** time, because `nuxt.config.ts` generates
+`.output/server/wrangler.json` — so they must be set for `build:cf`, not only for
+`deploy:cf`. There is no checked-in `wrangler.toml`.
+
+The route is configured as a Cloudflare **custom domain**, which needs only a `pattern`;
+Cloudflare infers the zone from the hostname. No `CF_ROUTE_ZONE_NAME` is required.
+
+### Secrets (maintainers)
+
+Build and deploy configuration lives in [Phase](https://phase.dev), self-hosted at
+`https://io.vicoli.de`. [`.phase.json`](./.phase.json) links this repo to the app; it
+contains only opaque identifiers and is safe to commit.
+
+```bash
+brew install phase                       # or https://pkg.phase.dev/install.sh
+export PHASE_HOST=https://io.vicoli.de   # add to your shell profile
+phase auth
+phase secrets list                       # sanity check: the Development set
+
+pnpm dev                                 # runs through `phase run`
+```
+
+`phase run` spawns the child via `sh -c`, which does not have `node_modules/.bin` on
+`PATH` — use `pnpm exec <bin>` inside it. Quote the whole command when it takes flags of
+its own (`phase run "pnpm exec wrangler --cwd .output deploy"`), otherwise `phase` parses
+them as its own.
+
+Contributors without access to that Phase org should follow
+[Option 1](#rocket-option-1-self-host-on-cloudflare) and use a `.env` instead.
 
 ### Testing
 

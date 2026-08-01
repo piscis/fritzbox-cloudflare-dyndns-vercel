@@ -1,0 +1,8 @@
+{
+  "version": "2",
+  "phaseApp": "fritzbox-cloudflare-dyndns",
+  "appId": "40f85262-d090-4e49-a316-1b9c2d0bdf4f",
+  "defaultEnv": "Development",
+  "envId": "0af28fee-36d0-42e4-b5ea-ede1d3244869",
+  "monorepoSupport": false
+}

@@ -1,5 +1,14 @@
 const THIRTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 30
 
+/**
+ * Build-time config comes from a secret store (Phase) or a `.env`, and values
+ * pasted into either routinely pick up stray whitespace. A newline in
+ * CF_ROUTE_PATTERN silently produces an invalid Worker route, so trim on read.
+ */
+function env(name: string, fallback = '') {
+  return (import.meta.env[name] ?? fallback).trim()
+}
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-06-06',
   devtools: { enabled: true },
@@ -53,25 +62,27 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true,
     },
-    preset: import.meta.env.NITRO_PRESET || 'node-server',
+    preset: env('NITRO_PRESET', 'node-server'),
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
       wrangler: {
-        name: import.meta.env.CF_WORKER_NAME || '',
+        name: env('CF_WORKER_NAME'),
         preview_urls: false,
         workers_dev: false,
         upload_source_maps: true,
         observability: {
-          enabled: import.meta.env.CF_LOG_ENABLED === 'true',
+          enabled: env('CF_LOG_ENABLED') === 'true',
           head_sampling_rate: 1,
         },
         placement: {
           mode: 'smart',
         },
+        // A custom-domain route needs only `pattern`; Cloudflare infers the zone
+        // from the hostname. wrangler's own schema requires zone_name/zone_id
+        // solely for non-custom-domain routes.
         route: {
-          pattern: import.meta.env.CF_ROUTE_PATTERN || '',
-          zone_name: import.meta.env.CF_ROUTE_ZONE_NAME || '',
+          pattern: env('CF_ROUTE_PATTERN'),
           custom_domain: true,
         },
       },
