@@ -15,25 +15,35 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/icon',
     '@nuxt/image',
-    '@unocss/nuxt',
-    '@nuxtjs/google-fonts',
+    '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
 
   ],
   css: [
-    '@unocss/reset/tailwind-compat.css',
+    // @nuxt/ui never touches nuxt.options.css itself; without this entry the
+    // build succeeds and ships a completely unstyled page.
+    '~/assets/css/main.css',
   ],
   icon: {
-    serverBundle: {
-      collections: ['devicon'],
+    // The landing page is prerendered, so its one icon has to be inlined at
+    // build time. Left to the server provider it renders an empty <span> and
+    // only fills in after a runtime call to /api/_nuxt_icon/devicon, which the
+    // prerenderer cannot make.
+    //
+    // @nuxt/ui adds its own lucide icons to this same bundle via the
+    // `icon:clientBundleIcons` hook. The bundle is a shared build template, so
+    // SSR reads it too and no server-side collection is needed.
+    clientBundle: {
+      icons: ['devicon:github'],
     },
+    serverBundle: false,
   },
-  googleFonts: {
-    download: true,
-    base64: true,
-    families: {
-      Nunito: true,
+  fonts: {
+    defaults: {
+      // `font-light` on the GitHub link needs weight 300; the @nuxt/fonts
+      // default that @nuxt/ui configures is [400, 500, 600, 700].
+      weights: [300, 400, 500, 600, 700],
     },
   },
   app: {
@@ -88,7 +98,22 @@ export default defineNuxtConfig({
       },
     },
     routeRules: {
-      '/': { static: true },
+      // The landing page has no per-request state, so it is rendered once at
+      // build time. `prerender` is the key Nitro actually reads; `static` is
+      // read only by the Vercel preset (`isr = !static`) and is kept so the
+      // one-click Vercel deploy in the README keeps its current behaviour.
+      //
+      // Note this must stay a per-route rule: a global `nitro.static` (what
+      // `nuxt generate` sets) would flip @nuxt/icon to the remote Iconify
+      // provider and turn every icon into a runtime network call.
+      '/': { prerender: true, static: true },
+      // Fonts are served from /_fonts/, not from `app.buildAssetsDir`, so the
+      // /_chunks/** rule below does not cover them.
+      '/_fonts/**': {
+        headers: {
+          'cache-control': `public, max-age=${THIRTY_DAYS_IN_SECONDS}, stale-if-error=900, stale-while-revalidate=900, s-maxage=${THIRTY_DAYS_IN_SECONDS}`,
+        },
+      },
       '/_chunks/**': {
         headers: {
           'cache-control': `public, max-age=${THIRTY_DAYS_IN_SECONDS}, stale-if-error=900, stale-while-revalidate=900, s-maxage=${THIRTY_DAYS_IN_SECONDS}`,
