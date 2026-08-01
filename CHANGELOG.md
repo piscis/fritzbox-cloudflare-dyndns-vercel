@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.3.2...2.4.0) (2026-08-01)
+
+### Features
+
+* **secrets:** serve build config from Phase and drop CF_ROUTE_ZONE_NAME ([7ce2ffa](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7ce2ffad7b256222687b0abc0a8bdd6ad6b0dcf4))
+
+### Bug Fixes
+
+* **api:** report failures instead of returning a false success ([8e6dc00](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/8e6dc002e395f3a900e0f653cda36a6317453560))
+
 ## [2.3.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.3.1...2.3.2) (2025-09-23)
 
 ## [2.3.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.3.0...2.3.1) (2025-09-23)
