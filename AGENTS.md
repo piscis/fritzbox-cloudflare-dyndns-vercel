@@ -56,8 +56,25 @@ hosted instance at [fritzdns.piscis.dev/api](https://fritzdns.piscis.dev/api/).
 
 1. Read `.agents/skills/orpc-api/SKILL.md` before touching anything under `server/router/`
 2. Implement → `pnpm lint:fix` → `pnpm typecheck` → `pnpm test`
-3. Open a PR against `main`; CI (lint / typecheck / test) must be green
-4. Production deploy: merge `main` → `released`; CI runs `build:cf` + `deploy:cf`
+3. Open a PR against `main`; CI (lint / typecheck / test) must be green. PRs never deploy.
+4. Merging into `main` **deploys staging**; merging `main` into `released` **deploys
+   production**. Both go through CI, not a local `deploy:cf`.
+
+## Deployments
+
+| Push to | GitHub Environment | Phase environment | Worker |
+|---------|--------------------|-------------------|--------|
+| `main` | `staging` | `Staging` | `fritzbox-cf-dyndns-stage` on `stage-fritzdns.piscis.dev` |
+| `released` | `production` | `Production` | `fritzbox-cf-dyndns` on `fritzdns.piscis.dev` |
+
+The stage is derived from the branch in the `setup-stage` job, which emits both the
+lowercase GitHub Environment name and the capitalised Phase environment name. The
+Worker name and route come from that Phase environment, so **staging cannot overwrite
+production** — they are separate Workers by construction, not by convention.
+
+Both use Cloudflare Smart Placement (`placement.mode: 'smart'`) and observability at
+full head sampling, set in `nuxt.config.ts` and baked into the generated
+`.output/server/wrangler.json` at build time.
 
 ## Tooling
 
