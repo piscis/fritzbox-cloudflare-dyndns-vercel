@@ -55,7 +55,7 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       message: 'Not Found',
     },
   })
-  .handler(async ({ input: { query } }) => {
+  .handler(async ({ input: { query }, errors }) => {
     const { logger } = useLogger()
 
     try {
@@ -64,47 +64,53 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       const cf = new Cloudflare({ apiToken: token })
       const zones: Cloudflare.Zones.Zone[] = []
 
-      for await (const zone of cf.zones.list()) {
-        zones.push(zone)
+      // Renamed from `zone`, which shadowed the query parameter of the same name.
+      for await (const cfZone of cf.zones.list()) {
+        zones.push(cfZone)
       }
 
-      if (!zones || zones.length <= 0) {
-        throw new ORPCError('NOT_FOUND', {
+      // Previously fell back to '' and then issued a doomed
+      // records.list({ zone_id: '' }) instead of reporting the missing zone.
+      const zoneId = first(zones.filter(z => z?.name === zone), undefined)?.id
+
+      if (!zoneId) {
+        throw errors.NOT_FOUND({
           message: `Zone "${zone}" not found.`,
         })
       }
 
-      const zoneId = first(zones.filter((z) => {
-        if (z?.name === zone) {
-          return true
-        }
-        else {
-          return false
-        }
-      }), undefined)?.id || ''
+      // `dnsRecords.result` is only the first page. A zone with more records
+      // than fit on one page would silently hide the target record.
+      const dnsRecords: Cloudflare.DNS.RecordResponse[] = []
 
-      const dnsRecords = await cf.dns.records.list({ zone_id: zoneId })
+      for await (const dnsRecord of cf.dns.records.list({ zone_id: zoneId })) {
+        dnsRecords.push(dnsRecord)
+      }
 
       const aRecord = first(select(
-        dnsRecords.result,
+        dnsRecords,
         r => r,
         r => r.type === 'A' && r.name === record,
       ), undefined)
 
       const aaaaRecord = first(select(
-        dnsRecords.result,
+        dnsRecords,
         r => r,
         r => r.type === 'AAAA' && r.name === record,
       ), undefined)
 
-      if (ipv4 && !aRecord && !zone) {
-        throw new ORPCError('NOT_FOUND', {
+      // Was `if (ipv4 && !aRecord && !zone)`. `zone` is a required non-empty
+      // string, so `!zone` was always false and this branch was unreachable —
+      // a request naming a record that does not exist returned 200 having
+      // updated nothing.
+      if (ipv4 && !aRecord) {
+        throw errors.NOT_FOUND({
           message: `A record for "${record}" does not exist.`,
         })
       }
 
-      if (ipv6 && !aaaaRecord && !zone) {
-        throw new ORPCError('NOT_FOUND', {
+      if (ipv6 && !aaaaRecord) {
+        throw errors.NOT_FOUND({
           message: `AAAA record for "${record}" does not exist.`,
         })
       }
@@ -138,7 +144,10 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
         throw e
       }
       else {
-        throw new ORPCError('INTERNAL_SERVER_ERROR', {
+        // Was `new ORPCError('INTERNAL_SERVER_ERROR', ...)`, which resolves to
+        // status 500 — the `.errors({ status: 503 })` declaration above is only
+        // applied through the injected `errors` constructor map.
+        throw errors.INTERNAL_SERVER_ERROR({
           message: 'Service Unavailable',
         })
       }
