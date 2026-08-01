@@ -4,6 +4,7 @@ import Cloudflare from 'cloudflare'
 import { first, select } from 'radash'
 import { z } from 'zod'
 import noCacheHeaders from '~~/server/router/middlewares/noCacheHeaders'
+import redactToken from '~~/server/utils/redactToken'
 import useLogger from '~~/server/utils/useLogger'
 
 const responseBodySchema = z.object({
@@ -138,7 +139,10 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       }
     }
     catch (e) {
-      logger.error(e)
+      // Upstream Cloudflare errors can embed the request that carried the
+      // token. Only the copy handed to the logger is scrubbed; `e` is rethrown
+      // untouched below.
+      logger.error(redactToken(e, query.token))
 
       if (e instanceof ORPCError) {
         throw e
