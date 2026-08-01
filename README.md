@@ -167,6 +167,31 @@ Every `CF_*` variable is consumed at **build** time, because `nuxt.config.ts` ge
 The route is configured as a Cloudflare **custom domain**, which needs only a `pattern`;
 Cloudflare infers the zone from the hostname. No `CF_ROUTE_ZONE_NAME` is required.
 
+#### The two Cloudflare tokens are not interchangeable
+
+This project uses Cloudflare API tokens for two unrelated purposes, and they need
+different permissions. Mixing them up produces a confusing failure, because the wrong
+token still authenticates — it just cannot do the job.
+
+| | DynDNS token | Deploy token (`CLOUDFLARE_API_TOKEN`) |
+| --- | --- | --- |
+| Sent by | your FRITZ!Box, as `?token=` | `wrangler deploy`, from CI |
+| Used to | update one A/AAAA record | upload and route a Worker |
+| Permissions | `Zone.Zone: Read`, `Zone.DNS: Edit` | see below |
+
+A deploy token needs, at minimum:
+
+- **Account → Workers Scripts: Edit** — upload the Worker
+- **Account → Account Settings: Read** — resolve the account
+- **Zone → Workers Routes: Edit** — attach the custom-domain route
+- **Zone → DNS: Edit** — a custom domain creates a DNS record
+- **Zone → Zone: Read**
+
+A DynDNS-scoped token used for deployment fails with
+`Authentication error [code: 10000]` on `/accounts/<id>/workers/services/<name>`, *after*
+wrangler has already printed the account name — so the log reads as if authentication
+succeeded. Check the token's permissions rather than its value.
+
 ### Secrets (maintainers)
 
 Build and deploy configuration lives in [Phase](https://phase.dev), on a self-hosted
