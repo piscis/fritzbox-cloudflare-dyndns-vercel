@@ -163,17 +163,18 @@ Cloudflare infers the zone from the hostname. No `CF_ROUTE_ZONE_NAME` is require
 
 ### Secrets (maintainers)
 
-Build and deploy configuration lives in [Phase](https://phase.dev), self-hosted at
-`https://io.vicoli.de`. [`.phase.json`](./.phase.json) links this repo to the app; it
-contains only opaque identifiers and is safe to commit.
+Build and deploy configuration lives in [Phase](https://phase.dev), on a self-hosted
+instance. [`.phase.json`](./.phase.json) links this repo to the app; it contains only
+opaque identifiers and is safe to commit. Maintainers: ask for the host URL and an
+invite to the org.
 
 ```bash
-brew install phase                       # or https://pkg.phase.dev/install.sh
-export PHASE_HOST=https://io.vicoli.de   # add to your shell profile
+brew install phase                        # or https://pkg.phase.dev/install.sh
+export PHASE_HOST=https://phase.example.com   # the self-hosted host; add to your shell profile
 phase auth
-phase secrets list                       # sanity check: the Development set
+phase secrets list                        # sanity check: the Development set
 
-pnpm dev                                 # runs through `phase run`
+pnpm dev                                  # runs through `phase run`
 ```
 
 `phase run` spawns the child via `sh -c`, which does not have `node_modules/.bin` on
