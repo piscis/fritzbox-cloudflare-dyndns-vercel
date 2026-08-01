@@ -293,6 +293,16 @@ skill is first-party to this repo and is deliberately absent from the lock.
 > On Windows, git needs `core.symlinks true` and a fresh checkout, or the symlinks
 > materialise as plain text files.
 
+Two MCP servers are registered per project: [`.mcp.json`](./.mcp.json) for Claude Code
+and [`.cursor/mcp.json`](./.cursor/mcp.json) for Cursor. Both point at Nuxt's hosted
+documentation endpoints — `https://nuxt.com/mcp` and `https://ui.nuxt.com/mcp` — so an
+agent can look up current Nuxt APIs instead of recalling them from training data. They
+carry no credentials, and they are duplicated rather than symlinked because each editor
+watches its own path; a unit test keeps the two identical.
+
+> Claude Code asks for approval the first time it sees a project `.mcp.json`. Answer
+> yes once per clone — `claude mcp reset-project-choices` clears the answer.
+
 ## Contributing
 
 Fork, branch, and open a PR against `main`. Please use
