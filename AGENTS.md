@@ -89,7 +89,8 @@ full head sampling, set in `nuxt.config.ts` and baked into the generated
 - Dependency updates: Renovate owns every bump — never hand-edit versions or
   `pnpm-lock.yaml`.
 - Install in CI: `pnpm install --frozen-lockfile`
-- Secrets: Phase (`.phase.json`, self-hosted `https://io.vicoli.de`). `phase run`
+- Secrets: Phase (`.phase.json`, on a self-hosted instance — the host comes from
+  `PHASE_HOST` and is not published here). `phase run`
   wraps `dev`, `build:cf` and `deploy:cf`. `phase run` spawns via `sh -c`, so use
   `pnpm exec <bin>` inside it, and quote commands that take their own flags.
 - **The wrangler deploy config is generated into `.output/` at build time** from
@@ -104,6 +105,7 @@ full head sampling, set in `nuxt.config.ts` and baked into the generated
 ## GitHub Actions secrets and variables (production deploy)
 
 - `PHASE_SERVICE_TOKEN` (secret) — a Phase Service Account Token scoped to Production
-- `PHASE_HOST` (variable) — `https://io.vicoli.de`
+- `PHASE_HOST` — the self-hosted Phase host. Already set on both Environments; the
+  workflow accepts it as either a variable or a secret.
 
 Everything else (`CF_*`, `CLOUDFLARE_*`) now comes from Phase Production.
