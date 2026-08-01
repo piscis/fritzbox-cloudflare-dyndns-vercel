@@ -1,9 +1,358 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-@theme {
-  /* @nuxt/fonts reads --font-* tokens and self-hosts the family, replacing the
-     old @nuxtjs/google-fonts download. Tailwind's preflight points
-     --default-font-family at --font-sans, so this applies document-wide. */
-  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+/* ============================================================
+   "Phosphor" — a refined retro dial-up terminal. Dark only.
+
+   Three layers, and the split between them is load-bearing:
+
+   1. `@theme static` — values Tailwind must emit as utilities or theme
+      variables. `static` is mandatory, not stylistic: a plain `@theme` block is
+      tree-shaken against the scanned source, and the only consumer of
+      `--color-fritz-*` is a <style> Nuxt UI injects at runtime, which the
+      scanner never sees. With a plain `@theme` the ramps silently vanish and
+      every primary-coloured element renders transparent, with no build error.
+
+   2. `:root` — raw design tokens that must NOT become utilities. Tailwind drops
+      non-namespaced custom properties from `@theme` entirely; its own docs say
+      to use `:root` for exactly this.
+
+   3. An UNLAYERED `.dark` block remapping Nuxt UI's semantic tokens onto the CRT
+      surfaces. Nuxt UI declares its defaults inside `@layer theme`, and
+      unlayered CSS outranks any layer at equal specificity — so this must stay
+      out of `@layer`, and `@theme` cannot be used for it at all (it may not
+      nest under a selector).
+
+   Both screens are monospace end to end, so no webfont is fetched: the design
+   declares a sans stack but never references it, and the old Nunito download
+   existed for a `font-light` GitHub link this redesign removes.
+   ============================================================ */
+
+@theme static {
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+               'Liberation Mono', 'Courier New', monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Fluid type. The `--text-*--line-height` sub-key pairs each size with the
+     leading the design specifies, so `text-step-3` emits both. */
+  --text-step--1: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --text-step-0: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);
+  --text-step-1: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-step-2: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem);
+  --text-step-3: clamp(2.25rem, 1.7rem + 2.8vw, 4rem);
+  --text-step-3--line-height: 0.94;
+  --text-step-4: clamp(2.75rem, 1.8rem + 4.8vw, 6rem);
+  --text-step-4--line-height: 0.88;
+
+  /* Nuxt UI derives --radius-lg as calc(--ui-radius * 2) = 8px. The design's
+     CRT bezel is 10px, and "barely rounded" is the point. */
+  --radius-lg: 10px;
+
+  --text-shadow-glow: 0 0 12px rgb(138 240 176 / 0.28);
+
+  /* FRITZ! yellow, sampled from public/favicons/favicon.svg. Nuxt UI reads
+     shade 400 for the flat `primary` alias in dark mode; the rest of the ramp
+     exists because any undefined shade compiles to an empty var() fallback,
+     which paints nothing rather than erroring. */
+  --color-fritz-50: #fffdf0;
+  --color-fritz-100: #fffacc;
+  --color-fritz-200: #fff599;
+  --color-fritz-300: #ffef5c;
+  --color-fritz-400: #ffe400;
+  --color-fritz-500: #e6cd00;
+  --color-fritz-600: #b39f00;
+  --color-fritz-700: #807200;
+  --color-fritz-800: #4d4500;
+  --color-fritz-900: #332e00;
+  --color-fritz-950: #1a1700;
+
+  /* Phosphor greens. 300/400/500/700/900/950 are the design's own tokens; the
+     rest are interpolated to complete the ramp. */
+  --color-phosphor-50: #e8fcf0;
+  --color-phosphor-100: #c6f7d9;
+  --color-phosphor-200: #a3f2c2;
+  --color-phosphor-300: #8af0b0;
+  --color-phosphor-400: #57b27c;
+  --color-phosphor-500: #478e66;
+  --color-phosphor-600: #3a7554;
+  --color-phosphor-700: #2e5e43;
+  --color-phosphor-800: #234534;
+  --color-phosphor-900: #1c2a22;
+  --color-phosphor-950: #0a0f0c;
+}
+
+:root {
+  /* Surfaces: warm-dark, faintly green-tinted. Never pure black. */
+  --crt-void: #050706;
+  --crt-screen: #0a0f0c;
+  --crt-raise: #101713;
+  --crt-line: #1c2a22;
+  --crt-line-hi: #2a3f33;
+
+  /* Phosphor text ramp. Ratios are measured against --crt-screen. */
+  --p-100: #8af0b0; /* 13.96:1 — headlines */
+  --p-200: #57b27c; /*  7.42:1 — body */
+  --p-300: #478e66; /*  4.90:1 — meta, log prefixes */
+  --p-400: #2e5e43; /*  2.58:1 — DECORATIVE ONLY, never text */
+  --p-leaf: #4ba241; /*  6.02:1 — sampled from the retired 404 artwork */
+
+  --fritz-yellow: #ffe400; /* 15.05:1 — the one interactive hue */
+  --fritz-red: #e2001a; /*  3.91:1 — display + chrome only, never body text */
+  --sig-red: #ff5f52; /*  6.45:1 — error body text */
+  --sig-amber: #ffc24b; /* 12.03:1 — warnings, degraded */
+  --on-accent: #050706; /* 15.73:1 on --fritz-yellow */
+
+  --glow: 0 0 12px rgb(138 240 176 / 0.28);
+  --glow-soft: 0 0 22px rgb(138 240 176 / 0.14);
+
+  /* "CRT bezels are barely rounded. Resist the urge." */
+  --radius: 4px;
+
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+
+  /* The hairline the frame's bar and foot line draw with. A `data-status`
+     attribute on the frame re-points it, so the whole card recolours by status
+     from one declaration. */
+  --frame-line: var(--crt-line);
+}
+
+/* 404 is the visitor's mistake — red. */
+[data-status="404"] {
+  --err-color: var(--sig-red);
+  --frame-line: #2a1418;
+  --frame-tint: rgb(226 0 26 / 0.07);
+  --frame-tint-hi: rgb(226 0 26 / 0.16);
+}
+
+/* 5xx is ours — amber, because it is not the visitor's fault. */
+[data-status="5xx"] {
+  --err-color: var(--sig-amber);
+  --frame-line: #2a2413;
+  --frame-tint: rgb(255 194 75 / 0.07);
+  --frame-tint-hi: rgb(255 194 75 / 0.16);
+}
+
+/* Unlayered on purpose — see the header note. */
+.dark {
+  --ui-bg: var(--crt-void);
+  --ui-bg-muted: var(--crt-screen);
+  --ui-bg-elevated: var(--crt-raise);
+  --ui-bg-accented: var(--crt-raise);
+  --ui-bg-inverted: var(--p-100);
+
+  /* --ui-text-dimmed deliberately resolves to --p-300 (4.90:1) rather than
+     --p-400 (2.58:1): Nuxt UI uses `text-dimmed` for real running text, and the
+     design forbids --p-400 from carrying any. */
+  --ui-text-dimmed: var(--p-300);
+  --ui-text-muted: var(--p-300);
+  --ui-text-toned: var(--p-200);
+  --ui-text: var(--p-200);
+  --ui-text-highlighted: var(--p-100);
+  /* What `variant="solid"` paints its label with — the yellow button's text. */
+  --ui-text-inverted: var(--on-accent);
+
+  --ui-border: var(--crt-line);
+  --ui-border-muted: var(--crt-line);
+  --ui-border-accented: var(--crt-line-hi);
+  --ui-border-inverted: var(--p-100);
+
+  --ui-primary: var(--fritz-yellow);
+}
+
+body {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CRT SURFACE
+   Three stacked layers, all deliberately restrained. Legibility beats
+   nostalgia every time the two conflict.
+   ============================================================ */
+
+/* 1. Phosphor grid — echoes the isometric grid in the error artwork. */
+.crt-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--p-400) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--p-400) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.13;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, #000 20%, transparent 78%);
+}
+
+/* 2. Scanlines — 3px period, ~4% alpha. Any stronger and it reads as a bug. */
+.crt-scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.22) 0px, rgb(0 0 0 / 0.22) 1px,
+    transparent 1px, transparent 3px
+  );
+  opacity: 0.5;
+  border-radius: inherit;
+}
+
+/* 3. Vignette + glass bloom on the bezel. */
+.crt-glass {
+  background:
+    radial-gradient(ellipse 120% 100% at 50% 0%, rgb(138 240 176 / 0.045), transparent 62%),
+    var(--crt-screen);
+  box-shadow:
+    inset 0 0 90px rgb(0 0 0 / 0.55),
+    inset 0 1px 0 rgb(138 240 176 / 0.07),
+    0 0 0 1px var(--crt-line),
+    0 24px 70px -20px rgb(0 0 0 / 0.9);
+}
+
+/* The error variant of the same bezel, tinted by the --frame-* set that
+   `data-status` re-points. */
+.crt-glass--error {
+  background:
+    radial-gradient(ellipse 120% 100% at 50% 0%, var(--frame-tint), transparent 62%),
+    var(--crt-screen);
+  box-shadow:
+    inset 0 0 90px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 var(--frame-tint-hi),
+    0 0 0 1px var(--frame-line),
+    0 24px 70px -20px rgb(0 0 0 / 0.9);
+}
+
+/* ============================================================
+   BRACKET BUTTONS — the bracket IS the affordance.
+
+   Written as CSS rather than `before:content-['[']` utilities. Tailwind's
+   scanner reads raw file text, so inside a JS string in app.config.ts the
+   candidate arrives as `before:content-[\'[\']` — backslashes included — and
+   never generates. The nested quote-and-bracket escaping is fragile in both
+   directions; the design system states these as CSS for the same reason.
+   ============================================================ */
+.bracket::before {
+  content: "[";
+}
+
+.bracket::after {
+  content: "]";
+}
+
+/* The whole-screen flicker. 0.6% amplitude — felt, not seen. */
+.flicker {
+  animation: flicker 7.5s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 47%, 49%, 83%, 85%, 100% { opacity: 1; }
+  48% { opacity: 0.985; }
+  84% { opacity: 0.99; }
+}
+
+/* Blinking block cursor. */
+.cursor {
+  display: inline-block;
+  width: 0.52em;
+  height: 0.86em;
+  vertical-align: -0.06em;
+  margin-left: 0.16em;
+  background: var(--p-100);
+  box-shadow: var(--glow);
+  animation: blink 1.06s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* ============================================================
+   TYPED HANDSHAKE LOG
+   The end state is the un-animated default and the animation only adds the
+   reveal, so `prefers-reduced-motion` lands the log fully written rather than
+   playing a faster version of it.
+   ============================================================ */
+[data-boot="run"] .log-line > span:last-child {
+  display: inline-block;
+  animation: type 0.55s steps(30) both;
+}
+
+[data-boot="run"] .log-line:nth-child(1) > span:last-child { animation-delay: 0.15s; }
+[data-boot="run"] .log-line:nth-child(2) > span:last-child { animation-delay: 0.75s; }
+[data-boot="run"] .log-line:nth-child(3) > span:last-child { animation-delay: 1.35s; }
+
+@keyframes type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* ============================================================
+   LAMPS
+   ============================================================ */
+.lamp {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--p-400);
+}
+
+.lamp--on { background: var(--p-leaf); box-shadow: 0 0 8px var(--p-leaf); }
+.lamp--warn { background: var(--fritz-yellow); box-shadow: 0 0 8px rgb(255 228 0 / 0.6); }
+.lamp--err { background: var(--fritz-red); box-shadow: 0 0 9px rgb(226 0 26 / 0.75); }
+.lamp--pulse { animation: pulse 2.4s ease-in-out infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ============================================================
+   MODEM WAVEFORM — five bars, staggered.
+   ============================================================ */
+.wave-bar {
+  width: 2px;
+  height: 30%;
+  background: currentColor;
+  animation: wave 0.9s ease-in-out infinite;
+}
+
+.wave-bar:nth-child(2) { animation-delay: 0.12s; }
+.wave-bar:nth-child(3) { animation-delay: 0.24s; }
+.wave-bar:nth-child(4) { animation-delay: 0.36s; }
+.wave-bar:nth-child(5) { animation-delay: 0.48s; }
+
+@keyframes wave {
+  0%, 100% { height: 25%; }
+  50% { height: 100%; }
+}
+
+/* ============================================================
+   MOTION — every animation above degrades to its END state, never to a
+   faster version of itself.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .flicker,
+  .cursor,
+  .lamp--pulse,
+  [data-boot="run"] .log-line > span:last-child {
+    animation: none;
+  }
+
+  .cursor { opacity: 1; }
+
+  [data-boot="run"] .log-line > span:last-child { clip-path: none; }
+
+  .wave-bar { animation: none; height: 60%; }
 }
