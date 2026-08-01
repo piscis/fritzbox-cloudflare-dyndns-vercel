@@ -16,5 +16,18 @@
   ],
   "baseBranchPatterns": [
     "main"
+  ],
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "description": "TypeScript 7 (the Go port) has no stable programmatic API for Volar/vue-tsc yet, so it cannot type-check .vue templates. Revisit once vue-tsc supports it.",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7.0.0",
+      "addLabels": [
+        "blocked-by-volar"
+      ]
+    }
   ]
 }
