@@ -130,6 +130,40 @@ pnpm preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+### Testing
+
+The suite is split into three Vitest projects:
+
+| Project | Location | Environment | Covers |
+| --- | --- | --- | --- |
+| `unit` | `tests/unit/` | node | Everything under `server/`, with the Cloudflare SDK mocked — fast, never hits the network |
+| `nuxt` | `tests/nuxt/` | nuxt | Component rendering under `app/` |
+| `e2e` | `tests/e2e/` | node | A real Nuxt server booted via `@nuxt/test-utils/e2e` |
+
+```bash
+# Run everything once
+pnpm test
+
+# Watch mode for the local loop
+pnpm test:watch
+
+# A single project — `unit` runs in well under a second
+pnpm test:unit
+pnpm test:e2e
+
+# With a coverage report (text + lcov + html in ./coverage)
+pnpm test:coverage
+```
+
+Coverage is measured over `server/**` and gated in CI. Note that `--coverage` must
+be passed as a flag rather than enabled in config: `@nuxt/test-utils` watches for it
+to turn on client sourcemaps, without which `.vue` coverage is inaccurate.
+
+> The DynDNS happy path is deliberately **not** covered end-to-end. The handler builds
+> a real Cloudflare client from the caller-supplied token, so an e2e request would
+> reach `api.cloudflare.com`. Only the validation failures — which are rejected before
+> the client is constructed — are exercised over HTTP.
+
 ### Sources
 
   - Look at the [Nuxt 4 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
@@ -139,8 +173,3 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ## Credits
 
 Original port for Vercel from: https://github.com/L480/cloudflare-dyndns
-
-## ToDo`s
-
-- [ ] A couple more tests for the API part
-- [ ] Add more e2e tests for error handling on the frontend
