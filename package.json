@@ -4,10 +4,7 @@
   "version": "2.3.2",
   "private": true,
   "packageManager": "pnpm@11.19.0",
-  "author": {
-    "name": "Alexander Pirsig",
-    "email": "me@piscis.dev"
-  },
+  "author": "piscis",
   "license": "MIT",
   "homepage": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel",
   "repository": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel.git",
