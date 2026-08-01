@@ -3,14 +3,18 @@ description: 'Install NodeJS and it''s dependencies'
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
+    # v6 is the first release that supports pnpm 11; it reads the version from
+    # the `packageManager` field in package.json.
+    - uses: pnpm/action-setup@v6
       with:
         run_install: false
     - name: Install NodeJS
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version-file: .nvmrc
         cache: pnpm
     - name: Install dependencies
       shell: bash
-      run: pnpm i
+      # --frozen-lockfile also skips resolution, so pnpm 11's 1-day
+      # minimumReleaseAge embargo can never fail a build.
+      run: pnpm install --frozen-lockfile

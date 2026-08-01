@@ -16,8 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
+        # GitRML/delete-workflow-runs is archived (last push 2024-04) and its
+        # scheduled run has been failing. Mattraks is the maintained fork.
+        uses: Mattraks/delete-workflow-runs@0cf693bc9909e5e867ee8f27b813224ba862939c # v2
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
           retain_days: ${{ github.event.inputs.days || 30 }}
+          keep_minimum_runs: 6

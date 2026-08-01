@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check Environment
         run: |
@@ -54,14 +54,31 @@ jobs:
         run: |
           pnpm run lint
 
+  typecheck:
+    timeout-minutes: 10
+    name: Typecheck 🔎
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Typecheck App
+        shell: bash
+        run: |
+          pnpm run typecheck
+
   test:
-    timeout-minutes: 8
+    timeout-minutes: 12
     name: Test 🧪
     needs: [setup-stage]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check Environment
         run: |
@@ -79,13 +96,13 @@ jobs:
     timeout-minutes: 10
     name: Build 🏗️ & Deploy 🚀
     environment: ${{ needs.setup-stage.outputs.env-name }}
-    needs: [setup-stage, lint, test]
+    needs: [setup-stage, lint, typecheck, test]
     if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check Environment
         run: |

@@ -92,8 +92,8 @@ You can test the api by going to the test page at `http://localhost:3000/api/` o
 
 ### Prerequisites for Development
 
-- NodeJS 22+
-- PNPM
+- Node.js 24 — see [`.nvmrc`](./.nvmrc) (`fnm use` / `nvm use`)
+- pnpm 11 — pinned by the `packageManager` field; `corepack enable` picks it up automatically
 
 ### Setup
 
