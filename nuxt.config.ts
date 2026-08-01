@@ -1,3 +1,5 @@
+import pkg from './package.json'
+
 const THIRTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 30
 
 /**
@@ -14,7 +16,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/icon',
-    '@nuxt/image',
     '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
@@ -25,33 +26,66 @@ export default defineNuxtConfig({
     // build succeeds and ships a completely unstyled page.
     '~/assets/css/main.css',
   ],
+  ui: {
+    // Phosphor is dark-only by design, so the whole colour-mode machinery goes:
+    // this stops @nuxt/ui installing @nuxtjs/color-mode, which drops its
+    // localStorage bootstrap script from the bundle and removes the
+    // <UColorModeButton> family of components. `colorMode: { preference:
+    // 'dark' }` would keep all of that and still let a stale preference win.
+    // Dark itself is switched on by `class: 'dark'` in app.head below.
+    colorMode: false,
+  },
   icon: {
-    // The landing page is prerendered, so its one icon has to be inlined at
-    // build time. Left to the server provider it renders an empty <span> and
-    // only fills in after a runtime call to /api/_nuxt_icon/devicon, which the
-    // prerenderer cannot make.
+    // The landing page is prerendered, so any icon has to be inlined at build
+    // time — left to the server provider it renders an empty <span> and only
+    // fills in after a runtime call the prerenderer cannot make.
     //
-    // @nuxt/ui adds its own lucide icons to this same bundle via the
-    // `icon:clientBundleIcons` hook. The bundle is a shared build template, so
-    // SSR reads it too and no server-side collection is needed.
-    clientBundle: {
-      icons: ['devicon:github'],
-    },
+    // Phosphor draws its glyphs as text (♪ ● ✕ ▲ →), so there is no explicit
+    // allowlist any more. @nuxt/ui still adds its own lucide icons here via the
+    // `icon:clientBundleIcons` hook; anything added later must join them.
     serverBundle: false,
   },
-  fonts: {
-    defaults: {
-      // `font-light` on the GitHub link needs weight 300; the @nuxt/fonts
-      // default that @nuxt/ui configures is [400, 500, 600, 700].
-      weights: [300, 400, 500, 600, 700],
+  runtimeConfig: {
+    public: {
+      // Rendered in the foot line. Read from package.json so it cannot drift
+      // from the released version the way a hardcoded string would.
+      version: pkg.version,
+      // Seeds the title bar before hydration. Each environment builds with its
+      // own CF_ROUTE_PATTERN, so the prerendered HTML already names the right
+      // host; the client corrects it from window.location on mount.
+      //
+      // Deliberately under `public` — `server/routes/api/[...].ts` destructures
+      // top-level `appName`/`appVersion`, and defining those would silently
+      // rewrite /api/spec.json and the e2e assertion that pins its title.
+      siteHost: env('CF_ROUTE_PATTERN'),
     },
   },
   app: {
     buildAssetsDir: '/_chunks/',
     head: {
+      // These live here rather than in layouts/default.vue because app/error.vue
+      // renders *instead of* app.vue and never mounts a layout — error pages
+      // previously shipped with no title, no favicons and no robots directive.
+      htmlAttrs: {
+        lang: 'en',
+        dir: 'ltr',
+        class: 'dark',
+      },
+      title: 'FRITZ!Box DynDNS Service',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'robots', content: 'noindex, nofollow' },
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'description', content: 'A DynDNS endpoint that keeps Cloudflare A and AAAA records pointed at your FRITZ!Box.' },
+      ],
+      link: [
+        { rel: 'shortcut icon', href: '/favicons/favicon.ico' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicons/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/favicons/favicon.png' },
+        { rel: 'apple-touch-icon', href: '/favicons/apple-touch-icon.png' },
+        { rel: 'apple-touch-startup-image', href: '/favicons/apple-touch-icon.png' },
       ],
     },
   },
