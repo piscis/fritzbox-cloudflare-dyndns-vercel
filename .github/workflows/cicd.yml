@@ -11,8 +11,9 @@ env:
 on:
   push:
     branches: [main, released]
+  # No branch filter: a stacked PR targets its predecessor rather than main, and
+  # would otherwise get no checks at all until it is retargeted.
   pull_request:
-    branches: [main]
 jobs:
   setup-stage:
     timeout-minutes: 1
