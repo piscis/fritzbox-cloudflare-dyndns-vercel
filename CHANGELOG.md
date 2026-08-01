@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.5.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.4.0...2.5.0) (2026-08-01)
+
+### Features
+
+* **ui:** replace unocss with nuxt ui and add a real error page ([eb603a5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/eb603a5267fd264fc28563ce27d9ad3e2abe89f2))
+
 ## [2.4.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.3.2...2.4.0) (2026-08-01)
 
 ### Features
