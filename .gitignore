@@ -17,3 +17,7 @@ coverage
 # (Claude Code writes .claude/settings.local.json and .claude/worktrees/).
 .claude/*
 !.claude/skills
+
+# Page snapshots and console logs the Playwright MCP server drops in the repo
+# root while an agent drives the app.
+.playwright-mcp
