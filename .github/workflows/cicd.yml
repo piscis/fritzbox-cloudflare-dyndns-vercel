@@ -109,6 +109,12 @@ jobs:
     if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
     runs-on: ubuntu-latest
 
+    # Job-level so both phase invocations below are covered. Job containers do
+    # not inherit runner host env, so this mapping is required, not decorative.
+    env:
+      PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
+      PHASE_HOST: ${{ vars.PHASE_HOST }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -120,15 +126,16 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup-node
 
-      - name: Build
+      - name: Install Phase CLI
+        run: curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version 2.3.1
+
+      - name: Build & Deploy
         run: |
-          pnpm build:cf
-          pnpm deploy:cf
+          # --env Production overrides the Development default in .phase.json.
+          # `pnpm exec` is required because phase run spawns via `sh -c`, which
+          # does not have node_modules/.bin on PATH. The deploy command is quoted
+          # so phase does not parse --cwd as one of its own flags.
+          phase run --env Production pnpm exec nuxt build
+          phase run --env Production "pnpm exec wrangler --cwd .output deploy"
         env:
           NITRO_PRESET: cloudflare_module
-          CF_WORKER_NAME: ${{ secrets.CF_WORKER_NAME }}
-          CF_ROUTE_PATTERN: ${{ secrets.CF_ROUTE_PATTERN }}
-          CF_ROUTE_ZONE_NAME: ${{ secrets.CF_ROUTE_ZONE_NAME }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CF_LOG_ENABLED: 'true'
