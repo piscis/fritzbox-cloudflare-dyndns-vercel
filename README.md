@@ -27,13 +27,13 @@ Set the TTL of each Record to 1 minute. The Service will only update existing re
 
 #### A-Record example
 
-The A-Record will be used to update your FRtIZ!Box IPv4 address in Cloudflare DNS. To create this record use a random IP Address and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv4 address.
+The A-Record will be used to update your FRITZ!Box IPv4 address in Cloudflare DNS. To create this record use a random IP Address and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv4 address.
 
 ![Example for an A-Record configured on Cloudflare](./docs/images/docs-a-record-example.png "Example for an A-Record configured on Cloudflare")
 
 #### AAAA-Record example
 
-The AAAA-Record will be used to update your FRtIZ!Box IPv6 address in Cloudflare DNS. To create this record use a random IP Address for example `2001:0db8:85a3:0000:0000:8a2e:0370:7334` and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv6 address.
+The AAAA-Record will be used to update your FRITZ!Box IPv6 address in Cloudflare DNS. To create this record use a random IP Address for example `2001:0db8:85a3:0000:0000:8a2e:0370:7334` and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv6 address.
 
 ![Example for an AAAA-Record configured on Cloudflare](./docs/images/docs-aaaa-record-example.png "Example for an AAAA-Record configured on Cloudflare")
 
@@ -90,11 +90,17 @@ https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.
 | Username          | admin                                                                                                                               | You can choose whatever value you want.                                                                                                  |
 | Password          | ●●●●●●                                                                                                                              | The API token you’ve created earlier.                                                                                                    |
 
-Please note, if you use a custom Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` service endpoint when configuring your FITZ!Box DynDNS settings
+Please note, if you use a custom Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` service endpoint when configuring your FRITZ!Box DynDNS settings
 
-```
+### API reference
 
-You can test the api by going to the test page at `http://localhost:3000/api/` or visit `https://fritzdns.piscis.dev/api/`.
+The service publishes an interactive OpenAPI reference. Open
+`http://localhost:3000/api/` locally, or visit
+[fritzdns.piscis.dev/api](https://fritzdns.piscis.dev/api/). The raw spec is at
+`/api/spec.json`.
+
+A health endpoint is available at `/api/health-check`.
+
 ----
 
 ## Development
@@ -245,6 +251,31 @@ to turn on client sourcemaps, without which `.vue` coverage is inaccurate.
   - Look at the [Nuxt 4 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ----
+
+## Working with AI agents
+
+[`AGENTS.md`](./AGENTS.md) is the entry point — commands, architecture, and the
+conventions that are not obvious from the code.
+
+Skills live in [`.agents/skills/`](./.agents/skills/) (the canonical, vendor-neutral
+location). `.claude/skills/<name>` are committed relative symlinks into it, so the
+same set is available to Claude Code and to any tool that reads `.agents/`.
+
+Vendored skills are pinned in [`skills-lock.json`](./skills-lock.json) — manage them
+with `npx skills add|update|remove`, never by editing the lock file. The `orpc-api`
+skill is first-party to this repo and is deliberately absent from the lock.
+
+> On Windows, git needs `core.symlinks true` and a fresh checkout, or the symlinks
+> materialise as plain text files.
+
+## Contributing
+
+Fork, branch, and open a PR against `main`. Please use
+[Conventional Commits](https://www.conventionalcommits.org/) — `CHANGELOG.md` is
+generated from them. Run `pnpm lint:fix && pnpm typecheck && pnpm test` before
+opening the PR, and read [`AGENTS.md`](./AGENTS.md) first.
+
+Security issues should go through [`SECURITY.md`](./SECURITY.md), not a public issue.
 
 ## Credits
 

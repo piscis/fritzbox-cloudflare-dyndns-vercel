@@ -12,3 +12,8 @@ dist
 .wrangler
 .vercel
 coverage
+
+# Agent config: the skills symlinks are shared, everything else is local
+# (Claude Code writes .claude/settings.local.json and .claude/worktrees/).
+.claude/*
+!.claude/skills
