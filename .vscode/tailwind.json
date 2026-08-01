@@ -2,12 +2,72 @@
   "version": 1.1,
   "atDirectives": [
     {
-      "name": "@tailwind",
-      "description": "Use the `@tailwind` directive to insert Tailwind's `base`, `components`, `utilities` and `screens` styles into your CSS.",
+      "name": "@theme",
+      "description": "Define your design tokens (colors, fonts, breakpoints, spacing) as CSS variables. Tailwind generates utility classes from them.\n```css\n@theme {\n  --font-sans: 'Nunito', sans-serif;\n}\n```\n",
       "references": [
         {
           "name": "Tailwind Documentation",
-          "url": "https://tailwindcss.com/docs/functions-and-directives#tailwind-directive"
+          "url": "https://tailwindcss.com/docs/functions-and-directives#theme-directive"
+        }
+      ]
+    },
+    {
+      "name": "@source",
+      "description": "Explicitly register source files Tailwind should scan for class names, for cases automatic detection misses.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#source-directive"
+        }
+      ]
+    },
+    {
+      "name": "@utility",
+      "description": "Register a custom utility that works with Tailwind's variants such as `hover:` and `lg:`. Replaces the v3 `@layer utilities` pattern.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#utility-directive"
+        }
+      ]
+    },
+    {
+      "name": "@variant",
+      "description": "Apply a Tailwind variant to styles in your own CSS.\n```css\n.btn {\n  background: white;\n  @variant dark {\n    background: black;\n  }\n}\n```\n",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#variant-directive"
+        }
+      ]
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Define a custom variant.\n```css\n@custom-variant dark (&:where(.dark, .dark *));\n```\n",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#custom-variant-directive"
+        }
+      ]
+    },
+    {
+      "name": "@plugin",
+      "description": "Load a JavaScript plugin.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#plugin-directive"
+        }
+      ]
+    },
+    {
+      "name": "@config",
+      "description": "Load a legacy JavaScript-based configuration file.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#config-directive"
         }
       ]
     },
@@ -17,7 +77,7 @@
       "references": [
         {
           "name": "Tailwind Documentation",
-          "url": "https://tailwindcss.com/docs/functions-and-directives#-directive"
+          "url": "https://tailwindcss.com/docs/functions-and-directives#apply-directive"
         }
       ]
     },
@@ -28,36 +88,6 @@
         {
           "name": "Tailwind Documentation",
           "url": "https://tailwindcss.com/docs/functions-and-directives#reference-directive"
-        }
-      ]
-    },
-    {
-      "name": "@responsive",
-      "description": "You can generate responsive variants of your own classes by wrapping their definitions in the `@responsive` directive:\n```css\n@responsive {\n  .alert {\n    background-color: #E53E3E;\n  }\n}\n```\n",
-      "references": [
-        {
-          "name": "Tailwind Documentation",
-          "url": "https://tailwindcss.com/docs/functions-and-directives#responsive-directive"
-        }
-      ]
-    },
-    {
-      "name": "@screen",
-      "description": "The `@screen` directive allows you to create media queries that reference your breakpoints by **name** instead of duplicating their values in your own CSS:\n```css\n@screen sm {\n  /* ... */\n}\n```\n…gets transformed into this:\n```css\n@media (min-width: 640px) {\n  /* ... */\n}\n```\n",
-      "references": [
-        {
-          "name": "Tailwind Documentation",
-          "url": "https://tailwindcss.com/docs/functions-and-directives#screen-directive"
-        }
-      ]
-    },
-    {
-      "name": "@variants",
-      "description": "Generate `hover`, `focus`, `active` and other **variants** of your own utilities by wrapping their definitions in the `@variants` directive:\n```css\n@variants hover, focus {\n   .btn-brand {\n    background-color: #3182CE;\n  }\n}\n```\n",
-      "references": [
-        {
-          "name": "Tailwind Documentation",
-          "url": "https://tailwindcss.com/docs/functions-and-directives#variants-directive"
         }
       ]
     }

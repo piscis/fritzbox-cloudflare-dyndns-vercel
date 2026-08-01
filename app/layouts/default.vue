@@ -1,14 +1,4 @@
 <script setup lang="ts">
-const bodyCls = computed(() => {
-  const cls = [
-    'font-nunito text-base text-black dark:text-white dark:bg-slate-900 antialiased',
-  ]
-  if (import.meta.dev) {
-    cls.push('debug-screens')
-  }
-  return cls
-})
-
 const metaTags = computed(() => {
   const meta = [
     { name: 'title', content: 'FRITZ!Box DynDNS Service' },
@@ -27,9 +17,6 @@ useHead({
   htmlAttrs: {
     lang: 'en',
     dir: 'ltr',
-  },
-  bodyAttrs: {
-    class: bodyCls,
   },
   meta: metaTags,
   link: [
@@ -62,7 +49,13 @@ useHead({
 </script>
 
 <template>
-  <div class="w-full">
+  <!--
+    @nuxt/ui styles <body> itself (antialiased, bg-default, and the font from
+    --font-sans), so the old bodyAttrs classes are gone. Text colour is kept
+    explicit here because Nuxt UI's `text-default` is slate-700/slate-200
+    rather than the pure black/white this page used.
+  -->
+  <div class="w-full text-base text-black dark:text-white">
     <slot />
   </div>
 </template>

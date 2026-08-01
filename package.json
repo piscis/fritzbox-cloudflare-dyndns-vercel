@@ -37,19 +37,19 @@
   },
   "dependencies": {
     "@iconify-json/devicon": "^1.2.62",
+    "@iconify-json/lucide": "^1.2.121",
     "@nuxt/eslint": "^1.16.0",
     "@nuxt/icon": "^2.4.1",
     "@nuxt/image": "^2.1.0",
-    "@nuxtjs/google-fonts": "^3.2.0",
+    "@nuxt/ui": "^4.10.0",
     "@orpc/openapi": "^1.14.13",
     "@orpc/server": "^1.14.13",
     "@orpc/zod": "^1.14.13",
-    "@unocss/nuxt": "^66.7.5",
-    "@unocss/reset": "^66.7.5",
     "cloudflare": "^7.0.0",
     "consola": "^3.4.2",
     "nuxt": "^4.5.1",
     "radash": "^12.1.1",
+    "tailwindcss": "^4.3.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {

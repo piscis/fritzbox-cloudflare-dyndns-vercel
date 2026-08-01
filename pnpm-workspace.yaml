@@ -7,6 +7,10 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+  # Pulled in by reka-ui -> @floating-ui/vue (a @nuxt/ui dependency). Its
+  # postinstall runs vue-demi-switch, which points the package at the Vue 3
+  # entry points; without it the Vue 2 shim is left in place.
+  vue-demi: true
   workerd: true
 
 # pnpm 11 defaults minimumReleaseAge to 1440 (1 day); these were newer than that
