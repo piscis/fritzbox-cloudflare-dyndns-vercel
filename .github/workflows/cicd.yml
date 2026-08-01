@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 1
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
+      # Phase environment names are capitalised; the GitHub Environment names are
+      # not. Emit both so the deploy job never has to transform one into the other.
+      phase-env: ${{ steps.env-name.outputs.phase_env }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup environment name
@@ -26,12 +29,16 @@ jobs:
         run: |
           if [[ ${GITHUB_HEAD_REF} == dev/* || ${GITHUB_HEAD_REF} == renovate/* ]]; then
             echo "env=development" >> $GITHUB_OUTPUT
+            echo "phase_env=Development" >> $GITHUB_OUTPUT
           elif [[ "${{github.ref}}" == "refs/heads/main" && "${{github.event_name}}" == "push" ]]; then
             echo "env=staging" >> $GITHUB_OUTPUT
+            echo "phase_env=Staging" >> $GITHUB_OUTPUT
           elif [[ "${{github.ref}}" == "refs/heads/released" && "${{github.event_name}}" == "push" ]]; then
             echo "env=production" >> $GITHUB_OUTPUT
+            echo "phase_env=Production" >> $GITHUB_OUTPUT
           else
             echo "env=development" >> $GITHUB_OUTPUT
+            echo "phase_env=Development" >> $GITHUB_OUTPUT
           fi
 
   lint:
@@ -103,10 +110,13 @@ jobs:
 
   build-deploy:
     timeout-minutes: 10
-    name: Build 🏗️ & Deploy 🚀
+    name: Build 🏗️ & Deploy 🚀 (${{ needs.setup-stage.outputs.env-name }})
     environment: ${{ needs.setup-stage.outputs.env-name }}
     needs: [setup-stage, lint, typecheck, test]
-    if: contains(fromJson('["production"]'), needs.setup-stage.outputs.env-name)
+    # push to main -> staging, push to released -> production. Each stage has its
+    # own CF_WORKER_NAME and CF_ROUTE_PATTERN in Phase, so they deploy separate
+    # Workers and staging cannot overwrite production.
+    if: contains(fromJson('["staging", "production"]'), needs.setup-stage.outputs.env-name)
     runs-on: ubuntu-latest
 
     # Job-level so both phase invocations below are covered. Job containers do
@@ -131,11 +141,12 @@ jobs:
 
       - name: Build & Deploy
         run: |
-          # --env Production overrides the Development default in .phase.json.
+          # --env overrides the Development default in .phase.json.
           # `pnpm exec` is required because phase run spawns via `sh -c`, which
           # does not have node_modules/.bin on PATH. The deploy command is quoted
           # so phase does not parse --cwd as one of its own flags.
-          phase run --env Production pnpm exec nuxt build
-          phase run --env Production "pnpm exec wrangler --cwd .output deploy"
+          phase run --env "$PHASE_ENV" pnpm exec nuxt build
+          phase run --env "$PHASE_ENV" "pnpm exec wrangler --cwd .output deploy"
         env:
           NITRO_PRESET: cloudflare_module
+          PHASE_ENV: ${{ needs.setup-stage.outputs.phase-env }}

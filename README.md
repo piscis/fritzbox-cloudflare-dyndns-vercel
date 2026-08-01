@@ -184,6 +184,27 @@ them as its own.
 Contributors without access to that Phase org should follow
 [Option 1](#rocket-option-1-self-host-on-cloudflare) and use a `.env` instead.
 
+### Deployments
+
+Two Cloudflare Workers, one per stage. Which one a push targets is derived from the
+branch, and the matching Phase environment supplies the Worker name and route — so
+the two can never overwrite each other.
+
+| Push to | GitHub Environment | Phase environment | Worker |
+| --- | --- | --- | --- |
+| `main` | `staging` | `Staging` | `fritzbox-cf-dyndns-stage` on `stage-fritzdns.piscis.dev` |
+| `released` | `production` | `Production` | `fritzbox-cf-dyndns` on `fritzdns.piscis.dev` |
+
+Pull requests run lint, typecheck and test only — they never deploy.
+
+Both Workers use Cloudflare [Smart Placement](https://developers.cloudflare.com/workers/configuration/smart-placement/)
+(`placement.mode: 'smart'`) and observability with full head sampling. That is set in
+[`nuxt.config.ts`](./nuxt.config.ts) and baked into the generated
+`.output/server/wrangler.json` at build time.
+
+Release path: merge into `main` (deploys staging) → merge `main` into `released`
+(deploys production).
+
 ### Testing
 
 The suite is split into three Vitest projects:
