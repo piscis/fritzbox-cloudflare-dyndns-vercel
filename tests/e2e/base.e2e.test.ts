@@ -24,9 +24,32 @@ describe('pages', () => {
     // Without an HTML Accept header Nitro answers with its JSON error payload
     // rather than rendering error.vue.
     const res = await fetch('/no-such-page', { headers: { accept: 'text/html' } })
+    const body = await res.text()
 
     expect(res.status).toBe(404)
-    expect(await res.text()).toContain('404_page_not_found')
+    expect(body).toContain('NO CARRIER')
+    // The path echo is the point of the design's 404, and only a real render
+    // proves it survives SSR — no component test can.
+    expect(body).toContain('/no-such-page')
+  })
+
+  it('never reflects the query string into the 404', async () => {
+    // A mistyped DynDNS update URL carries a live Cloudflare token. Only a real
+    // render proves it does not reach the HTML.
+    const res = await fetch('/api/typo?token=SUPER_SECRET_TOKEN', { headers: { accept: 'text/html' } })
+    const body = await res.text()
+
+    expect(body).not.toContain('SUPER_SECRET_TOKEN')
+    expect(body).not.toContain('token=')
+  })
+
+  it('serves the API reference the front page links to', async () => {
+    // The button needs `external`, because /api has no vue-router match; if it
+    // ever loses that, this stays green but the click 404s. Guard the target.
+    const res = await fetch('/api/')
+
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toContain('text/html')
   })
 
   it('marks the site noindex and sets the document language', async () => {
@@ -35,6 +58,22 @@ describe('pages', () => {
     expect(html).toContain('noindex, nofollow')
     expect(html).toContain('<title>FRITZ!Box DynDNS Service</title>')
     expect(html).toContain('lang="en"')
+  })
+
+  it('ships dark mode in the prerendered HTML, with no client-side flash', async () => {
+    const html = await $fetch<string>('/')
+
+    expect(html).toContain('class="dark"')
+  })
+
+  it('gives the error page the same head as the rest of the site', async () => {
+    // error.vue renders instead of app.vue and mounts no layout, so these come
+    // from `app.head` in nuxt.config. They used to be missing entirely here.
+    const html = await (await fetch('/no-such-page', { headers: { accept: 'text/html' } })).text()
+
+    expect(html).toContain('<title>FRITZ!Box DynDNS Service</title>')
+    expect(html).toContain('class="dark"')
+    expect(html).toContain('favicons/favicon.svg')
   })
 })
 
@@ -57,6 +96,12 @@ describe('static assets', () => {
 
   it('serves robots.txt', async () => {
     expect((await fetch('/robots.txt')).status).toBe(200)
+  })
+
+  it('still serves the modem clip', async () => {
+    // The clip is only reachable through the dial-up button now, so nothing
+    // else would catch it going missing.
+    expect((await fetch('/sounds/modem-dial-up.mp3')).status).toBe(200)
   })
 })
 

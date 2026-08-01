@@ -36,11 +36,9 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/devicon": "^1.2.62",
     "@iconify-json/lucide": "^1.2.121",
     "@nuxt/eslint": "^1.16.0",
     "@nuxt/icon": "^2.4.1",
-    "@nuxt/image": "^2.1.0",
     "@nuxt/ui": "^4.10.0",
     "@orpc/openapi": "^1.14.13",
     "@orpc/server": "^1.14.13",
