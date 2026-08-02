@@ -38,7 +38,7 @@ const label = computed(() => LABELS[state])
 
 <template>
   <span
-    class="ml-auto flex gap-[6px]"
+    class="ml-auto flex gap-1.5"
     role="status"
     :aria-label="label"
   >
