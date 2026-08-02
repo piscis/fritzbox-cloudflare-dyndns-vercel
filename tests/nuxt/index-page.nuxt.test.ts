@@ -21,12 +21,41 @@ registerEndpoint('/api/health-check', defineEventHandler((event) => {
   return health.body
 }))
 
+function stubAudioContext(): void {
+  // happy-dom has no Web Audio; the composable must still play through <audio>.
+  class FakeAnalyser {
+    frequencyBinCount = 128
+    fftSize = 256
+    smoothingTimeConstant = 0.8
+    minDecibels = -90
+    maxDecibels = -20
+    connect = vi.fn()
+    getByteFrequencyData = vi.fn((target: Uint8Array) => {
+      target.fill(0)
+    })
+  }
+
+  class FakeAudioContext {
+    state = 'running'
+    resume = vi.fn(() => Promise.resolve())
+    close = vi.fn(() => Promise.resolve())
+    createAnalyser = vi.fn(() => new FakeAnalyser())
+    createMediaElementSource = vi.fn(() => ({ connect: vi.fn() }))
+    get destination() {
+      return {}
+    }
+  }
+
+  vi.stubGlobal('AudioContext', FakeAudioContext)
+}
+
 describe('index page', () => {
   beforeEach(() => {
     health = { status: 200, body: { state: 'ok', timestamp: 1_700_000_000_000 } }
     // happy-dom implements no media playback.
     HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve())
     HTMLMediaElement.prototype.pause = vi.fn()
+    stubAudioContext()
   })
 
   describe('the modem easter egg', () => {
@@ -42,6 +71,14 @@ describe('index page', () => {
       // it rendered as an inert grey player mid-layout.
       expect(audio.attributes()).not.toHaveProperty('controls')
       expect(audio.attributes()).not.toHaveProperty('autoplay')
+    })
+
+    it('mounts a decorative spectrum canvas behind the copy', async () => {
+      const page = await mountSuspended(IndexPage)
+      const spectrum = page.find('canvas.modem-spectrum')
+
+      expect(spectrum.exists()).toBe(true)
+      expect(spectrum.attributes('aria-hidden')).toBe('true')
     })
 
     it('plays on click and reports it through aria-pressed', async () => {

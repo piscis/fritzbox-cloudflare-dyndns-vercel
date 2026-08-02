@@ -319,7 +319,34 @@ body {
 }
 
 /* ============================================================
-   MODEM WAVEFORM — five bars, staggered.
+   MODEM SPECTRUM — full-bleed canvas behind the CRT copy.
+   ============================================================ */
+.modem-spectrum {
+  opacity: 0.42;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+@media (max-width: 819px) {
+  .modem-spectrum {
+    opacity: 0.22;
+  }
+}
+
+/* ============================================================
+   MODEM WAVEFORM — five bars, staggered (button glyph).
    ============================================================ */
 .wave-bar {
   width: 2px;

@@ -20,7 +20,7 @@ const { state } = useHealthCheck()
       <StatusLamps :state="state" />
     </template>
 
-    <CarrierWave />
+    <ModemSpectrum />
 
     <div class="relative z-1">
       <TerminalLog :lines="HANDSHAKE" replayable />

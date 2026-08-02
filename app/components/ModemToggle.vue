@@ -10,40 +10,22 @@
  * The element is declared rather than built with `new Audio()`: markup is
  * SSR-safe (no DOM API at setup, nothing to guard for prerender or the Worker)
  * and `preload="none"` keeps all 852 KB unfetched until the first press.
+ * Playback + Web Audio graph live in `useModemDialup` so the spectrum can read
+ * the same AnalyserNode.
  */
-const SOUND = '/sounds/modem-dial-up.mp3'
+const { sound, playing, bindAudio, toggle, stop } = useModemDialup()
 
 const audio = useTemplateRef<HTMLAudioElement>('audio')
-const playing = ref(false)
 
-function stop(): void {
-  const element = audio.value
-  if (element) {
-    element.pause()
-    element.currentTime = 0
-  }
-  playing.value = false
-}
+watch(audio, (el) => {
+  if (el)
+    bindAudio(el)
+}, { immediate: true })
 
-async function toggle(): Promise<void> {
-  if (playing.value) {
-    stop()
-    return
-  }
-
-  try {
-    await audio.value?.play()
-    playing.value = true
-  }
-  catch {
-    // NotAllowedError (iOS low-power mode, Safari's per-site autoplay setting),
-    // NotSupportedError, AbortError. Leave the button honest rather than
-    // showing a pressed state for audio that never started.
-    playing.value = false
-  }
-}
-
-onBeforeUnmount(stop)
+onBeforeUnmount(() => {
+  stop()
+  bindAudio(null)
+})
 </script>
 
 <template>
@@ -66,7 +48,7 @@ onBeforeUnmount(stop)
     <audio
       ref="audio"
       preload="none"
-      :src="SOUND"
+      :src="sound"
       @ended="stop"
     />
   </BracketButton>
