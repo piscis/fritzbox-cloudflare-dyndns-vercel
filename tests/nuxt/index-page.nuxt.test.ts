@@ -2,7 +2,7 @@ import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 // Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler, setResponseStatus } from 'h3'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import IndexPage from '~/pages/index.vue'
 
 /**
@@ -59,18 +59,59 @@ describe('index page', () => {
   })
 
   describe('the modem easter egg', () => {
-    it('wires up the clip without autoplaying or preloading it', async () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('wires up the clip without an autoplay attribute or immediate play', async () => {
       const page = await mountSuspended(IndexPage)
       const audio = page.find('audio')
 
       expect(audio.exists()).toBe(true)
       expect(audio.attributes('src')).toBe('/sounds/modem-dial-up.mp3')
-      // 852 KB stays unfetched until someone actually presses the button.
+      // 852 KB stays unfetched until the first play() — autoplay try or a click.
       expect(audio.attributes('preload')).toBe('none')
-      // The old page shipped `controls autoplay`, which browsers block unmuted —
-      // it rendered as an inert grey player mid-layout.
+      // No HTML autoplay attribute: that path is blocked unmuted and used to
+      // render as an inert grey player mid-layout.
       expect(audio.attributes()).not.toHaveProperty('controls')
       expect(audio.attributes()).not.toHaveProperty('autoplay')
+      expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled()
+    })
+
+    it('autoplays two seconds after mount when the browser allows it', async () => {
+      const page = await mountSuspended(IndexPage)
+
+      await vi.advanceTimersByTimeAsync(1999)
+      await flushPromises()
+      expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled()
+
+      await vi.advanceTimersByTimeAsync(1)
+      await flushPromises()
+
+      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
+      expect(page.find('button[aria-pressed]').attributes('aria-pressed')).toBe('true')
+    })
+
+    it('does not autoplay after the visitor has already used the button', async () => {
+      const page = await mountSuspended(IndexPage)
+      const toggle = page.find('button[aria-pressed]')
+
+      await toggle.trigger('click')
+      await flushPromises()
+      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
+
+      // Stop, then let the scheduled delay elapse — must not restart on its own.
+      await toggle.trigger('click')
+      await flushPromises()
+      await vi.advanceTimersByTimeAsync(2000)
+      await flushPromises()
+
+      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
+      expect(toggle.attributes('aria-pressed')).toBe('false')
     })
 
     it('mounts a decorative spectrum canvas behind the copy', async () => {
@@ -167,6 +208,13 @@ describe('index page', () => {
       expect(link.exists()).toBe(true)
       expect(link.attributes('target')).toBe('_blank')
       expect(link.attributes('rel')).toContain('noopener')
+      expect(link.text()).toContain('GitHub')
+      // Leading mark — prerendered via icon.clientBundle, not a runtime fetch.
+      expect(
+        link.find('svg').exists()
+        || link.html().includes('i-lucide-github')
+        || link.html().includes('lucide:github'),
+      ).toBe(true)
     })
 
     it('states the privacy position in the foot line', async () => {

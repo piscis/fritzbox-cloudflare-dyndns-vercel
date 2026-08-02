@@ -3,12 +3,17 @@
  *
  * Module-scoped on purpose — the landing page mounts a single toggle and a
  * single spectrum, and MediaElementSource can only be created once per element.
- * Lazy: AudioContext + analyser appear on the first successful user-gesture
- * play so prerender / SSR never touch Web Audio, and the 852 KB clip stays
- * unfetched until someone presses the button (preload="none" on the element).
+ * Lazy: AudioContext + analyser appear on the first successful play so
+ * prerender / SSR never touch Web Audio. The clip stays `preload="none"` until
+ * that first play (autoplay attempt or a click).
+ *
+ * Unmuted autoplay is still gated by the browser: we schedule a try two seconds
+ * after mount, and if the UA refuses, the button stays honest and the click
+ * path remains the reliable fallback.
  */
 
 const SOUND = '/sounds/modem-dial-up.mp3'
+const AUTOPLAY_DELAY_MS = 2000
 
 const playing = ref(false)
 
@@ -16,6 +21,8 @@ let audioEl: HTMLAudioElement | null = null
 let ctx: AudioContext | null = null
 let analyser: AnalyserNode | null = null
 let sourceBound = false
+let autoplayTimer: ReturnType<typeof setTimeout> | null = null
+let autoplayCancelled = false
 
 function ensureGraph(): AnalyserNode | null {
   if (!import.meta.client || !audioEl || sourceBound)
@@ -57,13 +64,8 @@ function stop(): void {
   playing.value = false
 }
 
-async function toggle(): Promise<void> {
-  if (playing.value) {
-    stop()
-    return
-  }
-
-  if (!audioEl)
+async function play(): Promise<void> {
+  if (playing.value || !audioEl)
     return
 
   try {
@@ -78,6 +80,38 @@ async function toggle(): Promise<void> {
     // NotAllowedError / NotSupportedError / AbortError — leave the button honest.
     playing.value = false
   }
+}
+
+function cancelAutoplay(): void {
+  autoplayCancelled = true
+  if (autoplayTimer !== null) {
+    clearTimeout(autoplayTimer)
+    autoplayTimer = null
+  }
+}
+
+function scheduleAutoplay(delayMs = AUTOPLAY_DELAY_MS): void {
+  if (autoplayTimer !== null)
+    clearTimeout(autoplayTimer)
+
+  autoplayCancelled = false
+  autoplayTimer = setTimeout(() => {
+    autoplayTimer = null
+    if (!autoplayCancelled && !playing.value)
+      void play()
+  }, delayMs)
+}
+
+async function toggle(): Promise<void> {
+  // Any click means the visitor took over — do not restart after they stop.
+  cancelAutoplay()
+
+  if (playing.value) {
+    stop()
+    return
+  }
+
+  await play()
 }
 
 function tearDownGraph(): void {
@@ -96,6 +130,7 @@ export function useModemDialup() {
     // MediaElementSource is permanently tied to one element. Remounts (tests,
     // client navigations) get a fresh graph.
     if (audioEl) {
+      cancelAutoplay()
       stop()
       tearDownGraph()
     }
@@ -106,8 +141,11 @@ export function useModemDialup() {
     sound: SOUND,
     playing: readonly(playing),
     bindAudio,
+    play,
     toggle,
     stop,
+    scheduleAutoplay,
+    cancelAutoplay,
     getAnalyser: (): AnalyserNode | null => analyser,
   }
 }

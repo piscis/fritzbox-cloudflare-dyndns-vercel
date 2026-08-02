@@ -1,28 +1,33 @@
 <script setup lang="ts">
 /**
- * The dial-up easter egg, behind a click.
+ * The dial-up easter egg: autoplay after a short beat, click to stop/restart.
  *
- * `<audio controls autoplay>` has been blocked unmuted by Chrome and Safari for
- * years, so the old page rendered an inert grey stock player mid-layout — the
- * joke invisible and the page looking broken. A button always works and never
- * ambushes anyone in an open-plan office.
- *
- * The element is declared rather than built with `new Audio()`: markup is
- * SSR-safe (no DOM API at setup, nothing to guard for prerender or the Worker)
- * and `preload="none"` keeps all 852 KB unfetched until the first press.
- * Playback + Web Audio graph live in `useModemDialup` so the spectrum can read
- * the same AnalyserNode.
+ * Unmuted autoplay is blocked by Chrome and Safari for most visitors, so the
+ * scheduled try may no-op — the button stays the reliable path and never lies
+ * about a pressed state. Markup stays SSR-safe (`<audio preload="none">`),
+ * and the Web Audio graph lives in `useModemDialup` for the spectrum.
  */
-const { sound, playing, bindAudio, toggle, stop } = useModemDialup()
+const {
+  sound,
+  playing,
+  bindAudio,
+  toggle,
+  stop,
+  scheduleAutoplay,
+  cancelAutoplay,
+} = useModemDialup()
 
 const audio = useTemplateRef<HTMLAudioElement>('audio')
 
 watch(audio, (el) => {
-  if (el)
+  if (el) {
     bindAudio(el)
+    scheduleAutoplay()
+  }
 }, { immediate: true })
 
 onBeforeUnmount(() => {
+  cancelAutoplay()
   stop()
   bindAudio(null)
 })

@@ -55,6 +55,7 @@ const { state } = useHealthCheck()
           API docs →
         </BracketButton>
         <BracketButton :to="REPO" target="_blank" rel="noopener noreferrer" external>
+          <UIcon name="i-lucide-github" class="size-[1.1em]" aria-hidden="true" />
           GitHub
         </BracketButton>
         <ModemToggle />

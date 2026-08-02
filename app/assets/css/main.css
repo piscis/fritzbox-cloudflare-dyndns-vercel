@@ -322,7 +322,7 @@ body {
    MODEM SPECTRUM — full-bleed canvas behind the CRT copy.
    ============================================================ */
 .modem-spectrum {
-  opacity: 0.42;
+  opacity: 0.72;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
@@ -341,7 +341,7 @@ body {
 
 @media (max-width: 819px) {
   .modem-spectrum {
-    opacity: 0.22;
+    opacity: 0.4;
   }
 }
 

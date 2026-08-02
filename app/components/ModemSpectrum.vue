@@ -34,7 +34,7 @@ function drawDormant(ctx: CanvasRenderingContext2D, w: number, h: number): void 
   const leaf = cssVar('--p-leaf', '#4ba241')
   ctx.clearRect(0, 0, w, h)
   ctx.fillStyle = leaf
-  ctx.globalAlpha = 0.22
+  ctx.globalAlpha = 0.38
 
   for (let i = 0; i < bars; i++) {
     const t = i / (bars - 1)
@@ -61,6 +61,8 @@ function drawLive(ctx: CanvasRenderingContext2D, w: number, h: number): void {
   node.getByteFrequencyData(data)
 
   // Modem handshake energy sits in the lower-mid; skip the empty top of the FFT.
+  // Bars are mirrored (high → left, low → right) so the active carrier clears the
+  // copy on the left and reads in the open space on the right.
   const usable = Math.floor(bins * 0.55)
   const bars = 64
   const gap = w / bars
@@ -70,14 +72,14 @@ function drawLive(ctx: CanvasRenderingContext2D, w: number, h: number): void {
   ctx.clearRect(0, 0, w, h)
 
   for (let i = 0; i < bars; i++) {
-    const sample = data[Math.floor((i / bars) * usable)] ?? 0
+    const sample = data[Math.floor(((bars - 1 - i) / bars) * usable)] ?? 0
     const level = sample / 255
     const barH = Math.max(h * 0.03, level * h * 0.72)
     const x = i * gap + gap * 0.15
     const bw = gap * 0.6
 
     ctx.fillStyle = level > 0.55 ? leaf : mid
-    ctx.globalAlpha = 0.2 + level * 0.55
+    ctx.globalAlpha = 0.4 + level * 0.55
     ctx.fillRect(x, h - barH, bw, barH)
   }
 
