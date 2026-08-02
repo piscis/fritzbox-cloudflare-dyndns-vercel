@@ -32,7 +32,7 @@ hosted instance at [fritzdns.piscis.dev/api](https://fritzdns.piscis.dev/api/).
   and response
 - `cloudflare` SDK v7 for zone and DNS access; `consola` logging; `radash` helpers
 - Cloudflare Workers (`cloudflare_module` preset). Vercel is a secondary,
-  out-of-band target kept alive for the one-click deploy button.
+  out-of-band target. Both have a one-click deploy button in the README.
 - Vitest projects `unit` / `nuxt` / `e2e` (`@nuxt/test-utils`), coverage via
   `@vitest/coverage-v8`
 
@@ -81,6 +81,27 @@ Both use Cloudflare Smart Placement (`placement.mode: 'smart'`) and observabilit
 full head sampling, set in `nuxt.config.ts` and baked into the generated
 `.output/server/wrangler.json` at build time.
 
+**`wrangler.jsonc` in the repo root is not that config.** It exists only so the README's
+Deploy to Cloudflare button recognises the repo as a Workers app and has a `name` to
+rewrite for the person clicking it. `nuxt build` writes `.wrangler/deploy/config.json`
+pointing at the generated `.output/server/wrangler.json`, and wrangler follows that
+redirect in preference to any root config. Nitro additionally merges `wrangler.jsonc`
+*underneath* `nitro.cloudflare.wrangler`, so keys set in both are won by `nuxt.config.ts`,
+and `main`/`assets` are always re-derived (hence two `is overridden and will be ignored`
+warnings per Cloudflare build — expected, not a regression). Edit `nuxt.config.ts` to
+change staging or production; editing `wrangler.jsonc` changes neither.
+
+`CF_WORKER_NAME` and `CF_ROUTE_PATTERN` are both optional by design. When
+`CF_ROUTE_PATTERN` is empty, `nuxt.config.ts` emits no `route` and flips `workers_dev`
+on, because a fork has no custom domain and would otherwise deploy something
+unreachable — do not "simplify" those back into unconditional keys, as an empty pattern
+with `custom_domain: true` is a route wrangler cannot create.
+
+The same applies to `nitro.preset`, which is spread in only when `NITRO_PRESET` is set:
+unset, Nitro auto-detects the host — `vercel` on Vercel, `cloudflare_module` under Workers
+Builds (which exports `WORKERS_CI`). Both one-click deploy buttons run the plain `build`
+script and cannot pass `NITRO_PRESET`, so pinning a fallback preset here would break them.
+
 ## Tooling
 
 - Node 24.18.1 (`.nvmrc`), pnpm 11.19.0 (`packageManager`)
@@ -100,8 +121,8 @@ full head sampling, set in `nuxt.config.ts` and baked into the generated
   `pnpm exec <bin>` inside it, and quote commands that take their own flags.
 - **The wrangler deploy config is generated into `.output/` at build time** from
   `nitro.cloudflare` in `nuxt.config.ts`. `CF_WORKER_NAME` and `CF_ROUTE_PATTERN`
-  must be set for `build:cf`, not only for `deploy:cf`. There is no checked-in
-  `wrangler.toml`.
+  must be set for `build:cf`, not only for `deploy:cf`. The checked-in
+  `wrangler.jsonc` is for the deploy button only — see Deployments above.
 - Agent skills live in `.agents/skills/` (canonical); `.claude/skills/<name>` are
   committed relative symlinks. Vendored skills are pinned in `skills-lock.json` —
   change them only via `npx skills add|update|remove`, never by hand. `orpc-api` is
