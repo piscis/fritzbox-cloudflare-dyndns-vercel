@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.8.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.2...2.8.3) (2026-08-02)
+
 ## [2.8.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.1...2.8.2) (2026-08-02)
 
 ### Features
