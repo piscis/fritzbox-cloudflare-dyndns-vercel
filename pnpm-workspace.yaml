@@ -42,7 +42,16 @@ packages:
 # that came with it. The ajv and fast-uri pins are belt-and-braces should a future
 # dependency pull that subtree back in. `ajv@8` is scoped to the 8.x line so eslint's
 # ajv@6, a different and incompatible API, is left alone.
+#
+# esbuild covers GHSA-g7r4-m6w7-qqqr (path traversal in the esbuild dev server on
+# Windows, fixed in 0.28.1). The whole tree already resolved to 0.28.1 except
+# @nuxt/fonts -> fontless, which declares `^0.27.0` and so can never reach the fix
+# on its own; fontless 0.2.1 is the latest release, so there is nothing to upgrade
+# to. fontless imports only `transform` for CSS minification and never starts a dev
+# server, so it was not actually exposed -- the override just dedupes the tree onto
+# the patched version. Drop it once fontless widens its own range.
 overrides:
   ajv@8: ^8.20.0
+  esbuild: ^0.28.1
   fast-uri: ^3.1.5
   webpack: ^5.109.2
