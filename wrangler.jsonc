@@ -21,9 +21,14 @@
   // name/main/compatibility_date as the minimum a Wrangler config needs, and
   // the button reads this file before any build has produced the real one.
   "main": "./.output/server/index.mjs",
-  // Keep in step with `compatibilityDate` in nuxt.config.ts. In the merge this
-  // value outranks the date Nitro would otherwise default to.
-  "compatibility_date": "2025-06-06",
+  // Keep in step with `compatibilityDate.cloudflare` in nuxt.config.ts. In the
+  // merge this value outranks the date Nitro derives, so it is what lands in
+  // .output/server/wrangler.json and what actually deploys.
+  //
+  // workerd refuses a date in the future, so this cannot be raised past the day
+  // it is bumped — and this workerd build refuses anything after 2026-08-06, so
+  // going further needs a wrangler upgrade first.
+  "compatibility_date": "2026-08-02",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "binding": "ASSETS",

@@ -20,7 +20,16 @@ const workerName = env('CF_WORKER_NAME')
 const routePattern = env('CF_ROUTE_PATTERN')
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-06-06',
+  // Scoped to Cloudflare on purpose. The bare-string form sets compatx's
+  // `default`, which also gates the Vercel preset (it starts emitting
+  // observability routes at >= 2025-07-15) and the `cloudflare-dev` preset that
+  // `nuxt dev` would silently switch to — neither is part of this bump. Keep
+  // `default` explicit: compatx back-fills an omitted one with the *highest*
+  // platform date, which would reintroduce the global bump.
+  //
+  // Only the `cloudflare` key becomes wrangler's `compatibility_date`, and
+  // wrangler.jsonc outranks it in Nitro's merge — keep the two in step.
+  compatibilityDate: { default: '2025-06-06', cloudflare: '2026-08-02' },
   devtools: { enabled: true },
   modules: [
     '@nuxt/icon',
