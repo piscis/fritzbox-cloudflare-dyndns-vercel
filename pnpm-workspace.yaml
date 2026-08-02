@@ -31,13 +31,17 @@ trustPolicyExclude:
 
 packages:
   - .
-# ajv and webpack are auto-installed peers (ajv via ajv-formats/ajv-keywords,
-# webpack via unplugin/terser-webpack-plugin) and fast-uri rides along as ajv's own
-# dependency. `pnpm update` does not refresh peer-resolved versions even at
-# `--depth Infinity`, so they sat on versions with open advisories. All three are
-# build-time only and never reach `.output/server`. The `ajv@8` selector scopes the
-# override to the 8.x line so eslint's ajv@6 -- a different, incompatible API -- is
-# left alone.
+
+# `pnpm update` does not refresh auto-installed peer dependencies, even at
+# `--depth Infinity`, so these sat on versions with open advisories.
+#
+# webpack was only ever an *optional* peer (of unplugin and terser-webpack-plugin);
+# Nuxt 4 builds with Vite/Rolldown and never used it. Pinning it stops pnpm
+# auto-installing the stale peer, which drops the whole unused subtree --
+# terser-webpack-plugin -> schema-utils -> ajv@8 -> fast-uri -- and the 7 advisories
+# that came with it. The ajv and fast-uri pins are belt-and-braces should a future
+# dependency pull that subtree back in. `ajv@8` is scoped to the 8.x line so eslint's
+# ajv@6, a different and incompatible API, is left alone.
 overrides:
   ajv@8: ^8.20.0
   fast-uri: ^3.1.5
