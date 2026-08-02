@@ -52,6 +52,20 @@ describe('pages', () => {
     expect(res.headers.get('content-type')).toContain('text/html')
   })
 
+  it('sends X-Robots-Tag on every kind of response, not just HTML', async () => {
+    // A <meta> tag cannot reach JSON, and most of what this host serves is
+    // JSON. The header is the only directive an API response can carry.
+    const paths = ['/', '/no-such-page', '/api/health-check', '/api/spec.json', '/api/']
+
+    for (const path of paths) {
+      const tag = (await fetch(path, { headers: { accept: 'text/html' } })).headers.get('x-robots-tag')
+
+      expect(tag, `missing on ${path}`).toBeTruthy()
+      expect(tag, `not noindex on ${path}`).toContain('noindex')
+      expect(tag, `not nofollow on ${path}`).toContain('nofollow')
+    }
+  })
+
   it('marks the site noindex and sets the document language', async () => {
     const html = await $fetch<string>('/')
 
@@ -96,6 +110,22 @@ describe('static assets', () => {
 
   it('serves robots.txt', async () => {
     expect((await fetch('/robots.txt')).status).toBe(200)
+  })
+
+  it('lets crawlers fetch, so they can actually read the noindex', async () => {
+    // Counterintuitive but load-bearing: `Disallow: /` would stop a crawler
+    // fetching the page and therefore stop it seeing `noindex`, leaving a
+    // linked URL eligible for a bare listing. The README links this host.
+    const body = await (await fetch('/robots.txt')).text()
+    // Directives only — the file explains itself in comments, and those quote
+    // the very directive this asserts is absent.
+    const directives = body
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'))
+
+    expect(directives.some(line => /^disallow:\s*\/\s*$/i.test(line))).toBe(false)
+    expect(directives.some(line => /^allow:\s*\//i.test(line))).toBe(true)
   })
 
   it('still serves the modem clip', async () => {
