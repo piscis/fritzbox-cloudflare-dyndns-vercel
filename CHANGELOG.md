@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.6.0...2.7.0) (2026-08-02)
+
+### Features
+
+* **ui:** live modem spectrum behind the CRT card ([615d000](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/615d00058991bfa344297622c9b8efb702fd162f))
+
 ## [2.6.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.5.1...2.6.0) (2026-08-02)
 
 ### Features
