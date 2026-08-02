@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.8.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.1...2.8.2) (2026-08-02)
+
+### Features
+
+* **ui:** pulse the idle dial-up button with a soft yellow glow ([f02c1f1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/f02c1f1ae046e01c9f8cabc7463708ce2f44c4a3))
+
+### Bug Fixes
+
+* **modem:** play the dial-up handshake only on click ([7095de6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7095de6fd91bbc4cc392c161e1cf161500ae8981))
+
 ## [2.8.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.0...2.8.1) (2026-08-02)
 
 ### Bug Fixes
