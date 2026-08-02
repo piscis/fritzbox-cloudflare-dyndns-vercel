@@ -32,7 +32,9 @@ export default defineNuxtConfig({
   compatibilityDate: { default: '2025-06-06', cloudflare: '2026-08-02' },
   devtools: { enabled: true },
   modules: [
-    '@nuxt/icon',
+    // @nuxt/icon is deliberately absent: @nuxt/ui depends on it and registers
+    // it itself, so listing it here only duplicated the registration. The
+    // `icon` block below is still read by that instance.
     '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
