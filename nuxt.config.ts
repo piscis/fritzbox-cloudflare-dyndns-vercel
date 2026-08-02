@@ -40,10 +40,15 @@ export default defineNuxtConfig({
     // time — left to the server provider it renders an empty <span> and only
     // fills in after a runtime call the prerenderer cannot make.
     //
-    // Phosphor draws its glyphs as text (♪ ● ✕ ▲ →), so there is no explicit
-    // allowlist any more. @nuxt/ui still adds its own lucide icons here via the
-    // `icon:clientBundleIcons` hook; anything added later must join them.
+    // Phosphor draws most glyphs as text (♪ ● ✕ ▲ →); the GitHub CTA is the
+    // exception and must be listed here. @nuxt/ui still adds its own lucide
+    // icons via the `icon:clientBundleIcons` hook.
     serverBundle: false,
+    clientBundle: {
+      icons: [
+        'lucide:github',
+      ],
+    },
   },
   runtimeConfig: {
     public: {
