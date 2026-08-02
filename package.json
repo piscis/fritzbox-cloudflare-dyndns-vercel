@@ -37,8 +37,6 @@
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.121",
-    "@nuxt/eslint": "^1.16.0",
-    "@nuxt/icon": "^2.4.1",
     "@nuxt/ui": "^4.10.0",
     "@orpc/openapi": "^1.14.13",
     "@orpc/server": "^1.14.13",
@@ -52,6 +50,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.2.0",
+    "@nuxt/eslint": "^1.16.0",
     "@nuxt/test-utils": "^4.1.0",
     "@release-it/conventional-changelog": "^12.0.0",
     "@vitest/coverage-v8": "4.1.10",
