@@ -2,7 +2,7 @@ import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 // Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler, setResponseStatus } from 'h3'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import IndexPage from '~/pages/index.vue'
 
 /**
@@ -67,21 +67,13 @@ describe('index page', () => {
   })
 
   describe('the modem easter egg', () => {
-    beforeEach(() => {
-      vi.useFakeTimers()
-    })
-
-    afterEach(() => {
-      vi.useRealTimers()
-    })
-
     it('wires up the clip without an autoplay attribute or immediate play', async () => {
       const page = await mountSuspended(IndexPage)
       const audio = page.find('audio')
 
       expect(audio.exists()).toBe(true)
       expect(audio.attributes('src')).toBe('/sounds/modem-dial-up.mp3')
-      // 852 KB stays unfetched until the first play() — autoplay try or a click.
+      // 852 KB stays unfetched until the visitor clicks dial up.
       expect(audio.attributes('preload')).toBe('none')
       // No HTML autoplay attribute: that path is blocked unmuted and used to
       // render as an inert grey player mid-layout.
@@ -90,65 +82,15 @@ describe('index page', () => {
       expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled()
     })
 
-    it('autoplays two seconds after mount when the browser allows it', async () => {
+    it('builds the audio graph on click', async () => {
       const page = await mountSuspended(IndexPage)
 
-      await vi.advanceTimersByTimeAsync(1999)
-      await flushPromises()
-      expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled()
-
-      await vi.advanceTimersByTimeAsync(1)
-      await flushPromises()
-
-      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
-      expect(page.find('button[aria-pressed]').attributes('aria-pressed')).toBe('true')
-    })
-
-    it('builds no audio graph for the autoplay try, only on a gesture', async () => {
-      const page = await mountSuspended(IndexPage)
-
-      await vi.advanceTimersByTimeAsync(2000)
-      await flushPromises()
-
-      // A context built here would start suspended (Chrome logs the autoplay
-      // warning) and swallow the element's output — a pressed button over
-      // silence. See useModemDialup's ensureGraph.
-      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
       expect(audioContextConstructed).toBe(0)
-
-      // The gesture the composable has been waiting for lights the spectrum up.
-      window.dispatchEvent(new Event('pointerdown'))
-      await flushPromises()
-
-      expect(audioContextConstructed).toBe(1)
-      expect(page.find('button[aria-pressed]').attributes('aria-pressed')).toBe('true')
-    })
-
-    it('builds the graph on a click, which is already a gesture', async () => {
-      const page = await mountSuspended(IndexPage)
 
       await page.find('button[aria-pressed]').trigger('click')
       await flushPromises()
 
       expect(audioContextConstructed).toBe(1)
-    })
-
-    it('does not autoplay after the visitor has already used the button', async () => {
-      const page = await mountSuspended(IndexPage)
-      const toggle = page.find('button[aria-pressed]')
-
-      await toggle.trigger('click')
-      await flushPromises()
-      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
-
-      // Stop, then let the scheduled delay elapse — must not restart on its own.
-      await toggle.trigger('click')
-      await flushPromises()
-      await vi.advanceTimersByTimeAsync(2000)
-      await flushPromises()
-
-      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
-      expect(toggle.attributes('aria-pressed')).toBe('false')
     })
 
     it('mounts a decorative spectrum canvas behind the copy', async () => {
@@ -170,6 +112,21 @@ describe('index page', () => {
 
       expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
       expect(toggle.attributes('aria-pressed')).toBe('true')
+    })
+
+    it('stops on a second click', async () => {
+      const page = await mountSuspended(IndexPage)
+      const toggle = page.find('button[aria-pressed]')
+
+      await toggle.trigger('click')
+      await flushPromises()
+      expect(toggle.attributes('aria-pressed')).toBe('true')
+
+      await toggle.trigger('click')
+      await flushPromises()
+
+      expect(toggle.attributes('aria-pressed')).toBe('false')
+      expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled()
     })
 
     it('stays unpressed when the browser refuses to play', async () => {
