@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.8.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.7.0...2.8.0) (2026-08-02)
+
+### Features
+
+* **cloudflare:** add a one-click Deploy to Cloudflare button ([e80c016](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/e80c0163b50ead4b352238a93a5d703f8b990594))
+
+### Bug Fixes
+
+* **deploy:** let Nitro auto-detect the Vercel preset ([09fae9a](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/09fae9ac3127df0e28a21db0f8b996cc71f5b6f4))
+* **deps:** pin esbuild to ^0.28.1 for GHSA-g7r4-m6w7-qqqr ([b3e8be6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b3e8be6b1f2cb512dabee5a87c9539e522a792cc))
+
 ## [2.7.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.6.0...2.7.0) (2026-08-02)
 
 ### Features
