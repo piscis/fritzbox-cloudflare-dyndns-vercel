@@ -66,7 +66,7 @@ onMounted(() => {
       <li
         v-for="(line, index) in lines"
         :key="index"
-        class="log-line flex gap-(--sp-3) py-px break-words whitespace-pre-wrap text-(--p-200)"
+        class="log-line flex gap-(--sp-3) py-px wrap-break-word whitespace-pre-wrap text-(--p-200)"
       >
         <span class="flex-none select-none text-(--p-300)">&gt;</span>
         <span :class="line.tone ? TONES[line.tone] : undefined">{{ line.text }}</span>

@@ -16,12 +16,12 @@ const { status } = defineProps<{ status?: '404' | '5xx' }>()
 </script>
 
 <template>
-  <div class="relative flex min-h-[100dvh] flex-col items-center justify-center gap-[clamp(16px,3vw,28px)] p-[clamp(14px,4vw,48px)]">
+  <div class="relative flex min-h-dvh flex-col items-center justify-center gap-[clamp(16px,3vw,28px)] p-[clamp(14px,4vw,48px)]">
     <div class="crt-grid pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
 
     <UCard
       :data-status="status"
-      class="crt-scan flicker relative z-1 w-full max-w-[1000px] overflow-hidden"
+      class="crt-scan flicker relative z-1 w-full max-w-250 overflow-hidden"
       :class="status ? 'crt-glass--error' : 'crt-glass'"
       :ui="{
         root: () => 'rounded-lg',
