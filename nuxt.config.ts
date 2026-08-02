@@ -11,6 +11,14 @@ function env(name: string, fallback = '') {
   return (import.meta.env[name] ?? fallback).trim()
 }
 
+/**
+ * Both are empty for a fork deployed through the Deploy to Cloudflare button,
+ * and every Worker setting below that would otherwise be built from an empty
+ * string keys off that. See `nitro.cloudflare.wrangler`.
+ */
+const workerName = env('CF_WORKER_NAME')
+const routePattern = env('CF_ROUTE_PATTERN')
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-06-06',
   devtools: { enabled: true },
@@ -62,7 +70,7 @@ export default defineNuxtConfig({
       // Deliberately under `public` — `server/routes/api/[...].ts` destructures
       // top-level `appName`/`appVersion`, and defining those would silently
       // rewrite /api/spec.json and the e2e assertion that pins its title.
-      siteHost: env('CF_ROUTE_PATTERN'),
+      siteHost: routePattern,
     },
   },
   app: {
@@ -112,8 +120,10 @@ export default defineNuxtConfig({
       wasm: true,
     },
     // Only pin a preset when NITRO_PRESET is set (e.g. cloudflare_module for
-    // build:cf). Leaving it unset lets Nitro auto-detect — on Vercel that is
-    // the vercel preset, which the Deploy Button one-click flow needs.
+    // build:cf). Leaving it unset lets Nitro auto-detect the host — the vercel
+    // preset on Vercel, cloudflare_module under Workers Builds (which exports
+    // WORKERS_CI). Both one-click deploy buttons run the plain `build` script
+    // and have nowhere to pass NITRO_PRESET, so they depend on that detection.
     ...(env('NITRO_PRESET')
       ? { preset: env('NITRO_PRESET') }
       : {}),
@@ -121,9 +131,16 @@ export default defineNuxtConfig({
       deployConfig: true,
       nodeCompat: true,
       wrangler: {
-        name: env('CF_WORKER_NAME'),
+        // Nitro merges this object *over* the root wrangler.jsonc, and defu
+        // treats '' as a value rather than an absence — so setting an empty
+        // name here would mask the one the deploy button writes into that file.
+        ...(workerName ? { name: workerName } : {}),
         preview_urls: false,
-        workers_dev: false,
+        // Our own deployments are reached through the custom domain below, so
+        // the workers.dev subdomain stays off. A fork has no domain to attach:
+        // there it is the only way in, and disabling it deploys something
+        // unreachable.
+        workers_dev: !routePattern,
         upload_source_maps: true,
         observability: {
           enabled: env('CF_LOG_ENABLED') === 'true',
@@ -135,10 +152,12 @@ export default defineNuxtConfig({
         // A custom-domain route needs only `pattern`; Cloudflare infers the zone
         // from the hostname. wrangler's own schema requires zone_name/zone_id
         // solely for non-custom-domain routes.
-        route: {
-          pattern: env('CF_ROUTE_PATTERN'),
-          custom_domain: true,
-        },
+        //
+        // Emitted only when there is a pattern to attach — `custom_domain: true`
+        // against an empty pattern is a route wrangler cannot create.
+        ...(routePattern
+          ? { route: { pattern: routePattern, custom_domain: true } }
+          : {}),
       },
     },
     routeRules: {
