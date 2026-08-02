@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.8.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.0...2.8.1) (2026-08-02)
+
+### Bug Fixes
+
+* **modem:** build the dial-up audio graph only after a user gesture ([#236](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/236)) ([11ed979](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/11ed9797e0dcf2a5c11ea7db5dc69dbd379cf3dc))
+
 ## [2.8.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.7.0...2.8.0) (2026-08-02)
 
 ### Features
