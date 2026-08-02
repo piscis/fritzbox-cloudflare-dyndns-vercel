@@ -21,6 +21,9 @@ registerEndpoint('/api/health-check', defineEventHandler((event) => {
   return health.body
 }))
 
+/** Counts constructions so tests can assert Web Audio stayed untouched. */
+let audioContextConstructed = 0
+
 function stubAudioContext(): void {
   // happy-dom has no Web Audio; the composable must still play through <audio>.
   class FakeAnalyser {
@@ -37,6 +40,10 @@ function stubAudioContext(): void {
 
   class FakeAudioContext {
     state = 'running'
+    constructor() {
+      audioContextConstructed++
+    }
+
     resume = vi.fn(() => Promise.resolve())
     close = vi.fn(() => Promise.resolve())
     createAnalyser = vi.fn(() => new FakeAnalyser())
@@ -55,6 +62,7 @@ describe('index page', () => {
     // happy-dom implements no media playback.
     HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve())
     HTMLMediaElement.prototype.pause = vi.fn()
+    audioContextConstructed = 0
     stubAudioContext()
   })
 
@@ -94,6 +102,35 @@ describe('index page', () => {
 
       expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
       expect(page.find('button[aria-pressed]').attributes('aria-pressed')).toBe('true')
+    })
+
+    it('builds no audio graph for the autoplay try, only on a gesture', async () => {
+      const page = await mountSuspended(IndexPage)
+
+      await vi.advanceTimersByTimeAsync(2000)
+      await flushPromises()
+
+      // A context built here would start suspended (Chrome logs the autoplay
+      // warning) and swallow the element's output — a pressed button over
+      // silence. See useModemDialup's ensureGraph.
+      expect(HTMLMediaElement.prototype.play).toHaveBeenCalledOnce()
+      expect(audioContextConstructed).toBe(0)
+
+      // The gesture the composable has been waiting for lights the spectrum up.
+      window.dispatchEvent(new Event('pointerdown'))
+      await flushPromises()
+
+      expect(audioContextConstructed).toBe(1)
+      expect(page.find('button[aria-pressed]').attributes('aria-pressed')).toBe('true')
+    })
+
+    it('builds the graph on a click, which is already a gesture', async () => {
+      const page = await mountSuspended(IndexPage)
+
+      await page.find('button[aria-pressed]').trigger('click')
+      await flushPromises()
+
+      expect(audioContextConstructed).toBe(1)
     })
 
     it('does not autoplay after the visitor has already used the button', async () => {

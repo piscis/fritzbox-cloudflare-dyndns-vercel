@@ -3,13 +3,14 @@
  *
  * Module-scoped on purpose — the landing page mounts a single toggle and a
  * single spectrum, and MediaElementSource can only be created once per element.
- * Lazy: AudioContext + analyser appear on the first successful play so
- * prerender / SSR never touch Web Audio. The clip stays `preload="none"` until
- * that first play (autoplay attempt or a click).
+ * Lazy: AudioContext + analyser appear on the first gesture so prerender / SSR
+ * never touch Web Audio. The clip stays `preload="none"` until the first play
+ * (autoplay attempt or a click).
  *
  * Unmuted autoplay is still gated by the browser: we schedule a try two seconds
  * after mount, and if the UA refuses, the button stays honest and the click
- * path remains the reliable fallback.
+ * path remains the reliable fallback. That try must not build the graph —
+ * see `ensureGraph`.
  */
 
 const SOUND = '/sounds/modem-dial-up.mp3'
@@ -23,9 +24,50 @@ let analyser: AnalyserNode | null = null
 let sourceBound = false
 let autoplayTimer: ReturnType<typeof setTimeout> | null = null
 let autoplayCancelled = false
+let gestureSeen = false
+let gestureBound = false
 
+// Anything Chrome counts as activation for the autoplay policy. `keydown`
+// keeps the graph reachable for visitors who never point at anything.
+const GESTURE_EVENTS = ['pointerdown', 'keydown', 'touchstart'] as const
+
+function onFirstGesture(): void {
+  unbindGesture()
+  gestureSeen = true
+
+  // Only if the clip is already running: the autoplay try got through without a
+  // graph, so this is the first moment we can give the spectrum real bins.
+  // Otherwise the click path builds it and idle visitors pay for nothing.
+  if (playing.value)
+    ensureGraph()
+}
+
+function bindGesture(): void {
+  if (!import.meta.client || gestureBound || gestureSeen)
+    return
+
+  for (const type of GESTURE_EVENTS)
+    window.addEventListener(type, onFirstGesture, { once: true, passive: true })
+  gestureBound = true
+}
+
+function unbindGesture(): void {
+  if (!gestureBound)
+    return
+
+  for (const type of GESTURE_EVENTS)
+    window.removeEventListener(type, onFirstGesture)
+  gestureBound = false
+}
+
+/**
+ * Never call this before a gesture. An AudioContext constructed without one
+ * starts `suspended` (and Chrome logs the autoplay warning), while
+ * `createMediaElementSource` has already rerouted the element's output into
+ * that frozen graph — the clip would play silently behind a pressed button.
+ */
 function ensureGraph(): AnalyserNode | null {
-  if (!import.meta.client || !audioEl || sourceBound)
+  if (!import.meta.client || !audioEl || sourceBound || !gestureSeen)
     return analyser
 
   try {
@@ -64,14 +106,29 @@ function stop(): void {
   playing.value = false
 }
 
-async function play(): Promise<void> {
+/**
+ * `viaGesture` marks a call that runs inside a user activation (the toggle
+ * click). Only those may touch Web Audio; the scheduled autoplay try goes
+ * straight to the element and waits for a gesture to pick up the graph.
+ */
+async function play(viaGesture = false): Promise<void> {
   if (playing.value || !audioEl)
     return
 
+  if (viaGesture) {
+    unbindGesture()
+    gestureSeen = true
+  }
+
   try {
-    ensureGraph()
-    if (ctx?.state === 'suspended')
-      await ctx.resume()
+    if (gestureSeen) {
+      ensureGraph()
+      if (ctx?.state === 'suspended')
+        await ctx.resume()
+    }
+    else {
+      bindGesture()
+    }
 
     await audioEl.play()
     playing.value = true
@@ -111,15 +168,20 @@ async function toggle(): Promise<void> {
     return
   }
 
-  await play()
+  await play(true)
 }
 
 function tearDownGraph(): void {
+  unbindGesture()
   if (typeof ctx?.close === 'function')
     void ctx.close()
   ctx = null
   analyser = null
   sourceBound = false
+  // Activation is tracked per graph lifetime, not per document: a remount costs
+  // at most one gesture before the spectrum comes back, and the invariant
+  // "no graph without a gesture we observed ourselves" stays checkable.
+  gestureSeen = false
 }
 
 export function useModemDialup() {
