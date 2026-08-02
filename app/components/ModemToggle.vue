@@ -1,11 +1,10 @@
 <script setup lang="ts">
 /**
- * The dial-up easter egg: autoplay after a short beat, click to stop/restart.
+ * The dial-up easter egg: click to play, click again to stop/restart.
  *
- * Unmuted autoplay is blocked by Chrome and Safari for most visitors, so the
- * scheduled try may no-op — the button stays the reliable path and never lies
- * about a pressed state. Markup stays SSR-safe (`<audio preload="none">`),
- * and the Web Audio graph lives in `useModemDialup` for the spectrum.
+ * Markup stays SSR-safe (`<audio preload="none">`), and the Web Audio graph
+ * lives in `useModemDialup` for the spectrum — built only on a click so the
+ * button never claims to be playing over silence.
  */
 const {
   sound,
@@ -13,21 +12,16 @@ const {
   bindAudio,
   toggle,
   stop,
-  scheduleAutoplay,
-  cancelAutoplay,
 } = useModemDialup()
 
 const audio = useTemplateRef<HTMLAudioElement>('audio')
 
 watch(audio, (el) => {
-  if (el) {
+  if (el)
     bindAudio(el)
-    scheduleAutoplay()
-  }
 }, { immediate: true })
 
 onBeforeUnmount(() => {
-  cancelAutoplay()
   stop()
   bindAudio(null)
 })
