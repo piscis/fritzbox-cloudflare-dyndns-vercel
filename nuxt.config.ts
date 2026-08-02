@@ -132,6 +132,19 @@ export default defineNuxtConfig({
       },
     },
     routeRules: {
+      // This is an API host; nothing on it should be indexed.
+      //
+      // As an HTTP header rather than only a meta tag, because most of what is
+      // served here is not HTML — /api/health-check and /api/fritz-dyndns return
+      // JSON, /api/spec.json returns a schema, and a <meta> cannot reach any of
+      // them. `public/robots.txt` deliberately permits crawling so this
+      // directive is actually read; blocking the fetch would hide it and leave
+      // linked URLs eligible for a bare listing.
+      '/**': {
+        headers: {
+          'x-robots-tag': 'noindex, nofollow, noarchive, nosnippet',
+        },
+      },
       // The landing page has no per-request state, so it is rendered once at
       // build time. `prerender` is the key Nitro actually reads; `static` is
       // read only by the Vercel preset (`isr = !static`) and is kept so the
