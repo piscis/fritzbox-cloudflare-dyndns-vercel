@@ -18,6 +18,16 @@
     "main"
   ],
   "minimumReleaseAge": "3 days",
+  "lockFileMaintenance": {
+    "description": "Transitive deps only move during lock file maintenance. Without its own schedule this inherits the top-level `every 30 day`, which overrides the weekly cadence from `:maintainLockFilesWeekly` and lets vulnerable sub-dependencies (tar, minimatch, brace-expansion, ...) sit stale for months.",
+    "enabled": true,
+    "schedule": [
+      "before 6am on monday"
+    ],
+    "automergeSchedule": [
+      "before 6am on monday"
+    ]
+  },
   "packageRules": [
     {
       "description": "TypeScript 7 (the Go port) has no stable programmatic API for Volar/vue-tsc yet, so it cannot type-check .vue templates. Revisit once vue-tsc supports it.",
