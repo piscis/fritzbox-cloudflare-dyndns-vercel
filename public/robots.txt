@@ -1,2 +1,17 @@
+# This is an API host. Nothing here is meant to be found.
+#
+# Crawling is deliberately ALLOWED, which looks backwards but is what actually
+# keeps the site out of search results. `Disallow: /` stops a compliant crawler
+# fetching the page at all — so it never reads the `noindex` directive either,
+# and a URL it learns about from elsewhere can still be listed, with no
+# description. The README links https://fritzdns.piscis.dev from GitHub, so that
+# is not hypothetical.
+#
+# Every response instead carries an authoritative
+# `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet` (see `nitro.routeRules`
+# in nuxt.config.ts), and HTML repeats it in a meta tag. Letting crawlers read
+# that is what gets a URL dropped rather than merely hidden.
 User-agent: *
-Disallow: /
+Allow: /
+
+# No sitemap, deliberately.
