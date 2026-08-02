@@ -111,7 +111,12 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true,
     },
-    preset: env('NITRO_PRESET', 'node-server'),
+    // Only pin a preset when NITRO_PRESET is set (e.g. cloudflare_module for
+    // build:cf). Leaving it unset lets Nitro auto-detect — on Vercel that is
+    // the vercel preset, which the Deploy Button one-click flow needs.
+    ...(env('NITRO_PRESET')
+      ? { preset: env('NITRO_PRESET') }
+      : {}),
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,

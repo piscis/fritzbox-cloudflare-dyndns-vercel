@@ -10,7 +10,7 @@ hosted instance at [fritzdns.piscis.dev/api](https://fritzdns.piscis.dev/api/).
 | Command | Purpose |
 |---------|---------|
 | `pnpm dev` | Dev server on `:3000` (via `phase run`) |
-| `pnpm build` | Production build, `node-server` preset |
+| `pnpm build` | Production build (Nitro default / host auto-detect) |
 | `pnpm build:cf` | Cloudflare Workers build (via `phase run`) |
 | `pnpm deploy:cf` | `wrangler deploy` — requires a preceding `build:cf` |
 | `pnpm lint` / `pnpm lint:fix` | ESLint (Antfu + Nuxt flat config) |
