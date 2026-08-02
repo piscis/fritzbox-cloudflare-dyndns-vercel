@@ -19,7 +19,8 @@ minimumReleaseAgeExclude:
   - release-it@21.0.1
   - wrangler@4.118.0
 
-shamefullyHoist: true
+# Required by @antfu/eslint-config, which pins this through
+# `pnpm/yaml-enforce-settings`. Removing it fails `pnpm lint`.
 shellEmulator: true
 trustPolicy: no-downgrade
 
