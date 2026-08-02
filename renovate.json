@@ -19,11 +19,12 @@
   ],
   "minimumReleaseAge": "3 days",
   "lockFileMaintenance": {
-    "description": "Transitive deps only move during lock file maintenance. Without its own schedule this inherits the top-level `every 30 day`, which overrides the weekly cadence from `:maintainLockFilesWeekly` and lets vulnerable sub-dependencies (tar, minimatch, brace-expansion, ...) sit stale for months.",
+    "description": "Transitive deps only move during lock file maintenance. Without its own schedule this inherits the top-level `every 30 day`, which overrides the weekly cadence from `:maintainLockFilesWeekly` and lets vulnerable sub-dependencies (tar, minimatch, brace-expansion, ...) sit stale for months. Automerged because these PRs otherwise queue up unreviewed -- `:automergeMinor` does not cover lock file maintenance, so they are not picked up by any other rule. Renovate holds the merge until the `Build & Deploy` checks are green.",
     "enabled": true,
     "schedule": [
       "before 6am on monday"
     ],
+    "automerge": true,
     "automergeSchedule": [
       "before 6am on monday"
     ]
