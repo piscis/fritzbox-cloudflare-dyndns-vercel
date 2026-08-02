@@ -19,6 +19,18 @@ minimumReleaseAgeExclude:
   - release-it@21.0.1
   - wrangler@4.118.0
 
+# ajv and webpack are auto-installed peers (ajv via ajv-formats/ajv-keywords,
+# webpack via unplugin/terser-webpack-plugin) and fast-uri rides along as ajv's own
+# dependency. `pnpm update` does not refresh peer-resolved versions even at
+# `--depth Infinity`, so they sat on versions with open advisories. All three are
+# build-time only and never reach `.output/server`. The `ajv@8` selector scopes the
+# override to the 8.x line so eslint's ajv@6 -- a different, incompatible API -- is
+# left alone.
+overrides:
+  ajv@8: ^8.20.0
+  fast-uri: ^3.1.5
+  webpack: ^5.109.2
+
 # Required by @antfu/eslint-config, which pins this through
 # `pnpm/yaml-enforce-settings`. Removing it fails `pnpm lint`.
 shellEmulator: true
