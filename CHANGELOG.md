@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.6.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.5.1...2.6.0) (2026-08-02)
+
+### Features
+
+* **ui:** implement the Phosphor design for the front page and error pages ([2e352ef](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/2e352ef6a849e7e8359d307500b619006d7f4e3a))
+
+### Bug Fixes
+
+* **security:** redact the Cloudflare token before logging ([8622974](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/86229748fd3dd9647655a0948430414982d3fcea))
+* **seo:** serve X-Robots-Tag on every response and let crawlers read it ([5f020fa](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/5f020fa2243940461024bbb3711dfc33dc2f2f85))
+
 ## [2.5.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.5.0...2.5.1) (2026-08-01)
 
 ## [2.5.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.4.0...2.5.0) (2026-08-01)
