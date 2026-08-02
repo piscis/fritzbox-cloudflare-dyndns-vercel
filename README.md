@@ -153,7 +153,7 @@ is never read from the environment and never stored.
 
 | Variable | Consumed by | When | Required |
 | --- | --- | --- | --- |
-| `NITRO_PRESET` | `nuxt.config.ts` → `nitro.preset` | build | Cloudflare/Vercel only |
+| `NITRO_PRESET` | `nuxt.config.ts` → `nitro.preset` | build | Cloudflare only (Vercel auto-detects) |
 | `CF_WORKER_NAME` | `nuxt.config.ts` → `wrangler.name` | build | Cloudflare only |
 | `CF_ROUTE_PATTERN` | `nuxt.config.ts` → `wrangler.route.pattern` | build | Cloudflare only |
 | `CF_LOG_ENABLED` | `nuxt.config.ts` → `wrangler.observability.enabled` | build | no |
