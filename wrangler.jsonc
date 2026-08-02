@@ -1,0 +1,32 @@
+{
+  // This file exists for the "Deploy to Cloudflare" button in the README, which
+  // requires a checked-in Wrangler config to recognise the repository as a
+  // Workers application. It rewrites `name` to whatever Worker the person
+  // clicking it chooses, then hands the repo to Workers Builds.
+  //
+  // It is NOT the config any deploy actually uses. `nuxt build` regenerates
+  // .output/server/wrangler.json from nuxt.config.ts and writes
+  // .wrangler/deploy/config.json alongside it; wrangler follows that redirect,
+  // which outranks this file for `deploy`, `dev` and `versions upload`. Nitro
+  // also merges the values below *under* nuxt.config.ts's `nitro.cloudflare.
+  // wrangler` block, so anything set in both is won by nuxt.config.ts.
+  //
+  // Changing this file therefore has no effect on staging or production.
+  //
+  // Deliberately no "$schema": every key here is copied into the generated
+  // config, where a relative node_modules path would no longer resolve.
+  "name": "fritzbox-cloudflare-dyndns",
+  // Nitro always re-derives `main` and `assets` from the build output and logs
+  // that it is overriding them. Both are kept anyway: Cloudflare documents
+  // name/main/compatibility_date as the minimum a Wrangler config needs, and
+  // the button reads this file before any build has produced the real one.
+  "main": "./.output/server/index.mjs",
+  // Keep in step with `compatibilityDate` in nuxt.config.ts. In the merge this
+  // value outranks the date Nitro would otherwise default to.
+  "compatibility_date": "2025-06-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./.output/public"
+  }
+}

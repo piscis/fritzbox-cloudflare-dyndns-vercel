@@ -6,7 +6,7 @@ This is a DynDNS Service that can be used to update the IP address of a Fritz!Bo
 
 ✅ Key features:
 1️⃣ Automatic Cloudflare DNS updates 🔄
-2️⃣ Effortless deployment on Vercel with One-Click 🚀
+2️⃣ Effortless One-Click deployment on Cloudflare or Vercel 🚀
 3️⃣ Powered by Nuxt.js 🎨
 4️⃣ Open-source for community collaboration 🌍
 5️⃣ Supports both IPv4 and IPv6
@@ -45,7 +45,37 @@ The AAAA-Record will be used to update your FRITZ!Box IPv6 address in Cloudflare
 
 #### :rocket: Option 1: Self-host on Cloudflare
 
-Deploy this project to your Cloudflare account and use it as a service for your FRITZ!Box. Adjust the environment variables in the `.env` file to match your Cloudflare account and routing patterns.
+Deploy this project to your own Cloudflare account and use it as a service for your FRITZ!Box.
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel)
+
+Cloudflare clones this repository into your GitHub account, lets you pick a Worker name,
+then builds and deploys it. Nothing to configure: the service holds no secrets, and the
+build detects Cloudflare on its own.
+
+You end up with a Worker on `https://<worker-name>.<your-subdomain>.workers.dev`, so the
+Update URL for your FRITZ!Box is:
+
+```
+https://<worker-name>.<your-subdomain>.workers.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
+```
+
+To serve it from your own domain instead, set `CF_ROUTE_PATTERN` (see
+[Environment variables](#environment-variables)) and redeploy — the workers.dev
+subdomain is switched off automatically once a custom domain is configured.
+
+> **If the build fails while installing dependencies**, Workers Builds picked its default
+> pnpm rather than the version this repo pins. Set `PNPM_VERSION` to the version in the
+> `packageManager` field of [`package.json`](./package.json) under **Worker → Settings →
+> Build → Variables** and retry. The Node version needs no help — the builder reads
+> [`.nvmrc`](./.nvmrc).
+
+<details>
+<summary>Manual deploy (advanced)</summary>
+
+Use this if you would rather deploy from your machine than through Workers Builds. Adjust
+the environment variables in the `.env` file to match your Cloudflare account and routing
+patterns.
 
 ```bash
 cp .env.example .env
@@ -63,6 +93,8 @@ pnpm exec wrangler --cwd .output deploy
 > without access to that org. The commands above are the equivalent for a fork.
 
 If necessary make some adjustments to `nuxt.config.ts` to match your Cloudflare account and routing patterns. (see the nitro preset config in the [nuxt.config.ts](./nuxt.config.ts) file)
+
+</details>
 
 #### :rocket: Option 2: Self-host on Vercel
 
@@ -92,7 +124,10 @@ https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.
 | Username          | admin                                                                                                                               | You can choose whatever value you want.                                                                                                  |
 | Password          | ●●●●●●                                                                                                                              | The API token you’ve created earlier.                                                                                                    |
 
-Please note, if you use a custom Vercel deployment your service URL will be different. For example, if you're app is deployed to `https://some-random-name.vercel.app/` you have to use the following URL: `https://some-random-name.vercel.app/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` service endpoint when configuring your FRITZ!Box DynDNS settings
+Please note, if you self-host your service URL will be different — replace the host and keep
+the rest of the URL as-is. A Cloudflare deployment made with the button above answers on
+`https://<worker-name>.<your-subdomain>.workers.dev/api/fritz-dyndns/?token=...`, and a Vercel
+deployment on `https://some-random-name.vercel.app/api/fritz-dyndns/?token=...`.
 
 ### API reference
 
@@ -155,19 +190,44 @@ is never read from the environment and never stored.
 
 | Variable | Consumed by | When | Required |
 | --- | --- | --- | --- |
-| `NITRO_PRESET` | `nuxt.config.ts` → `nitro.preset` | build | Cloudflare only (Vercel auto-detects) |
-| `CF_WORKER_NAME` | `nuxt.config.ts` → `wrangler.name` | build | Cloudflare only |
-| `CF_ROUTE_PATTERN` | `nuxt.config.ts` → `wrangler.route.pattern` | build | Cloudflare only |
+| `NITRO_PRESET` | `nuxt.config.ts` → `nitro.preset` | build | manual builds only — hosts auto-detect |
+| `CF_WORKER_NAME` | `nuxt.config.ts` → `wrangler.name` | build | no — falls back to `wrangler.jsonc` |
+| `CF_ROUTE_PATTERN` | `nuxt.config.ts` → `wrangler.route.pattern` | build | no — unset ⇒ workers.dev |
 | `CF_LOG_ENABLED` | `nuxt.config.ts` → `wrangler.observability.enabled` | build | no |
-| `CLOUDFLARE_API_TOKEN` | `wrangler deploy` | deploy | Cloudflare only |
-| `CLOUDFLARE_ACCOUNT_ID` | `wrangler deploy` | deploy | Cloudflare only |
+| `WORKERS_CI` | Nitro's host auto-detection | build | set by Workers Builds itself |
+| `CLOUDFLARE_API_TOKEN` | `wrangler deploy` | deploy | manual Cloudflare deploy only |
+| `CLOUDFLARE_ACCOUNT_ID` | `wrangler deploy` | deploy | manual Cloudflare deploy only |
 
 Every `CF_*` variable is consumed at **build** time, because `nuxt.config.ts` generates
 `.output/server/wrangler.json` — so they must be set for `build:cf`, not only for
-`deploy:cf`. There is no checked-in `wrangler.toml`.
+`deploy:cf`.
+
+Leaving `CF_ROUTE_PATTERN` empty is what a one-click deploy does: no custom-domain route is
+emitted and the `workers.dev` subdomain is enabled instead, so the Worker is still reachable.
+Setting it flips both back. Likewise an empty `CF_WORKER_NAME` leaves the name to
+`wrangler.jsonc`.
+
+`NITRO_PRESET` is only needed when you build for a host by hand. Unset, `nuxt.config.ts` pins
+no preset at all and Nitro detects the host it is running on — the `vercel` preset on Vercel,
+`cloudflare_module` under Workers Builds, which exports `WORKERS_CI` for exactly that purpose.
+That is what lets both one-click buttons work without configuration.
 
 The route is configured as a Cloudflare **custom domain**, which needs only a `pattern`;
 Cloudflare infers the zone from the hostname. No `CF_ROUTE_ZONE_NAME` is required.
+
+#### Two Wrangler configs, and which one wins
+
+[`wrangler.jsonc`](./wrangler.jsonc) is checked in **only** so the Deploy to Cloudflare button
+recognises this repo as a Workers app and has a `name` to rewrite. No deploy uses it: `nuxt
+build` generates `.output/server/wrangler.json` from `nuxt.config.ts` and writes a
+`.wrangler/deploy/config.json` redirect next to it, which wrangler follows in preference to any
+root config — it prints `Using redirected Wrangler configuration` when it does. Nitro also
+merges `wrangler.jsonc` *underneath* the `nitro.cloudflare.wrangler` block, so anything set in
+both is won by `nuxt.config.ts`, and `main`/`assets` are always re-derived from the build (which
+is why each Cloudflare build logs two `is overridden and will be ignored` warnings).
+
+**Editing `wrangler.jsonc` therefore has no effect on staging or production** — change
+`nuxt.config.ts` instead.
 
 #### The two Cloudflare tokens are not interchangeable
 
