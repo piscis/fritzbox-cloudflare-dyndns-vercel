@@ -36,6 +36,7 @@ onBeforeUnmount(() => {
 <template>
   <BracketButton
     type="button"
+    :class="{ 'dialup-idle': !playing }"
     :aria-pressed="playing"
     :aria-label="playing ? 'Stop the modem handshake' : 'Play the modem handshake'"
     @click="toggle"

@@ -366,6 +366,30 @@ body {
 }
 
 /* ============================================================
+   DIAL-UP IDLE — soft yellow pulse so the easter egg reads as pressable.
+   Dropped while connecting (class unbound when playing).
+   ============================================================ */
+.dialup-idle {
+  animation: dialup-idle-glow 2.4s ease-in-out infinite;
+}
+
+.dialup-idle:hover,
+.dialup-idle:focus-visible {
+  animation-play-state: paused;
+}
+
+@keyframes dialup-idle-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 transparent;
+    border-color: var(--crt-line);
+  }
+  50% {
+    box-shadow: 0 0 18px rgb(255 228 0 / 0.22);
+    border-color: color-mix(in srgb, var(--fritz-yellow) 35%, var(--crt-line));
+  }
+}
+
+/* ============================================================
    MOTION — every animation above degrades to its END state, never to a
    faster version of itself.
    ============================================================ */
@@ -373,6 +397,7 @@ body {
   .flicker,
   .cursor,
   .lamp--pulse,
+  .dialup-idle,
   [data-boot="run"] .log-line > span:last-child {
     animation: none;
   }
@@ -382,4 +407,9 @@ body {
   [data-boot="run"] .log-line > span:last-child { clip-path: none; }
 
   .wave-bar { animation: none; height: 60%; }
+
+  .dialup-idle {
+    box-shadow: 0 0 14px rgb(255 228 0 / 0.16);
+    border-color: color-mix(in srgb, var(--fritz-yellow) 28%, var(--crt-line));
+  }
 }
