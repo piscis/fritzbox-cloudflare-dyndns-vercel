@@ -1,3 +1,5 @@
+![Your FRITZ!Box dials this service whenever its IP changes, and it rewrites the Cloudflare A and AAAA records for one hostname in your zone.](./docs/images/docs-hero.png "FRITZ!Box · DynDNS · Cloudflare")
+
 # Fritz!Box Cloudflare DynDNS Updater via Vercel / Cloudflare / etc. (Nuxt4 /VueJS / ORPC)
 
 This is a DynDNS Service that can be used to update the IP address of a Fritz!Box to a Cloudflare DNS record. It supports updates of A- and AAAA-records. Every time your IP Address changes the service will be called by your Fritz!Box and the IP address will be updated.
