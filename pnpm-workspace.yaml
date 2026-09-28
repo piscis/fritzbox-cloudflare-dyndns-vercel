@@ -9,8 +9,11 @@ allowBuilds:
   vue-demi: true
   workerd: true
 
-# pnpm 11 defaults minimumReleaseAge to 1440 (1 day); these were newer than that
-# when the lockfile was written.
+# Minutes. Matches pnpm 11's default, set explicitly so it stays in step with
+# `minimumReleaseAge: "1 day"` in renovate.json. Change both together.
+minimumReleaseAge: 1440
+
+# These were newer than minimumReleaseAge when the lockfile was written.
 minimumReleaseAgeExclude:
   - release-it@21.0.1
   - wrangler@4.118.0
