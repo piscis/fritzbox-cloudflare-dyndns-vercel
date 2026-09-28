@@ -341,19 +341,21 @@ to turn on client sourcemaps, without which `.vue` coverage is inaccurate.
 
 ## Working with AI agents
 
-[`AGENTS.md`](./AGENTS.md) is the entry point — commands, architecture, and the
-conventions that are not obvious from the code.
+[`CLAUDE.md`](./CLAUDE.md) is the entry point: the conventions that are not obvious
+from the code. `AGENTS.md` is a symlink to it for tools that read that name.
 
 Skills live in [`.agents/skills/`](./.agents/skills/) (the canonical, vendor-neutral
 location). `.claude/skills/<name>` are committed relative symlinks into it, so the
 same set is available to Claude Code and to any tool that reads `.agents/`.
 
-Vendored skills are pinned in [`skills-lock.json`](./skills-lock.json) — manage them
-with `npx skills add|update|remove`, never by editing the lock file. The `orpc-api`
-skill is first-party to this repo and is deliberately absent from the lock.
+Every skill is pinned in [`skills-lock.json`](./skills-lock.json) — manage them with
+`npx skills@latest add|update|remove`, never by editing the lock file or the skill
+folders. The repo-specific `orpc-api` skill is authored in
+[`piscis/agent-skills`](https://github.com/piscis/agent-skills); change it there, then
+run `npx skills@latest update -p`.
 
 > On Windows, git needs `core.symlinks true` and a fresh checkout, or the symlinks
-> materialise as plain text files.
+> (skills and `AGENTS.md`) materialise as plain text files.
 
 Two MCP servers are registered per project in [`.mcp.json`](./.mcp.json) for Claude
 Code. They point at Nuxt's hosted documentation endpoints — `https://nuxt.com/mcp` and
@@ -368,7 +370,7 @@ recalling them from training data. They carry no credentials.
 Fork, branch, and open a PR against `main`. Please use
 [Conventional Commits](https://www.conventionalcommits.org/) — `CHANGELOG.md` is
 generated from them. Run `pnpm lint:fix && pnpm typecheck && pnpm test` before
-opening the PR, and read [`AGENTS.md`](./AGENTS.md) first.
+opening the PR, and read [`CLAUDE.md`](./CLAUDE.md) first.
 
 Security issues should go through [`SECURITY.md`](./SECURITY.md), not a public issue.
 
