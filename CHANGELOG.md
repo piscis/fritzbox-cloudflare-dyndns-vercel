@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.9.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.3...2.9.0) (2026-09-28)
+
+### Features
+
+* **agents:** add Matt Pocock's engineering skills and per-repo config ([#242](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/242)) ([7e51000](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7e5100069d3962890b2840bac8bc785c68fccdaa))
+* **agents:** make CLAUDE.md the entry point and add more Matt Pocock skills ([#244](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/244)) ([3d527d1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/3d527d1dadfa0010d8c725e721cd7099df0078fe))
+
+### Bug Fixes
+
+* **agents:** drop duplicate wait-what and wayfinder entries from skills-lock.json ([#246](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/246)) ([892bdbb](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/892bdbbefded95668f2674cf76b6186c2b6c3181)), references [#244](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/244) [#245](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/245) [#244](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/244)
+
 ## [2.8.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.2...2.8.3) (2026-08-02)
 
 ## [2.8.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.1...2.8.2) (2026-08-02)
