@@ -97,12 +97,6 @@
       "skillPath": "skills/orpc-api/SKILL.md",
       "computedHash": "0225043b15f77ccaabfe9f47a5012408d681cc7dfa6a43b1441cd80c666dc9a8"
     },
-    "pnpm": {
-      "source": "antfu/skills",
-      "sourceType": "github",
-      "skillPath": "skills/pnpm/SKILL.md",
-      "computedHash": "2ec08c851c6f901d4ed72c21b826416ed074a487db65662b36249418afd728bf"
-    },
     "prototype": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -168,6 +162,12 @@
       "sourceType": "github",
       "skillPath": "skills/update-issue/SKILL.md",
       "computedHash": "9883c2277bbd7d58a8b5fed25ed9d727f06ae8d6940c91cf0ffb30dcbcb57a30"
+    },
+    "vitest": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/vitest/SKILL.md",
+      "computedHash": "21af2b13d47d31f3094b61c0f41abc8d6a7eed0df3c9a4029ea671f6978b7209"
     },
     "wait-what": {
       "source": "mattpocock/skills",
