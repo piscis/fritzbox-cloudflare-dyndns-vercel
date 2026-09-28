@@ -1,5 +1,3 @@
-# Minutes. Matches pnpm's default, set explicitly so it stays in step with
-# `minimumReleaseAge: "1 day"` in renovate.json. Change both together.
 minimumReleaseAge: 1440
 
 # minimumReleaseAgeExcludePrune, shellEmulator and trustPolicy are required by
@@ -46,8 +44,8 @@ packages:
 overrides:
   ajv@8: ^8.20.0
   esbuild: ^0.28.2
-  fast-uri: ^4.1.3
-  webpack: ^5.110.1
+  fast-uri: ^4.2.1
+  webpack: ^5.111.1
 
 allowBuilds:
   '@parcel/watcher': true
