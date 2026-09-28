@@ -144,3 +144,17 @@ script and cannot pass `NITRO_PRESET`, so pinning a fallback preset here would b
   workflow accepts it as either a variable or a secret.
 
 Everything else (`CF_*`, `CLOUDFLARE_*`) now comes from Phase Production.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `piscis/fritzbox-cloudflare-dyndns-vercel`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one root `CONTEXT.md` plus `docs/adr/`, both created lazily (neither exists yet). See `docs/agents/domain.md`.
