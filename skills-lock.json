@@ -91,12 +91,6 @@
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "2449db6ab1ded9581f69fcc56c1f64818112d05e271fd4c5da23c6523f9d3d9d"
     },
-    "nuxt": {
-      "source": "antfu/skills",
-      "sourceType": "github",
-      "skillPath": "skills/nuxt/SKILL.md",
-      "computedHash": "96dbdbfc06bf7045aeb9a463b972d5c0b5679d6dadf196d8ef6b98dc6defed2d"
-    },
     "orpc-api": {
       "source": "piscis/agent-skills",
       "sourceType": "github",
@@ -174,12 +168,6 @@
       "sourceType": "github",
       "skillPath": "skills/update-issue/SKILL.md",
       "computedHash": "9883c2277bbd7d58a8b5fed25ed9d727f06ae8d6940c91cf0ffb30dcbcb57a30"
-    },
-    "vitest": {
-      "source": "antfu/skills",
-      "sourceType": "github",
-      "skillPath": "skills/vitest/SKILL.md",
-      "computedHash": "943d436114c677802426741980146c07560bf375297666b03062444f4b98a785"
     },
     "wait-what": {
       "source": "mattpocock/skills",
