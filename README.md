@@ -145,7 +145,7 @@ A health endpoint is available at `/api/health-check`.
 ### Prerequisites for Development
 
 - Node.js 24 — see [`.nvmrc`](./.nvmrc) (`fnm use` / `nvm use`)
-- pnpm 11 — pinned by the `packageManager` field; `corepack enable` picks it up automatically
+- pnpm 12 — pinned by the `packageManager` field; `corepack enable` picks it up automatically
 
 ### Setup
 

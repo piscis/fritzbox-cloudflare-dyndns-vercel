@@ -18,7 +18,7 @@ home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary ta
   ESLint (`@antfu/eslint-config`) is the only formatter.
 - Renovate owns every version bump, including `pnpm-lock.yaml`. TypeScript stays on
   6.x on purpose, because vue-tsc cannot use TS 7's Go compiler yet.
-- pnpm settings go in `pnpm-workspace.yaml`. pnpm 11 reads only auth and registry
+- pnpm settings go in `pnpm-workspace.yaml`. pnpm 12 reads only auth and registry
   settings from `.npmrc`.
 - Every skill is installed and pinned in `skills-lock.json` by
   `npx skills@latest add|update|remove`, including `orpc-api`, which is authored in
