@@ -1,3 +1,5 @@
+# Minutes. Matches pnpm's default, set explicitly so it stays in step with
+# `minimumReleaseAge: "1 day"` in renovate.json. Change both together.
 minimumReleaseAge: 1440
 
 # minimumReleaseAgeExcludePrune, shellEmulator and trustPolicy are required by
