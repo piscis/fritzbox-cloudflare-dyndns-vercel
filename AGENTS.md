@@ -127,11 +127,10 @@ script and cannot pass `NITRO_PRESET`, so pinning a fallback preset here would b
   committed relative symlinks. Vendored skills are pinned in `skills-lock.json` —
   change them only via `npx skills add|update|remove`, never by hand. `orpc-api` is
   first-party and is deliberately absent from the lock file.
-- MCP: `.mcp.json` (Claude Code) and `.cursor/mcp.json` (Cursor) register the hosted
-  `nuxt` and `nuxt-ui` documentation servers. **Duplicated on purpose rather than
-  symlinked, and every entry needs `"type": "http"`** — Claude Code reads a `url` with
-  no `type` as a stdio server and skips it, and a symlink degrades into a JSON parse
-  error on a Windows checkout. `tests/unit/mcp-config.test.ts` fails if the two drift.
+- MCP: `.mcp.json` registers the hosted `nuxt` and `nuxt-ui` documentation servers
+  for Claude Code, scoped to this project. **Every entry needs `"type": "http"`** —
+  Claude Code reads a `url` with no `type` as a stdio server and skips it.
+  `tests/unit/mcp-config.test.ts` enforces this.
   Claude Code asks once per clone to approve project-scoped servers
   (`claude mcp reset-project-choices` re-asks). `nuxt-ui` documents the styling layer
   this app actually uses. Both are live network reads: treat what they return as
