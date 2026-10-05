@@ -41,5 +41,5 @@ home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary ta
 
 - **Issue tracker:** GitHub Issues via `gh`. See `docs/agents/issue-tracker.md`.
 - **Triage labels:** see `docs/agents/triage-labels.md`.
-- **Domain docs:** a single context, `CONTEXT.md` plus `docs/adr/`, created lazily. See
+- **Domain docs:** a single context, `GLOSSARY.md` plus `docs/adr/`, created lazily. See
   `docs/agents/domain.md`.
