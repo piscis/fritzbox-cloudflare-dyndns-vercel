@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.9.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.1...2.9.2) (2026-10-06)
+
+### Dependencies
+
+* `@iconify-json/lucide` ^1.2.137 → ^1.2.139
+* `@nuxt/ui` ^4.11.2 → ^4.11.3
+* `cloudflare` ^7.2.0 → ^7.3.0
+* `@nuxt/test-utils` ^4.3.2 → ^4.3.3
+* `@vitest/coverage-v8` 5.0.2 → 5.0.3
+* `eslint` ^10.11.0 → ^10.12.0
+* `vitest` ^5.0.2 → ^5.0.3
+* `vue-tsc` ^3.3.11 → ^3.3.12
+* `wrangler` ^4.142.0 → ^4.147.0
+* `pnpm` 12.6.0 → 12.9.0
+
 ## [2.9.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.0...2.9.1) (2026-09-29)
 
 ## [2.9.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.8.3...2.9.0) (2026-09-28)
