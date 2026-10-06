@@ -17,11 +17,8 @@ The schedule's prompt is a single line: `Follow docs/agents/daily-dependency-rel
   and leave every Dependency Dashboard checkbox unticked.
 - **Renovate decides what to bump.** Apply only updates that Renovate lists. Renovate
   owns every version bump in this repo. You are replaying its decisions on a daily clock.
-- **Isolation.** Other agents edit the main checkout at the same time. Work only in your
-  own worktree, base it on `origin/main` (local `main` is often stale), fetch and rebase
-  before every push, and set work aside with WIP commits, never `git stash`.
-- **Node 24.** The machine's default Node is 22. Run every `pnpm` command as
-  `fnm exec --using=24.20.0 pnpm …`.
+- **Workflow.** CLAUDE.md's Workflow rules (worktree isolation, rebasing, Node via
+  `fnm`) hold for every step.
 - **Token hygiene.** CLAUDE.md's rule on the `?token=` query parameter holds in PR
   bodies, comments and issues too.
 
@@ -68,9 +65,7 @@ release earlier unreleased commits.
 ### 3. Apply
 
 `git worktree add ../fritzdns-deps-<date> -b chore/deps-<date> origin/main`, then work
-inside it. It sits beside the repo, not under `.claude/worktrees/`: a nested worktree
-resolves `vitest.config.ts` types against the parent checkout's `node_modules`, and then
-`pnpm typecheck` fails with TS2769. Run `fnm exec --using=24.20.0 pnpm install` once first.
+inside it. Run `fnm exec --using=.nvmrc pnpm install` once first.
 
 Apply the non-major updates as a single commit titled like Renovate's group
 (`chore(deps): update all non-major dependencies`). Give each major its own branch
@@ -79,7 +74,7 @@ Apply the non-major updates as a single commit titled like Renovate's group
 
 - Edit the file Renovate detected it in. Keep the existing range style (`^x.y.z`). A
   `pnpm` update changes `packageManager` in `package.json`.
-- Run `fnm exec --using=24.20.0 pnpm install`. If pnpm rejects a transitive dependency
+- Run `fnm exec --using=.nvmrc pnpm install`. If pnpm rejects a transitive dependency
   as too young, drop that update from today's run.
 - If install leaves auto-installed peers stale, delete **both** `pnpm-lock.yaml` and
   `node_modules` and install again. Deleting only the lockfile rebuilds it from
@@ -146,7 +141,7 @@ Release only if all of these hold:
 
 Then, from a fresh branch at `origin/main` inside the worktree:
 
-1. `fnm exec --using=24.20.0 pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
+1. `fnm exec --using=.nvmrc pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
    Plain `pnpm release:patch` fails in a worktree.
 2. A dependency-only release leaves the new `CHANGELOG.md` section empty. Fill it with the
    `pkg from → to` list, then `git commit --amend --no-edit` and move the tag with
