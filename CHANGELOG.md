@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.2...2.9.3) (2026-10-07)
+
+### Dependencies
+
+* `@iconify-json/lucide` ^1.2.139 → ^1.2.140
+* `pnpm` 12.9.0 → 12.9.1
+
 ## [2.9.2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.1...2.9.2) (2026-10-06)
 
 ### Dependencies
