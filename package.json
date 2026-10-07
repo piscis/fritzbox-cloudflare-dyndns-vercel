@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.9.2",
   "private": true,
-  "packageManager": "pnpm@12.9.0",
+  "packageManager": "pnpm@12.9.1",
   "author": "piscis",
   "license": "MIT",
   "homepage": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel",
@@ -36,7 +36,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.139",
+    "@iconify-json/lucide": "^1.2.140",
     "@nuxt/ui": "^4.11.3",
     "@orpc/openapi": "^1.15.4",
     "@orpc/server": "^1.15.4",
