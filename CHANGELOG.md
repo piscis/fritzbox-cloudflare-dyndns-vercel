@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.9.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.3...2.9.4) (2026-10-09)
+
+### Dependencies
+
+* `@iconify-json/lucide` ^1.2.140 → ^1.2.141
+* `@orpc/openapi` ^1.15.4 → ^1.15.5
+* `@orpc/server` ^1.15.4 → ^1.15.5
+* `@orpc/zod` ^1.15.4 → ^1.15.5
+* `release-it` ^21.1.0 → ^21.1.1
+* `wrangler` ^4.147.0 → ^4.148.0
+* `pnpm` 12.9.1 → 12.10.1
+
 ## [2.9.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.2...2.9.3) (2026-10-07)
 
 ### Dependencies
