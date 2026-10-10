@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.0...2.10.1) (2026-10-10)
+
+### Bug Fixes
+
+* **build:** pin buildDir so nuxt 4.6 type check keeps nitro globals ([#285](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/285)) ([2ff9083](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/2ff90836d4b9e052d2f31de892cb9140a7886a05)), references [#271](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/271)
+
 ## [2.10.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.6...2.10.0) (2026-10-10)
 
 ### Features
