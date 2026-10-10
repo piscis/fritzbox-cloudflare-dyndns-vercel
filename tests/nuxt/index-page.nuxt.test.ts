@@ -187,6 +187,18 @@ describe('index page', () => {
       expect(page.text()).toContain('link established')
     })
 
+    it('leads with the setup guide as the one primary button', async () => {
+      const page = await mountSuspended(IndexPage)
+      const buttons = page.findAll('a.bracket')
+      const primary = buttons.filter(button => button.classes().includes('bg-(--fritz-yellow)'))
+
+      expect(buttons[0]!.attributes('href')).toBe('/setup')
+      expect(buttons[0]!.text()).toContain('Set up FRITZ!Box →')
+      // Primary is the yellow fill, and only one button may carry it.
+      expect(primary).toHaveLength(1)
+      expect(primary[0]!.attributes('href')).toBe('/setup')
+    })
+
     it('sends the API docs button to the live reference, not the README', async () => {
       const page = await mountSuspended(IndexPage)
       const docs = page.find('a[href="/api/"]')

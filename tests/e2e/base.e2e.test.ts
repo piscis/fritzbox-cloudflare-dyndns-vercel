@@ -55,7 +55,7 @@ describe('pages', () => {
   it('sends X-Robots-Tag on every kind of response, not just HTML', async () => {
     // A <meta> tag cannot reach JSON, and most of what this host serves is
     // JSON. The header is the only directive an API response can carry.
-    const paths = ['/', '/no-such-page', '/api/health-check', '/api/spec.json', '/api/']
+    const paths = ['/', '/setup', '/no-such-page', '/api/health-check', '/api/spec.json', '/api/']
 
     for (const path of paths) {
       const tag = (await fetch(path, { headers: { accept: 'text/html' } })).headers.get('x-robots-tag')
@@ -77,6 +77,27 @@ describe('pages', () => {
   it('ships dark mode in the prerendered HTML, with no client-side flash', async () => {
     const html = await $fetch<string>('/')
 
+    expect(html).toContain('class="dark"')
+  })
+
+  it('links the setup guide from the index page', async () => {
+    const html = await $fetch<string>('/')
+
+    expect(html).toContain('href="/setup"')
+  })
+
+  it('serves the setup guide prerendered, with the same head as the index page', async () => {
+    const res = await fetch('/setup', { headers: { accept: 'text/html' } })
+    const html = await res.text()
+
+    expect(res.status).toBe(200)
+    // Nitro serves prerendered pages as public assets, which carry a
+    // Last-Modified header that a per-request SSR render never sends.
+    expect(res.headers.get('last-modified')).toBeTruthy()
+    expect(html).toContain('04')
+    expect(html).toContain('Check it')
+    expect(html).toContain('noindex, nofollow')
+    expect(html).toContain('lang="en"')
     expect(html).toContain('class="dark"')
   })
 

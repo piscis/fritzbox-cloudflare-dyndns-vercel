@@ -185,8 +185,8 @@ export default defineNuxtConfig({
           'x-robots-tag': 'noindex, nofollow, noarchive, nosnippet',
         },
       },
-      // The landing page has no per-request state, so it is rendered once at
-      // build time. `prerender` is the key Nitro actually reads; `static` is
+      // The landing page and the setup guide have no per-request state, so
+      // they are rendered once at build time. `prerender` is the key Nitro actually reads; `static` is
       // read only by the Vercel preset (`isr = !static`) and is kept so the
       // one-click Vercel deploy in the README keeps its current behaviour.
       //
@@ -194,6 +194,9 @@ export default defineNuxtConfig({
       // `nuxt generate` sets) would flip @nuxt/icon to the remote Iconify
       // provider and turn every icon into a runtime network call.
       '/': { prerender: true, static: true },
+      // Same rule as `/`, so it gets the same prerendered head. Its host-bearing
+      // values follow the visitor's host on mount (`useSiteHost`).
+      '/setup': { prerender: true, static: true },
       // Fonts are served from /_fonts/, not from `app.buildAssetsDir`, so the
       // /_chunks/** rule below does not cover them.
       '/_fonts/**': {

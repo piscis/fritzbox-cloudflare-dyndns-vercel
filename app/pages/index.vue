@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { LogLine } from '~/components/TerminalLog.vue'
 
-const REPO = 'https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel'
-
 const HANDSHAKE: LogLine[] = [
   { text: 'ATDT 0192658' },
   { text: 'CONNECT 56000/ARQ/V90/LAPM/V42BIS' },
@@ -47,14 +45,21 @@ const { state } = useHealthCheck()
 
       <div class="mt-[clamp(26px,4vw,38px)] flex flex-wrap gap-(--sp-3)">
         <!--
+          The guide is what most visitors came for, so it takes the one primary
+          slot. A plain route, so no `external`: /setup is a page of this app.
+        -->
+        <BracketButton to="/setup" tone="primary">
+          Set up FRITZ!Box →
+        </BracketButton>
+        <!--
           The live Scalar reference rather than the README: it is one path away
           and it is what a visitor actually came for. The clickdummy pointed both
           buttons at the repo only because /api was out of prototype scope.
         -->
-        <BracketButton to="/api/" tone="primary" external>
+        <BracketButton to="/api/" external>
           API docs →
         </BracketButton>
-        <BracketButton :to="REPO" target="_blank" rel="noopener noreferrer" external>
+        <BracketButton :to="REPO_URL" target="_blank" rel="noopener noreferrer" external>
           <UIcon name="i-lucide-github" class="size-[1.1em]" aria-hidden="true" />
           GitHub
         </BracketButton>
@@ -75,7 +80,7 @@ const { state } = useHealthCheck()
       <span>no cookies, no analytics, no logs of your token</span>
       <span class="ml-auto">
         <ULink
-          :to="`${REPO}#readme`"
+          :to="`${REPO_URL}#readme`"
           target="_blank"
           rel="noopener noreferrer"
           class="border-b border-(--crt-line-hi) text-(--p-200) no-underline hover:text-(--p-100)"
