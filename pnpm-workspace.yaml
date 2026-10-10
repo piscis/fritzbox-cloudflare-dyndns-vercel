@@ -16,9 +16,47 @@ trustPolicy: no-downgrade
 #
 # why-is-node-running@3.2.2 (vitest 5 requires ^3.2.1) was published in January 2025
 # by the same maintainers without the provenance attestation 3.2.1 carried.
+#
+# The cssnano monorepo packages below come in through Nuxt 4.6 (@nuxt/vite-builder ->
+# cssnano 9). Every release is published from github.com/cssnano/cssnano by GitHub
+# trusted publishing with provenance. The 8.0.3-8.0.10 releases also named a human
+# approver, and 9.x dropped that step, so no-downgrade flags every 9.x release as a
+# possible takeover. They are excluded by name, because each new release would
+# otherwise need another entry. Re-check the publisher before you widen this list.
+# Revisit on the Nuxt 5 upgrade: Nuxt 5 makes cssnano an optional peer, off by default.
 trustPolicyExclude:
   - semver@6.3.1
   - why-is-node-running@3.2.2
+  - cssnano
+  - cssnano-preset-default
+  - cssnano-utils
+  - postcss-colormin
+  - postcss-convert-values
+  - postcss-discard-comments
+  - postcss-discard-duplicates
+  - postcss-discard-empty
+  - postcss-discard-overridden
+  - postcss-merge-longhand
+  - postcss-merge-rules
+  - postcss-minify-font-values
+  - postcss-minify-gradients
+  - postcss-minify-params
+  - postcss-minify-selectors
+  - postcss-normalize-charset
+  - postcss-normalize-display-values
+  - postcss-normalize-positions
+  - postcss-normalize-repeat-style
+  - postcss-normalize-string
+  - postcss-normalize-timing-functions
+  - postcss-normalize-unicode
+  - postcss-normalize-url
+  - postcss-normalize-whitespace
+  - postcss-ordered-values
+  - postcss-reduce-initial
+  - postcss-reduce-transforms
+  - postcss-svgo
+  - postcss-unique-selectors
+  - stylehacks
 
 shellEmulator: true
 
