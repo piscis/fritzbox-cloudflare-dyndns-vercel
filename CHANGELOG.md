@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.4...2.9.5) (2026-10-10)
+
+### Dependencies
+
+* `happy-dom` ^20.14.5 → ^20.14.6
+* `wrangler` ^4.148.0 → ^4.149.0
+
 ## [2.9.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.3...2.9.4) (2026-10-09)
 
 ### Dependencies
