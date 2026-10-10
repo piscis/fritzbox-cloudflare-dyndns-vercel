@@ -184,8 +184,27 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
       const text = page.text()
 
-      expect(text).toMatch(/DynDNS status/i)
+      // FRITZ!OS shows the DynDNS state on the overview page, not on the DynDNS tab.
+      expect(text).toContain('Übersicht')
+      expect(text).toContain('Komfortfunktionen')
+      expect(text).toContain('IPv4-Status: angemeldet')
+      expect(text).not.toMatch(/status on the same tab/i)
       expect(text).toContain('real IP')
+    })
+
+    it('points at DynDNS-Fehler entries in the event log', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      expect(page.text()).toContain('System → Ereignisse')
+      expect(page.text()).toContain('DynDNS-Fehler')
+    })
+
+    it('explains the FRITZ!Box error when the Domainnamen does not resolve', async () => {
+      const page = await mountSuspended(SetupPage)
+      const entry = page.findAll('.trouble dt').find(dt => dt.text().includes('nicht aufgelöst werden'))!
+
+      expect(entry.text()).toContain('Der angegebene Domainname kann trotz erfolgreicher Aktualisierung nicht aufgelöst werden.')
+      expect(entry.element.nextElementSibling!.textContent).toContain('home.example.com')
     })
 
     it.each([

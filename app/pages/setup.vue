@@ -328,21 +328,34 @@ const TROUBLE = [
           <span class="step-number">{{ STEPS.check.number }}</span> {{ STEPS.check.title }}
         </h2>
         <ul class="checklist">
-          <li>The FRITZ!Box DynDNS status on the same tab reports a successful update.</li>
+          <li>
+            On the FRITZ!Box <em>Overview (Übersicht)</em>, the DynDNS line under
+            <em>Komfortfunktionen</em> reads <em>IPv4-Status: angemeldet</em>, and
+            <em>IPv6-Status: angemeldet</em> if you use IPv6.
+          </li>
           <li>
             In Cloudflare, the records from step 02 now hold your real IP instead of the
             placeholder.
           </li>
         </ul>
         <p>
-          If not, the FRITZ!Box event log, <em>System → Event Log (System → Ereignisse)</em>, shows
-          the service's answer:
+          If not, look for <em>DynDNS-Fehler</em> entries in the FRITZ!Box event log,
+          <em>System → Event Log (System → Ereignisse)</em>. A failed update ends with one of
+          these messages from the service:
         </p>
         <dl class="trouble">
           <template v-for="entry in TROUBLE" :key="entry.message">
             <dt><code>{{ entry.message }}</code></dt>
             <dd>{{ entry.fix }}</dd>
           </template>
+          <!-- The FRITZ!Box's own message, copied from FRITZ!OS on a 7590 AX. -->
+          <dt><code>DynDNS-Fehler: Der angegebene Domainname kann trotz erfolgreicher Aktualisierung nicht aufgelöst werden.</code></dt>
+          <dd>
+            The update worked, but the FRITZ!Box could not look up its own name afterwards. Make
+            Domain name (Domainnamen) the same hostname as in the Update URL,
+            <code>{{ hostname }}</code>. Right after you create the records, give DNS a few
+            minutes to catch up.
+          </dd>
           <dt>The record still holds the placeholder IP</dt>
           <dd>
             Proxy status is set to Proxied: switch it to DNS only. For the A record, your line may
