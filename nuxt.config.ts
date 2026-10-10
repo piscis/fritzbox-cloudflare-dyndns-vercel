@@ -55,9 +55,10 @@ export default defineNuxtConfig({
     colorMode: false,
   },
   icon: {
-    // The landing page is prerendered, so any icon has to be inlined at build
-    // time — left to the server provider it renders an empty <span> and only
-    // fills in after a runtime call the prerenderer cannot make.
+    // The landing page and /setup are prerendered, so any icon has to be
+    // inlined at build time — left to the server provider it renders an empty
+    // <span> and only fills in after a runtime call the prerenderer cannot
+    // make.
     //
     // Phosphor draws most glyphs as text (♪ ● ✕ ▲ →); the GitHub CTA is the
     // exception and must be listed here. @nuxt/ui still adds its own lucide
@@ -186,9 +187,10 @@ export default defineNuxtConfig({
         },
       },
       // The landing page and the setup guide have no per-request state, so
-      // they are rendered once at build time. `prerender` is the key Nitro actually reads; `static` is
-      // read only by the Vercel preset (`isr = !static`) and is kept so the
-      // one-click Vercel deploy in the README keeps its current behaviour.
+      // they are rendered once at build time. `prerender` is the key Nitro
+      // actually reads; `static` is read only by the Vercel preset
+      // (`isr = !static`) and is kept so the one-click Vercel deploy in the
+      // README keeps its current behaviour.
       //
       // Note this must stay a per-route rule: a global `nitro.static` (what
       // `nuxt generate` sets) would flip @nuxt/icon to the remote Iconify

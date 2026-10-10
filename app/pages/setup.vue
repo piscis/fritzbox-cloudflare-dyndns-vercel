@@ -25,6 +25,16 @@ function guessZone(hostname: string): string {
   return hostname.split('.').slice(-2).join('.')
 }
 
+/**
+ * The server compares names exactly, so a typed name is lowercased, trimmed
+ * and loses one trailing dot (`Fritz.Example.com.` → `fritz.example.com`)
+ * before it reaches an output, the zone guess or a check. The fields keep what
+ * the visitor typed.
+ */
+function normalizeName(name: string): string {
+  return name.trim().toLowerCase().replace(/\.$/, '')
+}
+
 // Builder state lives in memory only: no localStorage, no cookies, no query
 // string. An empty field falls back to the placeholder, so the page reads the
 // same before any input as it does prerendered and without JS.
@@ -34,7 +44,7 @@ const zoneEdit = ref<string | null>(null)
 const zoneInput = computed({
   // Auto-filled from the hostname until the visitor edits it; then the edit
   // sticks, for zones like `example.co.uk`.
-  get: () => zoneEdit.value ?? (hostnameInput.value.trim() ? guessZone(hostnameInput.value.trim()) : ''),
+  get: () => zoneEdit.value ?? (normalizeName(hostnameInput.value) ? guessZone(normalizeName(hostnameInput.value)) : ''),
   set: (value: string) => {
     zoneEdit.value = value
   },
@@ -50,8 +60,8 @@ const ipChoice = ref<typeof IP_CHOICES[number]['value']>('both')
 const wantsIpv4 = computed(() => ipChoice.value !== 'ipv6')
 const wantsIpv6 = computed(() => ipChoice.value !== 'ipv4')
 
-const hostname = computed(() => hostnameInput.value.trim() || HOSTNAME)
-const zone = computed(() => zoneInput.value.trim() || guessZone(hostname.value))
+const hostname = computed(() => normalizeName(hostnameInput.value) || HOSTNAME)
+const zone = computed(() => normalizeName(zoneInput.value) || guessZone(hostname.value))
 
 const config = useRuntimeConfig()
 const { state } = useHealthCheck()
@@ -82,11 +92,11 @@ const SCREENSHOTS = {
   ],
 } as const
 
-const TOKEN_FIELDS: Field[] = [
+const tokenFields = computed<Field[]>(() => [
   { label: 'Permission', value: 'Zone · Zone · Read' },
   { label: 'Permission', value: 'Zone · DNS · Edit' },
-  { label: 'Zone Resources', value: `Include · Specific zone · ${ZONE}` },
-]
+  { label: 'Zone Resources', value: `Include · Specific zone · ${zone.value}` },
+])
 
 const inZone = computed(() => hostname.value === zone.value || hostname.value.endsWith(`.${zone.value}`))
 
@@ -115,21 +125,19 @@ const recordName = computed<Field>(() => {
   return { label: 'Name', value: hostname.value, note: `${hostname.value} is not in ${zone.value}` }
 })
 
-const aRecord = computed<Field[]>(() => [
-  { label: 'Type', value: 'A' },
-  recordName.value,
-  { label: 'IPv4 address', value: '192.0.2.1', note: 'any IPv4 works until the first update' },
-  { label: 'Proxy status', value: 'DNS only' },
-  { label: 'TTL', value: '1 min' },
-])
+/** The Add record form for one IP family, with a documentation address as placeholder. */
+function recordFields(type: 'A' | 'AAAA', family: 'IPv4' | 'IPv6', placeholder: string): Field[] {
+  return [
+    { label: 'Type', value: type },
+    recordName.value,
+    { label: `${family} address`, value: placeholder, note: `any ${family} works until the first update` },
+    { label: 'Proxy status', value: 'DNS only' },
+    { label: 'TTL', value: '1 min' },
+  ]
+}
 
-const aaaaRecord = computed<Field[]>(() => [
-  { label: 'Type', value: 'AAAA' },
-  recordName.value,
-  { label: 'IPv6 address', value: '2001:db8::1', note: 'any IPv6 works until the first update' },
-  { label: 'Proxy status', value: 'DNS only' },
-  { label: 'TTL', value: '1 min' },
-])
+const aRecord = computed(() => recordFields('A', 'IPv4', '192.0.2.1'))
+const aaaaRecord = computed(() => recordFields('AAAA', 'IPv6', '2001:db8::1'))
 
 // `<pass>`, `<ipaddr>` and `<ip6addr>` stay literal: the FRITZ!Box substitutes
 // them itself on every update.
@@ -159,11 +167,11 @@ const TROUBLE = [
   },
   {
     message: `A record for "${HOSTNAME}" does not exist.`,
-    fix: 'Create the A record from step 02, or remove ipv4=<ipaddr> from the Update URL if you only want IPv6.',
+    fix: 'Create the A record from step 02. If your line has no IPv4, pick IPv6 only under IP families in step 02 and copy the Update URL again.',
   },
   {
     message: `AAAA record for "${HOSTNAME}" does not exist.`,
-    fix: 'Create the AAAA record from step 02, or remove ipv6=<ip6addr> from the Update URL if you only want IPv4.',
+    fix: 'Create the AAAA record from step 02. If your line has no IPv6, pick IPv4 only under IP families in step 02 and copy the Update URL again.',
   },
   {
     message: 'Missing ipv4 or ipv6 URL parameter.',
@@ -202,7 +210,7 @@ const TROUBLE = [
           In Cloudflare, open <em>My Profile → API Tokens → Create Token → Create Custom Token</em>
           and give the token these two permissions, <b>Zone.Zone Read</b> and <b>Zone.DNS Edit</b>:
         </p>
-        <FieldList :fields="TOKEN_FIELDS" />
+        <FieldList :fields="tokenFields" />
         <p>
           Under <em>Zone Resources → Include → Specific zone</em>, pick the one zone your FRITZ!Box
           lives in. Then a leaked token can't touch your other domains.
@@ -212,7 +220,7 @@ const TROUBLE = [
           logged, but whoever operates this Instance could read it.
           If that's not good enough,
           <ULink
-            :to="SELF_HOST_URL"
+            :to="RUN_YOUR_OWN_URL"
             target="_blank"
             rel="noopener noreferrer"
             class="border-b border-(--crt-line-hi) text-(--p-100) no-underline hover:text-(--fritz-yellow)"
@@ -220,10 +228,7 @@ const TROUBLE = [
             run your own →
           </ULink>
         </p>
-        <details class="shot">
-          <summary>show screenshot ▸</summary>
-          <img v-for="shot in SCREENSHOTS.token" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
-        </details>
+        <ScreenshotToggle :shots="SCREENSHOTS.token" />
       </section>
 
       <section aria-labelledby="step-records">
@@ -283,13 +288,10 @@ const TROUBLE = [
           <FieldList :fields="aaaaRecord" />
         </template>
         <p>
-          Skip the record for an IP family your line doesn't have, and drop its parameter from the
-          Update URL in step 03.
+          Skip the record for an IP family your line doesn't have: pick the IP families above that
+          it does have, and the Update URL in step 03 follows.
         </p>
-        <details class="shot">
-          <summary>show screenshot ▸</summary>
-          <img v-for="shot in SCREENSHOTS.records" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
-        </details>
+        <ScreenshotToggle :shots="SCREENSHOTS.records" />
       </section>
 
       <section aria-labelledby="step-fritzbox">
@@ -308,10 +310,7 @@ const TROUBLE = [
           <code>&lt;ip6addr&gt;</code> become your current addresses. Click
           <em>Apply (Übernehmen)</em>.
         </p>
-        <details class="shot">
-          <summary>show screenshot ▸</summary>
-          <img v-for="shot in SCREENSHOTS.fritzbox" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
-        </details>
+        <ScreenshotToggle :shots="SCREENSHOTS.fritzbox" />
       </section>
 
       <section aria-labelledby="step-check">
@@ -337,8 +336,8 @@ const TROUBLE = [
           <dt>The record still holds the placeholder IP</dt>
           <dd>
             Proxy status is set to Proxied: switch it to DNS only. For the A record, your line may
-            have no public IPv4 (DS-Lite): delete the A record and drop
-            <code>ipv4=&lt;ipaddr&gt;</code> from the Update URL.
+            have no public IPv4 (DS-Lite): delete the A record, pick IPv6 only under IP families in
+            step 02 and copy the Update URL again.
           </dd>
         </dl>
       </section>
@@ -507,34 +506,5 @@ const TROUBLE = [
 
 .setup .trouble dd {
   margin: var(--sp-1) 0 0 var(--sp-4);
-}
-
-.setup .shot {
-  margin-top: var(--sp-4);
-}
-
-.setup .shot summary {
-  display: inline-block;
-  cursor: pointer;
-  list-style: none;
-  border-bottom: 1px solid var(--crt-line-hi);
-  color: var(--p-300);
-}
-
-.setup .shot summary::-webkit-details-marker {
-  display: none;
-}
-
-.setup .shot summary:hover,
-.setup .shot summary:focus-visible {
-  color: var(--p-100);
-}
-
-.setup .shot img {
-  display: block;
-  margin-top: var(--sp-3);
-  max-width: 100%;
-  height: auto;
-  border: 1px solid var(--crt-line-hi);
 }
 </style>
