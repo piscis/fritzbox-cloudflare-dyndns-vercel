@@ -8,16 +8,16 @@ import type { Field } from '~/components/FieldList.vue'
  *
  * Step 02 opens with a small builder: hostname, zone and IP families. Steps 02
  * and 03 then show the visitor's own values, ready to copy. Until they type,
- * and without JS, every value is a placeholder (`fritz.example.com` in
+ * and without JS, every value is a placeholder (`home.example.com` in
  * `example.com`, both IP families), so the prerendered HTML reads correctly on
- * its own. The token is never an input here: the Update URL keeps the
+ * its own. The placeholders match the screenshots and the README. The token is never an input here: the Update URL keeps the
  * FRITZ!Box's own `<pass>`, and the visitor types the token into the FRITZ!Box
  * Password field. Nothing is sent anywhere or stored.
  *
  * Menu paths stay in text, because the FRITZ!Box admin UI moves between
  * firmware versions and text is the cheapest thing to update.
  */
-const HOSTNAME = 'fritz.example.com'
+const HOSTNAME = 'home.example.com'
 const ZONE = 'example.com'
 
 /** The last two labels, the zone in the common case (`example.com`). */
@@ -27,7 +27,7 @@ function guessZone(hostname: string): string {
 
 /**
  * The server compares names exactly, so a typed name is lowercased, trimmed
- * and loses one trailing dot (`Fritz.Example.com.` → `fritz.example.com`)
+ * and loses one trailing dot (`Home.Example.com.` → `home.example.com`)
  * before it reaches an output, the zone guess or a check. The fields keep what
  * the visitor typed.
  */
@@ -85,7 +85,7 @@ const SCREENSHOTS = {
   ],
   records: [
     { src: '/setup/a-record.png', alt: 'Cloudflare\'s Add record form for an A record: a name, a placeholder IPv4 address, proxy status DNS only, TTL 1 min' },
-    { src: '/setup/aaaa-record.png', alt: 'Cloudflare\'s Add record form for an AAAA record: a name, a placeholder IPv6 address, proxy status DNS only' },
+    { src: '/setup/aaaa-record.png', alt: 'Cloudflare\'s Add record form for an AAAA record: a name, a placeholder IPv6 address, proxy status DNS only, TTL 1 min' },
   ],
   fritzbox: [
     { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab in the German interface, under Internet → Freigaben, with DynDNS aktiv ticked and the Update-URL, Domainnamen, Benutzername and Kennwort fields filled in' },
@@ -125,7 +125,10 @@ const recordName = computed<Field>(() => {
   return { label: 'Name', value: hostname.value, note: `${hostname.value} is not in ${zone.value}` }
 })
 
-/** The Add record form for one IP family, with a documentation address as placeholder. */
+/**
+ * The Add record form for one IP family, with a documentation address as
+ * placeholder: the same one the screenshots and the README show.
+ */
 function recordFields(type: 'A' | 'AAAA', family: 'IPv4' | 'IPv6', placeholder: string): Field[] {
   return [
     { label: 'Type', value: type },
@@ -137,7 +140,7 @@ function recordFields(type: 'A' | 'AAAA', family: 'IPv4' | 'IPv6', placeholder: 
 }
 
 const aRecord = computed(() => recordFields('A', 'IPv4', '192.0.2.1'))
-const aaaaRecord = computed(() => recordFields('AAAA', 'IPv6', '2001:db8::1'))
+const aaaaRecord = computed(() => recordFields('AAAA', 'IPv6', '2001:0db8:85a3:0000:0000:8a2e:0370:7334'))
 
 // `<pass>`, `<ipaddr>` and `<ip6addr>` stay literal: the FRITZ!Box substitutes
 // them itself on every update.
@@ -148,9 +151,8 @@ const updateUrl = computed(() =>
 )
 
 const fritzboxFields = computed<Field[]>(() => [
-  { label: 'DynDNS provider (DynDNS-Anbieter)', value: 'User-defined', note: '(Benutzerdefiniert)' },
   { label: 'Update URL (Update-URL)', value: updateUrl.value, copy: true },
-  { label: 'Domain name (Domainname)', value: hostname.value, note: 'the full hostname from the Update URL', copy: true },
+  { label: 'Domain name (Domainnamen)', value: hostname.value, note: 'the full hostname from the Update URL', copy: true },
   { label: 'Username (Benutzername)', value: 'fritz', note: 'any value, the service ignores it', copy: true },
   { label: 'Password (Kennwort)', value: '●●●●●●', note: 'your Cloudflare API token from step 01' },
 ])
@@ -308,7 +310,7 @@ const TROUBLE = [
         </h2>
         <p>
           In the FRITZ!Box admin page, open <em>Internet → Permit Access → DynDNS</em>
-          <em>(Internet → Freigaben → DynDNS)</em>, tick <em>Use DynDNS (DynDNS benutzen)</em> and
+          <em>(Internet → Freigaben → DynDNS)</em>, tick <em>Use DynDNS (DynDNS aktiv)</em> and
           fill in:
         </p>
         <FieldList :fields="fritzboxFields" />
