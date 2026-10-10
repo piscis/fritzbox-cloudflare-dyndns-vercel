@@ -15,11 +15,15 @@ This is a DynDNS Service that can be used to update the IP address of a Fritz!Bo
 
 ## Setup Service and configure Fritz!Box
 
+Prefer a guided version with a URL builder? Follow the steps at [fritzdns.piscis.dev/setup](https://fritzdns.piscis.dev/setup).
+
 ### Create a Cloudflare API token
 
 Create a [Cloudflare API token](https://dash.cloudflare.com/profile/api-tokens) with **read permissions** for the scope `Zone.Zone` and **edit permissions** for the scope `Zone.DNS`.
 
-![Create a Cloudflare custom token](./docs/images/docs-create-cloudflare-token.png "Create a Cloudflare custom token")
+Under **Zone Resources → Include → Specific zone**, pick the one zone your FRITZ!Box lives in. Then a leaked token can't touch your other domains.
+
+![Create a Cloudflare custom token](./public/setup/cloudflare-token.png "Create a Cloudflare custom token")
 
 ### Create A- and AAAA-records for your domain in Cloudflare
 
@@ -31,13 +35,13 @@ Set the TTL of each Record to 1 minute. The Service will only update existing re
 
 The A-Record will be used to update your FRITZ!Box IPv4 address in Cloudflare DNS. To create this record use a random IP Address and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv4 address.
 
-![Example for an A-Record configured on Cloudflare](./docs/images/docs-a-record-example.png "Example for an A-Record configured on Cloudflare")
+![Example for an A-Record configured on Cloudflare](./public/setup/a-record.png "Example for an A-Record configured on Cloudflare")
 
 #### AAAA-Record example
 
 The AAAA-Record will be used to update your FRITZ!Box IPv6 address in Cloudflare DNS. To create this record use a random IP Address for example `2001:0db8:85a3:0000:0000:8a2e:0370:7334` and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv6 address.
 
-![Example for an AAAA-Record configured on Cloudflare](./docs/images/docs-aaaa-record-example.png "Example for an AAAA-Record configured on Cloudflare")
+![Example for an AAAA-Record configured on Cloudflare](./public/setup/aaaa-record.png "Example for an AAAA-Record configured on Cloudflare")
 
 ----
 
@@ -115,7 +119,7 @@ https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.
 
 ### Configure your FRITZ!Box DynDNS Settings
 
-![Configure DynDNS settings](./docs/images/docs-fritzbox-dyndns.png "Configure DynDNS settings in your FRITZ!Box Admin interface")
+![Configure DynDNS settings](./public/setup/fritzbox-dyndns.png "Configure DynDNS settings in your FRITZ!Box Admin interface")
 
 | FRITZ!Box Setting | Value                                                                                                                               | Description                                                                                                                              |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
