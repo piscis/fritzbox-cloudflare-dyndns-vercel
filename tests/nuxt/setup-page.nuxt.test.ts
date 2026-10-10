@@ -104,10 +104,17 @@ describe('setup page', () => {
 
       expect(text).toContain('AAAA')
       expect(text).toContain('192.0.2.1')
-      expect(text).toContain('2001:db8::1')
+      expect(text).toContain('2001:0db8:85a3:0000:0000:8a2e:0370:7334')
       expect(text).toContain('DNS only')
       expect(text).toContain('1 min')
-      expect(text).toContain('fritz')
+    })
+
+    it('uses the same placeholder IPs as the screenshots and the README', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      expect(valueOf(page, 'IPv4 address')).toBe('192.0.2.1')
+      expect(valueOf(page, 'IPv6 address')).toBe('2001:0db8:85a3:0000:0000:8a2e:0370:7334')
+      expect(page.text()).not.toContain('2001:db8::1')
     })
 
     it('points a missing IP family at the IP choice instead of editing the URL by hand', async () => {
@@ -130,7 +137,7 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
 
       expect(page.text()).toContain(
-        `https://${window.location.host}/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>`,
+        `https://${window.location.host}/api/fritz-dyndns/?token=<pass>&record=home.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>`,
       )
     })
 
@@ -139,17 +146,34 @@ describe('setup page', () => {
       const text = page.text()
 
       expect(text).toContain('(Internet → Freigaben → DynDNS)')
+      expect(text).toContain('(DynDns aktiv)')
       expect(text).toContain('(Update-URL)')
-      expect(text).toContain('(Domainname)')
+      expect(text).toContain('(Domainnamen)')
       expect(text).toContain('(Benutzername)')
       expect(text).toContain('(Kennwort)')
+      expect(text).toContain('(Übernehmen)')
+      expect(text).not.toContain('DynDNS benutzen')
+    })
+
+    it('lists only the fields the FRITZ!Box DynDNS tab shows, without a provider row', async () => {
+      const page = await mountSuspended(SetupPage)
+      const terms = page.findAll('section[aria-labelledby="step-fritzbox"] dt').map(dt => dt.text())
+
+      expect(terms).toEqual([
+        'Update URL (Update-URL)',
+        'Domain name (Domainnamen)',
+        'Username (Benutzername)',
+        'Password (Kennwort)',
+      ])
+      expect(page.text()).not.toMatch(/DynDNS-Anbieter\)|Benutzerdefiniert|User-defined/)
     })
 
     it('fills in Domain Name, Username and Password', async () => {
       const page = await mountSuspended(SetupPage)
       const text = page.text()
 
-      expect(text).toContain('fritz.example.com')
+      expect(valueOf(page, 'Domain name')).toBe('home.example.com')
+      expect(valueOf(page, 'Username')).toBe('fritz')
       expect(text).toContain('any value')
       expect(text).toContain('your Cloudflare API token')
     })
@@ -160,14 +184,33 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
       const text = page.text()
 
-      expect(text).toMatch(/DynDNS status/i)
+      // FRITZ!OS shows the DynDNS state on the overview page, not on the DynDNS tab.
+      expect(text).toContain('Übersicht')
+      expect(text).toContain('Komfortfunktionen')
+      expect(text).toContain('IPv4-Status: angemeldet')
+      expect(text).not.toMatch(/status on the same tab/i)
       expect(text).toContain('real IP')
+    })
+
+    it('points at DynDNS-Fehler entries in the event log', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      expect(page.text()).toContain('System → Ereignisse')
+      expect(page.text()).toContain('DynDNS-Fehler')
+    })
+
+    it('explains the FRITZ!Box error when the Domainnamen does not resolve', async () => {
+      const page = await mountSuspended(SetupPage)
+      const entry = page.findAll('.trouble dt').find(dt => dt.text().includes('nicht aufgelöst werden'))!
+
+      expect(entry.text()).toContain('Der angegebene Domainname kann trotz erfolgreicher Aktualisierung nicht aufgelöst werden.')
+      expect(entry.element.nextElementSibling!.textContent).toContain('home.example.com')
     })
 
     it.each([
       'Zone "example.com" not found.',
-      'A record for "fritz.example.com" does not exist.',
-      'AAAA record for "fritz.example.com" does not exist.',
+      'A record for "home.example.com" does not exist.',
+      'AAAA record for "home.example.com" does not exist.',
       'Missing ipv4 or ipv6 URL parameter.',
     ])('quotes the server message %s word for word', async (message) => {
       const page = await mountSuspended(SetupPage)
@@ -176,8 +219,8 @@ describe('setup page', () => {
     })
 
     it.each([
-      'A record for "fritz.example.com" does not exist.',
-      'AAAA record for "fritz.example.com" does not exist.',
+      'A record for "home.example.com" does not exist.',
+      'AAAA record for "home.example.com" does not exist.',
       'The record still holds the placeholder IP',
     ])('answers %s with the step 02 IP choice, not a hand-edited URL', async (message) => {
       const page = await mountSuspended(SetupPage)
@@ -236,6 +279,12 @@ describe('setup page', () => {
       expect(alts[1]).toMatch(/\bA record\b/)
       expect(alts[2]).toMatch(/\bAAAA record\b/)
       expect(alts[3]).toMatch(/FRITZ!Box.*DynDNS/)
+      // The screenshot shows the German interface, so the alt text names its labels.
+      expect(alts[3]).toContain('Internet → Freigaben')
+      expect(alts[3]).toContain('DynDns aktiv')
+      // Both record screenshots show the TTL step 02 asks for.
+      expect(alts[1]).toContain('TTL 1 min')
+      expect(alts[2]).toContain('TTL 1 min')
     })
   })
 
@@ -244,12 +293,12 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
 
       expect((field(page, 'Hostname').element as HTMLInputElement).value).toBe('')
-      expect(field(page, 'Hostname').attributes('placeholder')).toBe('fritz.example.com')
+      expect(field(page, 'Hostname').attributes('placeholder')).toBe('home.example.com')
       expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('')
       expect(field(page, 'Zone').attributes('placeholder')).toBe('example.com')
       expect((field(page, 'IPv4 + IPv6').element as HTMLInputElement).checked).toBe(true)
-      expect(valueOf(page, 'Name')).toBe('fritz')
-      expect(valueOf(page, 'Domain name')).toBe('fritz.example.com')
+      expect(valueOf(page, 'Name')).toBe('home')
+      expect(valueOf(page, 'Domain name')).toBe('home.example.com')
     })
 
     it('keeps everything in memory: no storage, no cookies, no query string', async () => {
@@ -424,7 +473,7 @@ describe('setup page', () => {
   })
 
   describe('the IP choice', () => {
-    const base = 'https://HOST/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com'
+    const base = 'https://HOST/api/fritz-dyndns/?token=<pass>&record=home.example.com&zone=example.com'
 
     it.each([
       ['IPv4 + IPv6', `${base}&ipv4=<ipaddr>&ipv6=<ip6addr>`],

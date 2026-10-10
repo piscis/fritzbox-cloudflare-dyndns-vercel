@@ -33,7 +33,7 @@ Set the TTL of each Record to 1 minute. The Service will only update existing re
 
 #### A-Record example
 
-The A-Record will be used to update your FRITZ!Box IPv4 address in Cloudflare DNS. To create this record use a random IP Address and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv4 address.
+The A-Record will be used to update your FRITZ!Box IPv4 address in Cloudflare DNS. To create this record use a random IP Address for example `192.0.2.1` and make sure the proxy is disabled and the TTL is set to 1 minute. After the configuration of your FRITZ!Box is done the record should be updated with your current IPv4 address.
 
 ![Example for an A-Record configured on Cloudflare](./public/setup/a-record.png "Example for an A-Record configured on Cloudflare")
 
@@ -61,7 +61,7 @@ You end up with a Worker on `https://<worker-name>.<your-subdomain>.workers.dev`
 Update URL for your FRITZ!Box is:
 
 ```
-https://<worker-name>.<your-subdomain>.workers.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
+https://<worker-name>.<your-subdomain>.workers.dev/api/fritz-dyndns/?token=<pass>&record=home.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
 ```
 
 To serve it from your own domain instead, set `CF_ROUTE_PATTERN` (see
@@ -114,19 +114,19 @@ This service is provided for free and without any warranty. Since this service i
 **Please note** that this option is not secure due to the fact that the API token is visible in the URL. Although cloudflare REDACTS the API token in the logs it is still possible to get your API token by inspecting the network traffic. If you need a more secure option, please consider self-hosting.
 
 ```
-https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
+https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=home.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>
 ```
 
 ### Configure your FRITZ!Box DynDNS Settings
 
 ![Configure DynDNS settings](./public/setup/fritzbox-dyndns.png "Configure DynDNS settings in your FRITZ!Box Admin interface")
 
-| FRITZ!Box Setting | Value                                                                                                                               | Description                                                                                                                              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Update URL        | `https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
-| Domain Name       | fritz.example.com                                                                                                                   | The FQDN from the URL parameter `record` and `zone`.                                                                                     |
-| Username          | admin                                                                                                                               | You can choose whatever value you want.                                                                                                  |
-| Password          | ●●●●●●                                                                                                                              | The API token you’ve created earlier.                                                                                                    |
+| FRITZ!Box Setting | Value                                                                                                                              | Description                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Update URL        | `https://fritzdns.piscis.dev/api/fritz-dyndns/?token=<pass>&record=home.example.com&zone=example.com&ipv4=<ipaddr>&ipv6=<ip6addr>` | Replace the URL parameter `record` and `zone` with your domain name. If required you can omit either the `ipv4` or `ipv6` URL parameter. |
+| Domain Name       | home.example.com                                                                                                                   | The FQDN from the URL parameter `record` and `zone`.                                                                                     |
+| Username          | fritz                                                                                                                              | You can choose whatever value you want.                                                                                                  |
+| Password          | ●●●●●●                                                                                                                             | The Cloudflare API token you’ve created earlier.                                                                                         |
 
 Please note, if you self-host your service URL will be different — replace the host and keep
 the rest of the URL as-is. A Cloudflare deployment made with the button above answers on
