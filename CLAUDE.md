@@ -31,8 +31,7 @@ home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary ta
   `git worktree add ../fritzdns-<slug> -b <type>/<slug> origin/main`. A worktree under
   `.claude/worktrees/` fails `pnpm typecheck` with TS2769, because Nuxt typechecks the
   parent checkout's `vitest.config.ts`.
-- Fetch and rebase onto `origin/main` before every push. Set work aside with WIP
-  commits; the stash is shared by every worktree.
+- Fetch and rebase onto `origin/main` before every push.
 - After `pnpm lint:fix`, `git diff --stat` must list only your files. Revert the rest:
   it is another agent's work in flight.
 - The machine's default Node is 22. Run pnpm as `fnm exec --using=.nvmrc pnpm …`.
