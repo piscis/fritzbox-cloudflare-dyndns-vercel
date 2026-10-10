@@ -88,7 +88,7 @@ const SCREENSHOTS = {
     { src: '/setup/aaaa-record.png', alt: 'Cloudflare\'s Add record form for an AAAA record: a name, a placeholder IPv6 address, proxy status DNS only' },
   ],
   fritzbox: [
-    { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab under Internet → Permit Access, with Use DynDNS ticked and the Update URL, domain name, username and password fields filled in' },
+    { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab in the German interface, under Internet → Freigaben, with DynDNS aktiv ticked and the Update-URL, Domainnamen, Benutzername and Kennwort fields filled in' },
   ],
 } as const
 

@@ -236,6 +236,8 @@ describe('setup page', () => {
       expect(alts[1]).toMatch(/\bA record\b/)
       expect(alts[2]).toMatch(/\bAAAA record\b/)
       expect(alts[3]).toMatch(/FRITZ!Box.*DynDNS/)
+      // The screenshot shows the German interface, so the alt text names its labels.
+      expect(alts[3]).toContain('Internet → Freigaben')
     })
   })
 
