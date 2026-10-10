@@ -6,17 +6,52 @@ import type { Field } from '~/components/FieldList.vue'
  * can flip between the Cloudflare dashboard, the FRITZ!Box admin page and this
  * tab without losing their place.
  *
- * Everything is a placeholder (`fritz.example.com` in `example.com`, both IP
- * families), so the prerendered HTML reads correctly on its own. The token is
- * never an input here: the Update URL keeps the FRITZ!Box's own `<pass>`, and
- * the visitor types the token into the FRITZ!Box Password field.
+ * Step 02 opens with a small builder: hostname, zone and IP families. Steps 02
+ * and 03 then show the visitor's own values, ready to copy. Until they type,
+ * and without JS, every value is a placeholder (`fritz.example.com` in
+ * `example.com`, both IP families), so the prerendered HTML reads correctly on
+ * its own. The token is never an input here: the Update URL keeps the
+ * FRITZ!Box's own `<pass>`, and the visitor types the token into the FRITZ!Box
+ * Password field. Nothing is sent anywhere or stored.
  *
  * Menu paths stay in text, because the FRITZ!Box admin UI moves between
  * firmware versions and text is the cheapest thing to update.
  */
 const HOSTNAME = 'fritz.example.com'
 const ZONE = 'example.com'
-const RECORD_NAME = 'fritz'
+
+/** The last two labels, the zone in the common case (`example.com`). */
+function guessZone(hostname: string): string {
+  return hostname.split('.').slice(-2).join('.')
+}
+
+// Builder state lives in memory only: no localStorage, no cookies, no query
+// string. An empty field falls back to the placeholder, so the page reads the
+// same before any input as it does prerendered and without JS.
+const hostnameInput = ref('')
+const zoneEdit = ref<string | null>(null)
+
+const zoneInput = computed({
+  // Auto-filled from the hostname until the visitor edits it; then the edit
+  // sticks, for zones like `example.co.uk`.
+  get: () => zoneEdit.value ?? (hostnameInput.value.trim() ? guessZone(hostnameInput.value.trim()) : ''),
+  set: (value: string) => {
+    zoneEdit.value = value
+  },
+})
+
+const IP_CHOICES = [
+  { value: 'both', label: 'IPv4 + IPv6' },
+  { value: 'ipv4', label: 'IPv4 only' },
+  { value: 'ipv6', label: 'IPv6 only' },
+] as const
+
+const ipChoice = ref<typeof IP_CHOICES[number]['value']>('both')
+const wantsIpv4 = computed(() => ipChoice.value !== 'ipv6')
+const wantsIpv6 = computed(() => ipChoice.value !== 'ipv4')
+
+const hostname = computed(() => hostnameInput.value.trim() || HOSTNAME)
+const zone = computed(() => zoneInput.value.trim() || guessZone(hostname.value))
 
 const config = useRuntimeConfig()
 const { state } = useHealthCheck()
@@ -53,37 +88,62 @@ const TOKEN_FIELDS: Field[] = [
   { label: 'Zone Resources', value: `Include · Specific zone · ${ZONE}` },
 ]
 
-const RECORD_DEFAULTS: Field[] = [
-  { label: 'Name', value: RECORD_NAME, note: `the part of ${HOSTNAME} before .${ZONE}` },
-]
+const inZone = computed(() => hostname.value === zone.value || hostname.value.endsWith(`.${zone.value}`))
 
-const A_RECORD: Field[] = [
+// Letters, digits and hyphens per label, no hyphen at either end of a label.
+// Catches a pasted scheme or path, spaces and empty labels.
+const HOSTNAME_PATTERN = /^[a-z\d](?:[a-z\d-]*[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]*[a-z\d])?)*$/i
+
+// Warnings never hide the outputs: an unusual setup may still be right.
+const warnings = computed(() => [
+  ...(HOSTNAME_PATTERN.test(hostname.value)
+    ? []
+    : [`${hostname.value} does not look like a hostname: use only letters, digits, hyphens and dots, with no https:// or path.`]),
+  ...(inZone.value
+    ? []
+    : [`${hostname.value} is not ${zone.value} and does not end in .${zone.value}, so Cloudflare will not find the record in that zone.`]),
+])
+
+// Cloudflare's Name field takes the hostname minus the zone, `@` for the apex.
+const recordName = computed<Field>(() => {
+  if (hostname.value === zone.value)
+    return { label: 'Name', value: '@', note: `the zone apex, ${zone.value} itself` }
+  if (inZone.value) {
+    const name = hostname.value.slice(0, -zone.value.length - 1)
+    return { label: 'Name', value: name, note: `the part of ${hostname.value} before .${zone.value}` }
+  }
+  return { label: 'Name', value: hostname.value, note: `${hostname.value} is not in ${zone.value}` }
+})
+
+const aRecord = computed<Field[]>(() => [
   { label: 'Type', value: 'A' },
-  ...RECORD_DEFAULTS,
+  recordName.value,
   { label: 'IPv4 address', value: '192.0.2.1', note: 'any IPv4 works until the first update' },
   { label: 'Proxy status', value: 'DNS only' },
   { label: 'TTL', value: '1 min' },
-]
+])
 
-const AAAA_RECORD: Field[] = [
+const aaaaRecord = computed<Field[]>(() => [
   { label: 'Type', value: 'AAAA' },
-  ...RECORD_DEFAULTS,
+  recordName.value,
   { label: 'IPv6 address', value: '2001:db8::1', note: 'any IPv6 works until the first update' },
   { label: 'Proxy status', value: 'DNS only' },
   { label: 'TTL', value: '1 min' },
-]
+])
 
 // `<pass>`, `<ipaddr>` and `<ip6addr>` stay literal: the FRITZ!Box substitutes
 // them itself on every update.
 const updateUrl = computed(() =>
-  `https://${host.value}/api/fritz-dyndns/?token=<pass>&record=${HOSTNAME}&zone=${ZONE}&ipv4=<ipaddr>&ipv6=<ip6addr>`,
+  `https://${host.value}/api/fritz-dyndns/?token=<pass>&record=${hostname.value}&zone=${zone.value}${
+    wantsIpv4.value ? '&ipv4=<ipaddr>' : ''
+  }${wantsIpv6.value ? '&ipv6=<ip6addr>' : ''}`,
 )
 
 const fritzboxFields = computed<Field[]>(() => [
   { label: 'DynDNS provider (DynDNS-Anbieter)', value: 'User-defined', note: '(Benutzerdefiniert)' },
-  { label: 'Update URL (Update-URL)', value: updateUrl.value },
-  { label: 'Domain name (Domainname)', value: HOSTNAME, note: 'the full hostname from the Update URL' },
-  { label: 'Username (Benutzername)', value: 'fritz', note: 'any value, the service ignores it' },
+  { label: 'Update URL (Update-URL)', value: updateUrl.value, copy: true },
+  { label: 'Domain name (Domainname)', value: hostname.value, note: 'the full hostname from the Update URL', copy: true },
+  { label: 'Username (Benutzername)', value: 'fritz', note: 'any value, the service ignores it', copy: true },
   { label: 'Password (Kennwort)', value: '●●●●●●', note: 'your Cloudflare API token from step 01' },
 ])
 
@@ -170,14 +230,58 @@ const TROUBLE = [
         <h2 id="step-records">
           <span class="step-number">{{ STEPS.records.number }}</span> {{ STEPS.records.title }}
         </h2>
+        <div class="builder">
+          <label for="setup-hostname">Hostname <span>the name your FRITZ!Box should get</span></label>
+          <input
+            id="setup-hostname"
+            v-model="hostnameInput"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            :placeholder="HOSTNAME"
+          >
+          <label for="setup-zone">Zone <span>your domain in Cloudflare</span></label>
+          <input
+            id="setup-zone"
+            v-model="zoneInput"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            :placeholder="guessZone(hostname)"
+          >
+          <fieldset>
+            <legend>IP families <span>the ones your line has</span></legend>
+            <span v-for="choice in IP_CHOICES" :key="choice.value" class="choice">
+              <input
+                :id="`setup-ip-${choice.value}`"
+                v-model="ipChoice"
+                type="radio"
+                name="setup-ip"
+                :value="choice.value"
+              >
+              <label :for="`setup-ip-${choice.value}`">{{ choice.label }}</label>
+            </span>
+          </fieldset>
+        </div>
+        <p v-for="warning in warnings" :key="warning" role="alert" class="warning">
+          {{ warning }}
+        </p>
         <p>
           The service only updates existing records and never creates them, so create them once by
           hand. In Cloudflare, open <em>your domain → DNS → Records → Add record</em>.
         </p>
-        <h3>A record, for IPv4</h3>
-        <FieldList :fields="A_RECORD" />
-        <h3>AAAA record, for IPv6</h3>
-        <FieldList :fields="AAAA_RECORD" />
+        <template v-if="wantsIpv4">
+          <h3>A record, for IPv4</h3>
+          <FieldList :fields="aRecord" />
+        </template>
+        <template v-if="wantsIpv6">
+          <h3>AAAA record, for IPv6</h3>
+          <FieldList :fields="aaaaRecord" />
+        </template>
         <p>
           Skip the record for an IP family your line doesn't have, and drop its parameter from the
           Update URL in step 03.
@@ -290,6 +394,90 @@ const TROUBLE = [
 .setup b {
   font-style: normal;
   color: var(--p-100);
+}
+
+.setup .builder {
+  display: grid;
+  gap: var(--sp-2);
+  margin: var(--sp-4) 0;
+  border: 1px solid var(--crt-line);
+  border-radius: var(--radius);
+  background: var(--crt-screen);
+  padding: var(--sp-4);
+}
+
+.setup .builder label,
+.setup .builder legend {
+  color: var(--p-100);
+}
+
+.setup .builder label span,
+.setup .builder legend span {
+  color: var(--p-300);
+}
+
+.setup .builder label span::before,
+.setup .builder legend span::before {
+  content: '— ';
+}
+
+.setup .builder input[type='text'] {
+  margin-bottom: var(--sp-2);
+  border: 1px solid var(--crt-line-hi);
+  border-radius: var(--radius);
+  background: var(--crt-void);
+  padding: 0.5em 0.75em;
+  font: inherit;
+  color: var(--p-100);
+  caret-color: var(--fritz-yellow);
+}
+
+.setup .builder input[type='text']::placeholder {
+  color: var(--p-300);
+}
+
+.setup .builder input:focus-visible {
+  outline: 2px solid var(--fritz-yellow);
+  outline-offset: 2px;
+}
+
+.setup .builder fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.setup .builder legend {
+  margin-bottom: var(--sp-2);
+  padding: 0;
+}
+
+.setup .builder .choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.setup .builder .choice input {
+  accent-color: var(--fritz-yellow);
+}
+
+.setup .builder .choice label {
+  color: var(--p-200);
+  cursor: pointer;
+}
+
+.setup .warning {
+  border-left: 2px solid var(--sig-amber);
+  padding-left: var(--sp-3);
+  color: var(--sig-amber);
+}
+
+.setup .warning::before {
+  content: '! ';
 }
 
 .setup .note {

@@ -1,9 +1,28 @@
+import type { VueWrapper } from '@vue/test-utils'
 import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 // Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler } from 'h3'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import SetupPage from '~/pages/setup.vue'
+
+type Page = Pick<VueWrapper, 'findAll' | 'get'>
+
+/** The form control a visitor finds by its visible label. */
+function field(page: Page, label: string) {
+  const match = page.findAll('label').find(l => l.text().replace(/\s+/g, ' ').trim().startsWith(label))
+  if (!match)
+    throw new Error(`no label "${label}"`)
+  return page.get(`#${match.attributes('for')}`)
+}
+
+/** The value shown next to a field label in one of the field lists. */
+function valueOf(page: Page, label: string, term?: Element): string {
+  term ??= page.findAll('dt').find(dt => dt.text().startsWith(label))?.element
+  if (!term)
+    throw new Error(`no field "${label}"`)
+  return term.nextElementSibling!.querySelector('code')!.textContent ?? ''
+}
 
 // Without this the title bar's health check would silently exercise its
 // `down` path against the in-memory h3 app.
@@ -189,12 +208,211 @@ describe('setup page', () => {
     })
   })
 
+  describe('the builder', () => {
+    it('starts empty and shows the placeholder values', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      expect((field(page, 'Hostname').element as HTMLInputElement).value).toBe('')
+      expect(field(page, 'Hostname').attributes('placeholder')).toBe('fritz.example.com')
+      expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('')
+      expect(field(page, 'Zone').attributes('placeholder')).toBe('example.com')
+      expect((field(page, 'IPv4 + IPv6').element as HTMLInputElement).checked).toBe(true)
+      expect(valueOf(page, 'Name')).toBe('fritz')
+      expect(valueOf(page, 'Domain name')).toBe('fritz.example.com')
+    })
+
+    it('keeps everything in memory: no storage, no cookies, no query string', async () => {
+      const setItem = vi.spyOn(Storage.prototype, 'setItem')
+      const before = { search: window.location.search, cookie: document.cookie }
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('home.example.org')
+      await field(page, 'Zone').setValue('example.org')
+      await field(page, 'IPv6 only').setValue(true)
+      await flushPromises()
+
+      expect(setItem).not.toHaveBeenCalled()
+      expect(window.localStorage).toHaveLength(0)
+      expect(window.location.search).toBe(before.search)
+      expect(document.cookie).toBe(before.cookie)
+      setItem.mockRestore()
+    })
+
+    it('fills the zone from the hostname and builds the Update URL from both', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('home.example.org')
+
+      expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('example.org')
+      expect(valueOf(page, 'Update URL')).toBe(
+        `https://${window.location.host}/api/fritz-dyndns/?token=<pass>&record=home.example.org&zone=example.org&ipv4=<ipaddr>&ipv6=<ip6addr>`,
+      )
+    })
+
+    it('keeps an edited zone when the hostname changes', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('fritz.example.co.uk')
+      await field(page, 'Zone').setValue('example.co.uk')
+      await field(page, 'Hostname').setValue('box.example.co.uk')
+
+      expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('example.co.uk')
+      expect(valueOf(page, 'Update URL')).toContain('&record=box.example.co.uk&zone=example.co.uk&')
+    })
+  })
+
+  it('sets the FRITZ!Box Domain Name to the hostname', async () => {
+    const page = await mountSuspended(SetupPage)
+
+    await field(page, 'Hostname').setValue('home.example.org')
+
+    expect(valueOf(page, 'Domain name')).toBe('home.example.org')
+  })
+
+  describe('warnings', () => {
+    function warnings(page: Page): string[] {
+      return page.findAll('[role="alert"]').map(w => w.text())
+    }
+
+    it('shows none for the placeholders or a hostname inside its zone', async () => {
+      const page = await mountSuspended(SetupPage)
+      expect(warnings(page)).toEqual([])
+
+      await field(page, 'Hostname').setValue('fritz.example.co.uk')
+      await field(page, 'Zone').setValue('example.co.uk')
+      expect(warnings(page)).toEqual([])
+    })
+
+    it('flags a hostname outside the zone and still shows the values', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('fritz.example.com')
+      await field(page, 'Zone').setValue('example.org')
+
+      expect(warnings(page).join(' ')).toContain('fritz.example.com is not example.org and does not end in .example.org')
+      expect(valueOf(page, 'Update URL')).toContain('&record=fritz.example.com&zone=example.org&')
+      expect(valueOf(page, 'Domain name')).toBe('fritz.example.com')
+    })
+
+    it.each([
+      'https://fritz.example.com',
+      'fritz.example.com/path',
+      'fritz example.com',
+      'fritz_box.example.com',
+      '-fritz.example.com',
+      'fritz..example.com',
+    ])('flags %s as not a hostname and still shows the values', async (input) => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue(input)
+
+      expect(warnings(page).join(' ')).toContain('does not look like a hostname')
+      expect(valueOf(page, 'Domain name')).toBe(input)
+      expect(valueOf(page, 'Update URL')).toContain(`&record=${input}&`)
+    })
+  })
+
+  describe('copy buttons', () => {
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    function stubClipboard(writeText: (text: string) => Promise<void>) {
+      return vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(writeText)
+    }
+
+    it.each([
+      ['Update URL'],
+      ['Domain name'],
+      ['Username'],
+    ])('copies the shown %s', async (label) => {
+      const writeText = stubClipboard(() => Promise.resolve())
+      const page = await mountSuspended(SetupPage)
+      await field(page, 'Hostname').setValue('home.example.org')
+
+      const button = page.get(`button[aria-label^="Copy ${label}"]`)
+      await button.trigger('click')
+      await flushPromises()
+
+      expect(writeText).toHaveBeenCalledWith(valueOf(page, label))
+      expect(button.text()).toContain('copied')
+    })
+
+    it('says so when the browser blocks the clipboard, and the value stays selectable text', async () => {
+      stubClipboard(() => Promise.reject(new Error('NotAllowedError')))
+      const page = await mountSuspended(SetupPage)
+
+      const button = page.get('button[aria-label^="Copy Update URL"]')
+      await button.trigger('click')
+      await flushPromises()
+
+      expect(button.text()).toContain('select it')
+      expect(valueOf(page, 'Update URL')).toContain('/api/fritz-dyndns/')
+    })
+  })
+
+  describe('the IP choice', () => {
+    const base = 'https://HOST/api/fritz-dyndns/?token=<pass>&record=fritz.example.com&zone=example.com'
+
+    it.each([
+      ['IPv4 + IPv6', `${base}&ipv4=<ipaddr>&ipv6=<ip6addr>`],
+      ['IPv4 only', `${base}&ipv4=<ipaddr>`],
+      ['IPv6 only', `${base}&ipv6=<ip6addr>`],
+    ])('%s builds the matching Update URL', async (choice, url) => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'IPv6 only').setValue(true)
+      await field(page, choice).setValue(true)
+
+      expect(valueOf(page, 'Update URL')).toBe(url.replace('HOST', window.location.host))
+    })
+  })
+
+  describe('the DNS records', () => {
+    function recordTypes(page: Page): string[] {
+      return page.findAll('dt').filter(dt => dt.text() === 'Type').map(dt => valueOf(page, 'Type', dt.element))
+    }
+
+    it('names the record after the subdomain', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('home.lab.example.org')
+
+      expect(valueOf(page, 'Name')).toBe('home.lab')
+    })
+
+    it('uses @ for the zone apex', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('example.org')
+
+      expect(valueOf(page, 'Name')).toBe('@')
+    })
+
+    it.each([
+      ['IPv4 + IPv6', ['A', 'AAAA']],
+      ['IPv4 only', ['A']],
+      ['IPv6 only', ['AAAA']],
+    ])('%s shows only the matching records', async (choice, types) => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, choice).setValue(true)
+
+      expect(recordTypes(page)).toEqual(types)
+    })
+  })
+
   describe('the token', () => {
     it('is never asked for', async () => {
       const page = await mountSuspended(SetupPage)
+      const labels = page.findAll('label').map(l => l.text().toLowerCase())
 
       // Not even a field: the token goes into the FRITZ!Box and nowhere else.
-      expect(page.findAll('input, textarea, select')).toHaveLength(0)
+      expect(page.findAll('input[type="password"], textarea')).toHaveLength(0)
+      expect(labels.length).toBeGreaterThan(0)
+      for (const label of labels) {
+        expect(label).not.toMatch(/token|password|pass\b/)
+      }
     })
   })
 
