@@ -71,13 +71,22 @@ describe('setup page', () => {
       expect(text).toContain('could read it')
     })
 
-    it('links to the README self-host section on GitHub', async () => {
+    it('links to the README section on running your own', async () => {
       const page = await mountSuspended(SetupPage)
       const link = page.find('a[href="https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel#use-the-service"]')
 
       expect(link.exists()).toBe(true)
       expect(link.attributes('target')).toBe('_blank')
       expect(link.attributes('rel')).toContain('noopener')
+    })
+
+    it('scopes the token to the zone being built for', async () => {
+      const page = await mountSuspended(SetupPage)
+      expect(valueOf(page, 'Zone Resources')).toBe('Include · Specific zone · example.com')
+
+      await field(page, 'Hostname').setValue('home.example.org')
+
+      expect(valueOf(page, 'Zone Resources')).toBe('Include · Specific zone · example.org')
     })
 
     it('offers no deploy buttons', async () => {
@@ -99,6 +108,14 @@ describe('setup page', () => {
       expect(text).toContain('DNS only')
       expect(text).toContain('1 min')
       expect(text).toContain('fritz')
+    })
+
+    it('points a missing IP family at the IP choice instead of editing the URL by hand', async () => {
+      const page = await mountSuspended(SetupPage)
+      const text = page.get('section[aria-labelledby="step-records"]').text().replace(/\s+/g, ' ')
+
+      expect(text).not.toMatch(/\b(?:remove|drop) .*from the Update URL/i)
+      expect(text).toContain('IP families')
     })
 
     it('explains that the service only updates existing records', async () => {
@@ -156,6 +173,20 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
 
       expect(page.text()).toContain(message)
+    })
+
+    it.each([
+      'A record for "fritz.example.com" does not exist.',
+      'AAAA record for "fritz.example.com" does not exist.',
+      'The record still holds the placeholder IP',
+    ])('answers %s with the step 02 IP choice, not a hand-edited URL', async (message) => {
+      const page = await mountSuspended(SetupPage)
+      const term = page.findAll('.trouble dt').find(dt => dt.text() === message)
+      const fix = term?.element.nextElementSibling?.textContent?.replace(/\s+/g, ' ') ?? ''
+
+      expect(fix).toContain('step 02')
+      expect(fix).toContain('copy the Update URL again')
+      expect(fix).not.toMatch(/\b(?:remove|drop) .*from the Update URL/i)
     })
 
     it('covers a record still holding the placeholder IP', async () => {
@@ -259,6 +290,46 @@ describe('setup page', () => {
       expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('example.co.uk')
       expect(valueOf(page, 'Update URL')).toContain('&record=box.example.co.uk&zone=example.co.uk&')
     })
+
+    it('fills the zone from the hostname again once the edited zone is cleared', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('fritz.example.co.uk')
+      await field(page, 'Zone').setValue('example.co.uk')
+      await field(page, 'Zone').setValue('')
+      await field(page, 'Hostname').setValue('home.example.org')
+
+      expect(field(page, 'Zone').attributes('placeholder')).toBe('example.org')
+      expect(valueOf(page, 'Update URL')).toContain('&record=home.example.org&zone=example.org&')
+    })
+
+    it('lowercases the hostname and zone, as the server compares names exactly', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue('Fritz.Example.com')
+
+      expect((field(page, 'Hostname').element as HTMLInputElement).value).toBe('Fritz.Example.com')
+      expect(valueOf(page, 'Update URL')).toContain('&record=fritz.example.com&zone=example.com&')
+      expect(valueOf(page, 'Domain name')).toBe('fritz.example.com')
+      expect(page.findAll('[role="alert"]')).toHaveLength(0)
+
+      await field(page, 'Zone').setValue(' Example.COM. ')
+
+      expect((field(page, 'Zone').element as HTMLInputElement).value).toBe(' Example.COM. ')
+      expect(valueOf(page, 'Update URL')).toContain('&record=fritz.example.com&zone=example.com&')
+      expect(page.findAll('[role="alert"]')).toHaveLength(0)
+    })
+
+    it('drops a trailing dot before guessing the zone', async () => {
+      const page = await mountSuspended(SetupPage)
+
+      await field(page, 'Hostname').setValue(' fritz.example.com. ')
+
+      expect((field(page, 'Zone').element as HTMLInputElement).value).toBe('example.com')
+      expect(valueOf(page, 'Update URL')).toContain('&record=fritz.example.com&zone=example.com&')
+      expect(valueOf(page, 'Name')).toBe('fritz')
+      expect(page.findAll('[role="alert"]')).toHaveLength(0)
+    })
   })
 
   it('sets the FRITZ!Box Domain Name to the hostname', async () => {
@@ -296,6 +367,7 @@ describe('setup page', () => {
 
     it.each([
       'https://fritz.example.com',
+      'https://fritz.example.com/',
       'fritz.example.com/path',
       'fritz example.com',
       'fritz_box.example.com',

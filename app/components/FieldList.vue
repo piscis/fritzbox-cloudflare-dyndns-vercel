@@ -22,17 +22,18 @@ onMounted(() => {
   canCopy.value = Boolean(navigator.clipboard)
 })
 
-const copyState = ref<{ label: string, result: 'copied' | 'failed' } | null>(null)
+// Keyed by row, since labels can repeat (two `Permission` rows in step 01).
+const copyState = ref<{ row: number, result: 'copied' | 'failed' } | null>(null)
 let reset: ReturnType<typeof setTimeout> | undefined
 
-async function copy(field: Field): Promise<void> {
+async function copy(field: Field, row: number): Promise<void> {
   clearTimeout(reset)
   try {
     await navigator.clipboard.writeText(field.value)
-    copyState.value = { label: field.label, result: 'copied' }
+    copyState.value = { row, result: 'copied' }
   }
   catch {
-    copyState.value = { label: field.label, result: 'failed' }
+    copyState.value = { row, result: 'failed' }
   }
   reset = setTimeout(() => {
     copyState.value = null
@@ -41,8 +42,8 @@ async function copy(field: Field): Promise<void> {
 
 onBeforeUnmount(() => clearTimeout(reset))
 
-function buttonText(field: Field): string {
-  if (copyState.value?.label !== field.label)
+function buttonText(row: number): string {
+  if (copyState.value?.row !== row)
     return 'copy'
   return copyState.value.result === 'copied' ? 'copied' : 'blocked, select it'
 }
@@ -50,7 +51,7 @@ function buttonText(field: Field): string {
 
 <template>
   <dl class="m-0 grid grid-cols-1 gap-x-(--sp-5) gap-y-(--sp-2) rounded-(--radius) border border-(--crt-line) bg-(--crt-screen) p-(--sp-4) text-step-0 sm:grid-cols-[minmax(10rem,auto)_1fr]">
-    <template v-for="field in fields" :key="field.label">
+    <template v-for="(field, row) in fields" :key="row">
       <dt class="text-(--p-300)">
         {{ field.label }}
       </dt>
@@ -62,11 +63,11 @@ function buttonText(field: Field): string {
           type="button"
           :aria-label="`Copy ${field.label}`"
           class="bracket ml-(--sp-2) cursor-pointer border-0 bg-transparent p-0 font-mono text-step--1 text-(--p-300) hover:text-(--p-100) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--fritz-yellow)"
-          @click="copy(field)"
+          @click="copy(field, row)"
         >
-          {{ buttonText(field) }}
+          {{ buttonText(row) }}
         </button>
-        <span v-if="field.copy && copyState?.label === field.label" class="sr-only" aria-live="polite">
+        <span v-if="field.copy && copyState?.row === row" class="sr-only" aria-live="polite">
           {{ copyState.result === 'copied' ? 'Copied.' : 'The browser blocked copying. Select the text instead.' }}
         </span>
       </dd>
