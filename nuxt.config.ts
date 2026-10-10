@@ -114,6 +114,15 @@ export default defineNuxtConfig({
       ],
     },
   },
+  // Pinned to the default on purpose. Left unset, `nuxt build` moves the build
+  // to node_modules/.cache/nuxt/.nuxt whenever .nuxt exists (postinstall's
+  // `nuxt prepare` always creates it). On Nuxt 4.6 that leaves
+  // .nuxt/tsconfig.server.json pointing at the cache's nitro.d.ts while its own
+  // `exclude` drops ../node_modules, so `typeCheck` below loses every Nitro
+  // auto-import in server/ and the build fails (#283, nuxt/nuxt#36406). The
+  // cost: a build overwrites the .nuxt a running `nuxt dev` uses. Remove once
+  // a 4.x release ships nuxt/nuxt#36494.
+  buildDir: '.nuxt',
   typescript: {
     typeCheck: true,
   },
