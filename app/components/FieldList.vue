@@ -3,14 +3,49 @@
  * Field → value pairs for a form the visitor fills in somewhere else, the
  * Cloudflare dashboard or the FRITZ!Box admin page. Values are plain selectable
  * `<code>`, so they can be copied by hand.
+ *
+ * A field with `copy` also gets a `[copy]` button. It only appears once the page
+ * runs in a browser with the Clipboard API, so the prerendered HTML and a page
+ * without JS carry no button that does nothing.
  */
 export interface Field {
   label: string
   value: string
   note?: string
+  copy?: boolean
 }
 
 const { fields } = defineProps<{ fields: Field[] }>()
+
+const canCopy = ref(false)
+onMounted(() => {
+  canCopy.value = Boolean(navigator.clipboard)
+})
+
+const copyState = ref<{ label: string, result: 'copied' | 'failed' } | null>(null)
+let reset: ReturnType<typeof setTimeout> | undefined
+
+async function copy(field: Field): Promise<void> {
+  clearTimeout(reset)
+  try {
+    await navigator.clipboard.writeText(field.value)
+    copyState.value = { label: field.label, result: 'copied' }
+  }
+  catch {
+    copyState.value = { label: field.label, result: 'failed' }
+  }
+  reset = setTimeout(() => {
+    copyState.value = null
+  }, 2500)
+}
+
+onBeforeUnmount(() => clearTimeout(reset))
+
+function buttonText(field: Field): string {
+  if (copyState.value?.label !== field.label)
+    return 'copy'
+  return copyState.value.result === 'copied' ? 'copied' : 'blocked, select it'
+}
 </script>
 
 <template>
@@ -22,6 +57,18 @@ const { fields } = defineProps<{ fields: Field[] }>()
       <dd class="m-0 mb-(--sp-2) sm:mb-0">
         <code class="break-all text-(--p-100)">{{ field.value }}</code>
         <span v-if="field.note" class="text-(--p-300)"> — {{ field.note }}</span>
+        <button
+          v-if="field.copy && canCopy"
+          type="button"
+          :aria-label="`Copy ${field.label}`"
+          class="bracket ml-(--sp-2) cursor-pointer border-0 bg-transparent p-0 font-mono text-step--1 text-(--p-300) hover:text-(--p-100) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--fritz-yellow)"
+          @click="copy(field)"
+        >
+          {{ buttonText(field) }}
+        </button>
+        <span v-if="field.copy && copyState?.label === field.label" class="sr-only" aria-live="polite">
+          {{ copyState.result === 'copied' ? 'Copied.' : 'The browser blocked copying. Select the text instead.' }}
+        </span>
       </dd>
     </template>
   </dl>
