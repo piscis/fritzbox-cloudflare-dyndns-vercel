@@ -65,7 +65,9 @@ release earlier unreleased commits.
 ### 3. Apply
 
 `git worktree add ../fritzdns-deps-<date> -b chore/deps-<date> origin/main`, then work
-inside it. Run `fnm exec --using=.nvmrc pnpm install` once first.
+inside it. Run `fnm exec --using=.nvmrc pnpm install` once first, then record the
+baseline audit before you edit anything:
+`fnm exec --using=.nvmrc pnpm audit --json > /tmp/audit-base-<date>.json`.
 
 Apply the non-major updates as a single commit titled like Renovate's group
 (`chore(deps): update all non-major dependencies`). Give each major its own branch
@@ -80,7 +82,8 @@ Apply the non-major updates as a single commit titled like Renovate's group
   `node_modules` and install again. Deleting only the lockfile rebuilds it from
   `node_modules/.pnpm/lock.yaml`.
 
-Then run `pnpm audit` and note any new advisories in the PR body.
+Then run `pnpm audit --json` again, compare its advisories against the baseline file, and
+note any new ones in the PR body.
 
 Done when: each branch installs cleanly with no age rejections.
 
@@ -107,7 +110,7 @@ Before each push: `git fetch origin && git rebase origin/main`, then rerun step 
 lockfile changed. Then:
 
 1. `gh pr checks <pr> --watch`. `lint`, `typecheck` and `test` must all pass.
-2. `gh pr merge <pr> --squash --delete-branch`.
+2. `gh pr merge <pr> --squash --delete-branch`. This also deletes the PR's worktree.
 3. For each open Renovate PR from step 2: check out its branch, run step 4 on it, then
    do the same two steps.
 
@@ -139,15 +142,19 @@ Release only if all of these hold:
   `ready-for-human` issue titled `Release pending: major dependency update`, naming the
   majors, and stop here. Production rollout of a major is the maintainer's call.
 
-Then, from a fresh branch at `origin/main` inside the worktree:
+Then release from a new worktree. Step 5's merge deleted the deps worktree, so create
+this one first and run every command below inside it:
 
-1. `fnm exec --using=.nvmrc pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
-   Plain `pnpm release:patch` fails in a worktree.
-2. A dependency-only release leaves the new `CHANGELOG.md` section empty. Fill it with the
-   `pkg from → to` list, then `git commit --amend --no-edit` and move the tag with
-   `git tag -f <version>`.
+1. `git worktree add ../fritzdns-release-<date> -b chore/release-<date> origin/main`,
+   then `fnm exec --using=.nvmrc pnpm install --frozen-lockfile`.
+2. `fnm exec --using=.nvmrc pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
+   Plain `pnpm release:patch` fails in a worktree. `.release-it.json` lists
+   `chore(deps)` commits under `### Dependencies`, so the new `CHANGELOG.md` section is
+   complete as generated.
 3. `git push origin HEAD:main`, then `git push origin <version>`.
-4. `gh release create <version> --title v<version> --notes "<same section>"`.
+4. Write the new section without its `## [<version>]` heading to
+   `/tmp/release-notes-<version>.md`, then
+   `gh release create <version> --title v<version> --notes-file /tmp/release-notes-<version>.md`.
 5. `git merge-base --is-ancestor origin/released HEAD` must succeed. Then
    `git push origin HEAD:released`. This is a fast-forward, which deploys Production.
 6. Watch the `released` run until it is green. Then
@@ -161,7 +168,8 @@ Done when: Production runs the new version and is healthy.
   one with the same title) with the failing command and its output. Keep the open PR.
 - If Production is unhealthy after a release, open a `needs-triage` issue titled
   `Production unhealthy after <version>`. Do not roll back yourself.
-- On success, remove the worktree. On any failure, keep it for inspection.
+- On success, remove the release worktree and delete its `chore/release-<date>` branch.
+  On any failure, keep the failing worktree for inspection.
 
 Finish with one short paragraph for Paseo: what shipped (versions, PRs, release), what
 was skipped and why, and links to any issues you opened.
