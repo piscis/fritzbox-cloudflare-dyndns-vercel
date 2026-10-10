@@ -88,7 +88,7 @@ const SCREENSHOTS = {
     { src: '/setup/aaaa-record.png', alt: 'Cloudflare\'s Add record form for an AAAA record: a name, a placeholder IPv6 address, proxy status DNS only, TTL 1 min' },
   ],
   fritzbox: [
-    { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab in the German interface, under Internet → Freigaben, with DynDNS aktiv ticked and the Update-URL, Domainnamen, Benutzername and Kennwort fields filled in' },
+    { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab in the German interface, under Internet → Freigaben, with DynDns aktiv ticked and the Update-URL, Domainnamen, Benutzername and Kennwort fields filled in' },
   ],
 } as const
 
@@ -310,7 +310,7 @@ const TROUBLE = [
         </h2>
         <p>
           In the FRITZ!Box admin page, open <em>Internet → Permit Access → DynDNS</em>
-          <em>(Internet → Freigaben → DynDNS)</em>, tick <em>Use DynDNS (DynDNS aktiv)</em> and
+          <em>(Internet → Freigaben → DynDNS)</em>, tick <em>Use DynDNS (DynDns aktiv)</em> and
           fill in:
         </p>
         <FieldList :fields="fritzboxFields" />

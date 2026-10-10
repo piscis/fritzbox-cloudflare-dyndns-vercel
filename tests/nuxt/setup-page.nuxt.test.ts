@@ -146,7 +146,7 @@ describe('setup page', () => {
       const text = page.text()
 
       expect(text).toContain('(Internet → Freigaben → DynDNS)')
-      expect(text).toContain('(DynDNS aktiv)')
+      expect(text).toContain('(DynDns aktiv)')
       expect(text).toContain('(Update-URL)')
       expect(text).toContain('(Domainnamen)')
       expect(text).toContain('(Benutzername)')
@@ -262,7 +262,7 @@ describe('setup page', () => {
       expect(alts[3]).toMatch(/FRITZ!Box.*DynDNS/)
       // The screenshot shows the German interface, so the alt text names its labels.
       expect(alts[3]).toContain('Internet → Freigaben')
-      expect(alts[3]).toContain('DynDNS aktiv')
+      expect(alts[3]).toContain('DynDns aktiv')
       // Both record screenshots show the TTL step 02 asks for.
       expect(alts[1]).toContain('TTL 1 min')
       expect(alts[2]).toContain('TTL 1 min')
