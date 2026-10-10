@@ -149,6 +149,20 @@ describe('static assets', () => {
     expect(directives.some(line => /^allow:\s*\//i.test(line))).toBe(true)
   })
 
+  it.each([
+    '/setup/cloudflare-token.png',
+    '/setup/a-record.png',
+    '/setup/aaaa-record.png',
+    '/setup/fritzbox-dyndns.png',
+  ])('serves the setup screenshot %s', async (path) => {
+    // The setup page only lazy-loads these when a toggle opens, so no page
+    // test would notice one going missing.
+    const res = await fetch(path)
+
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toContain('image/png')
+  })
+
   it('still serves the modem clip', async () => {
     // The clip is only reachable through the dial-up button now, so nothing
     // else would catch it going missing.

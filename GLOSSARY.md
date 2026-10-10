@@ -5,6 +5,18 @@ IP, plus the path that ships changes to it.
 
 ## Language
 
+### Service
+
+**Update URL**:
+The URL the FRITZ!Box calls on every IP change. It carries the FRITZ!Box's own `<pass>`,
+`<ipaddr>` and `<ip6addr>` placeholders, which the FRITZ!Box fills in on each call.
+_Avoid_: DynDNS URL, callback URL, endpoint
+
+**Instance**:
+Any running deployment of the service, whoever operates it. **Staging** and
+**Production** are the maintainer's two Instances.
+_Avoid_: server, host, self-hosted copy
+
 ### Delivery
 
 **Staging**:

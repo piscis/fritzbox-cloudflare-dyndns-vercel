@@ -29,6 +29,24 @@ const STEPS = {
   check: { number: '04', title: 'Check it' },
 } as const
 
+/**
+ * One closed "show screenshot" toggle per step, for a visitor unsure whether
+ * they're on the right screen. The files live in `public/setup/`, where the
+ * README renders them from too, and load only once a toggle opens.
+ */
+const SCREENSHOTS = {
+  token: [
+    { src: '/setup/cloudflare-token.png', alt: 'Cloudflare\'s Create Custom Token form: the permissions Zone · Zone · Read and Zone · DNS · Edit, and Zone Resources set to Include · Specific zone' },
+  ],
+  records: [
+    { src: '/setup/a-record.png', alt: 'Cloudflare\'s Add record form for an A record: a name, a placeholder IPv4 address, proxy status DNS only, TTL 1 min' },
+    { src: '/setup/aaaa-record.png', alt: 'Cloudflare\'s Add record form for an AAAA record: a name, a placeholder IPv6 address, proxy status DNS only' },
+  ],
+  fritzbox: [
+    { src: '/setup/fritzbox-dyndns.png', alt: 'The FRITZ!Box DynDNS tab under Internet → Permit Access, with Use DynDNS ticked and the Update URL, domain name, username and password fields filled in' },
+  ],
+} as const
+
 const TOKEN_FIELDS: Field[] = [
   { label: 'Permission', value: 'Zone · Zone · Read' },
   { label: 'Permission', value: 'Zone · DNS · Edit' },
@@ -142,6 +160,10 @@ const TROUBLE = [
             run your own →
           </ULink>
         </p>
+        <details class="shot">
+          <summary>show screenshot ▸</summary>
+          <img v-for="shot in SCREENSHOTS.token" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
+        </details>
       </section>
 
       <section aria-labelledby="step-records">
@@ -160,6 +182,10 @@ const TROUBLE = [
           Skip the record for an IP family your line doesn't have, and drop its parameter from the
           Update URL in step 03.
         </p>
+        <details class="shot">
+          <summary>show screenshot ▸</summary>
+          <img v-for="shot in SCREENSHOTS.records" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
+        </details>
       </section>
 
       <section aria-labelledby="step-fritzbox">
@@ -178,6 +204,10 @@ const TROUBLE = [
           <code>&lt;ip6addr&gt;</code> become your current addresses. Click
           <em>Apply (Übernehmen)</em>.
         </p>
+        <details class="shot">
+          <summary>show screenshot ▸</summary>
+          <img v-for="shot in SCREENSHOTS.fritzbox" :key="shot.src" :src="shot.src" :alt="shot.alt" loading="lazy">
+        </details>
       </section>
 
       <section aria-labelledby="step-check">
@@ -289,5 +319,34 @@ const TROUBLE = [
 
 .setup .trouble dd {
   margin: var(--sp-1) 0 0 var(--sp-4);
+}
+
+.setup .shot {
+  margin-top: var(--sp-4);
+}
+
+.setup .shot summary {
+  display: inline-block;
+  cursor: pointer;
+  list-style: none;
+  border-bottom: 1px solid var(--crt-line-hi);
+  color: var(--p-300);
+}
+
+.setup .shot summary::-webkit-details-marker {
+  display: none;
+}
+
+.setup .shot summary:hover,
+.setup .shot summary:focus-visible {
+  color: var(--p-100);
+}
+
+.setup .shot img {
+  display: block;
+  margin-top: var(--sp-3);
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--crt-line-hi);
 }
 </style>

@@ -149,6 +149,46 @@ describe('setup page', () => {
     })
   })
 
+  describe('screenshots', () => {
+    it.each([
+      ['step-token', ['/setup/cloudflare-token.png']],
+      ['step-records', ['/setup/a-record.png', '/setup/aaaa-record.png']],
+      ['step-fritzbox', ['/setup/fritzbox-dyndns.png']],
+    ])('%s keeps its screenshots behind a closed toggle', async (step, sources) => {
+      const page = await mountSuspended(SetupPage)
+      const toggle = page.find(`section[aria-labelledby="${step}"] details`)
+
+      expect(toggle.exists()).toBe(true)
+      expect(toggle.find('summary').text()).toBe('show screenshot ▸')
+      expect((toggle.element as HTMLDetailsElement).open).toBe(false)
+
+      const images = toggle.findAll('img')
+      expect(images.map(img => img.attributes('src'))).toEqual(sources)
+      for (const img of images)
+        expect(img.attributes('loading')).toBe('lazy')
+    })
+
+    it('opens a toggle on click', async () => {
+      const page = await mountSuspended(SetupPage)
+      const toggle = page.find('section[aria-labelledby="step-token"] details')
+
+      await toggle.find('summary').trigger('click')
+
+      expect((toggle.element as HTMLDetailsElement).open).toBe(true)
+    })
+
+    it('describes each screenshot in its alt text', async () => {
+      const page = await mountSuspended(SetupPage)
+      const alts = page.findAll('details img').map(img => img.attributes('alt'))
+
+      expect(alts).toHaveLength(4)
+      expect(alts[0]).toMatch(/Cloudflare.*token/i)
+      expect(alts[1]).toMatch(/\bA record\b/)
+      expect(alts[2]).toMatch(/\bAAAA record\b/)
+      expect(alts[3]).toMatch(/FRITZ!Box.*DynDNS/)
+    })
+  })
+
   describe('the token', () => {
     it('is never asked for', async () => {
       const page = await mountSuspended(SetupPage)
