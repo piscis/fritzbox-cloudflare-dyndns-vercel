@@ -13,3 +13,11 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
 Edit the right-hand column to match whatever vocabulary you actually use.
+
+## Type labels
+
+Type labels sit beside the triage roles and say what kind of issue it is.
+
+| Label  | Apply to                                                                |
+| ------ | ----------------------------------------------------------------------- |
+| `spec` | Every spec, such as one `/to-spec` publishes. Its tickets don't get it. |
