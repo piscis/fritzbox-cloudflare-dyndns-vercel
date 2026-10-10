@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { REPO_URL, SELF_HOST_URL } from '~/utils/repo'
+import { REPO_URL, RUN_YOUR_OWN_URL } from '~/utils/repo'
 
 /**
  * GitHub's heading anchors, as github-slugger derives them: lowercase, drop
@@ -39,13 +39,13 @@ function readmeSlugs(): Set<string> {
   return slugs
 }
 
-describe('the README self-host link', () => {
+describe('the README run-your-own link', () => {
   it('points at the repository on GitHub', () => {
-    expect(SELF_HOST_URL.startsWith(`${REPO_URL}#`)).toBe(true)
+    expect(RUN_YOUR_OWN_URL.startsWith(`${REPO_URL}#`)).toBe(true)
   })
 
   it('names a heading that exists in README.md', () => {
-    const anchor = new URL(SELF_HOST_URL).hash.slice(1)
+    const anchor = new URL(RUN_YOUR_OWN_URL).hash.slice(1)
 
     expect(readmeSlugs()).toContain(anchor)
   })
