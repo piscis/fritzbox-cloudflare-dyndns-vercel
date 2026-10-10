@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.10.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.6...2.10.0) (2026-10-10)
+
+### Features
+
+* **setup:** add a back-to-home button above the guide ([#280](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/280)) ([84714dc](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/84714dc00bfbc0ddeafcb26ed21500e4f83be796))
+* **setup:** add screenshot toggles, README link and glossary terms ([#277](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/277)) ([8910fa5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/8910fa5947ec31274ce98e4b840d73f6047c7807))
+* **setup:** add static FRITZ!Box setup guide at /setup ([#276](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/276)) ([37a95d3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/37a95d37ae27ddcbd8167bf590dd168074a6801a))
+* **setup:** build the Update URL from hostname, zone and IP choice ([#278](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/278)) ([0bc0bce](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/0bc0bce61c937bdd7db7886670b63243a9e8eae2))
+
+### Bug Fixes
+
+* **setup:** normalise hostname case and point troubleshooting at the IP choice ([#279](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/279)) ([d325431](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/d32543129daf8bde6aa0ea86ca1bfbf34def0083))
+
+
 ## [2.9.6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.9.5...2.9.6) (2026-10-10)
 
 ### Dependencies
