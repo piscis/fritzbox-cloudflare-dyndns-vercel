@@ -488,12 +488,23 @@ describe('setup page', () => {
     })
   })
 
+  it('opens with a back button to home, above the heading', async () => {
+    const page = await mountSuspended(SetupPage)
+    const back = page.findAll('a[href="/"]')[0]!
+    const heading = page.find('h1').element
+
+    expect(back.text()).toContain('← home')
+    expect(back.element.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('links back home from the foot line', async () => {
     const page = await mountSuspended(SetupPage)
-    const home = page.find('a[href="/"]')
+    const links = page.findAll('a[href="/"]')
+    const home = links.at(-1)!
 
-    expect(home.exists()).toBe(true)
+    expect(links).toHaveLength(2)
     expect(home.text()).toContain('← home')
+    expect(page.find('#step-check').element.compareDocumentPosition(home.element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(page.text()).toContain('no cookies, no analytics, no logs of your token')
   })
 })

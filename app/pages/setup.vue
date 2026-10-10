@@ -188,6 +188,14 @@ const TROUBLE = [
     </template>
 
     <div class="setup relative z-1 text-step-0 text-(--p-200)">
+      <!--
+        The foot line's "← home" sits below four long steps, so the way back
+        also opens the page.
+      -->
+      <BracketButton to="/" tone="quiet" class="mb-(--sp-4)">
+        ← home
+      </BracketButton>
+
       <p class="mb-2.5 text-step--1 tracking-[0.22em] text-(--p-300) uppercase">
         FRITZ!Box · Cloudflare
       </p>
