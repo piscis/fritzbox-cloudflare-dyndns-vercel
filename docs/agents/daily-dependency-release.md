@@ -112,7 +112,8 @@ lockfile changed. Then:
 1. `gh pr checks <pr> --watch`. `lint`, `typecheck` and `test` must all pass.
 2. `gh pr merge <pr> --squash --delete-branch`. This also deletes the PR's worktree.
 3. For each open Renovate PR from step 2: check out its branch, run step 4 on it, then
-   do the same two steps.
+   do the same two steps. If the PR conflicts with `main`, skip it silently: Renovate
+   rebases its own branches.
 
 Merge PRs one at a time, and rebase each remaining one onto the new `origin/main`
 before merging it.
@@ -120,7 +121,7 @@ before merging it.
 A PR that fails CI is not merged. Leave it open, add a `gh pr comment` explaining the
 failure, carry on with the others, and handle it in step 8.
 
-Done when: every PR is either merged or left open with a comment.
+Done when: every PR is merged, left open with a comment, or skipped as conflicting.
 
 ### 6. Staging
 
@@ -164,12 +165,16 @@ Done when: Production runs the new version and is healthy.
 
 ### 8. Failures and report
 
-- If an update or PR stays broken, open a `needs-triage` issue (or comment on an existing
-  one with the same title) with the failing command and its output. Keep the open PR.
+- If an update or PR stays broken, open a `needs-triage` issue with the failing command
+  and its output. Keep the open PR. When an issue already tracks it, comment only on
+  news: a different error, a new blocking package, or a blocker that cleared. An
+  unchanged blocker needs no comment; list it in the report instead.
 - If Production is unhealthy after a release, open a `needs-triage` issue titled
   `Production unhealthy after <version>`. Do not roll back yourself.
 - On success, remove the release worktree and delete its `chore/release-<date>` branch.
-  On any failure, keep the failing worktree for inspection.
+- Keep a failing worktree for inspection only when you opened a new issue for it, or
+  commented with news. Otherwise the issue already holds the output, so remove the
+  worktree.
 
 Finish with one short paragraph for Paseo: what shipped (versions, PRs, release), what
 was skipped and why, and links to any issues you opened.
