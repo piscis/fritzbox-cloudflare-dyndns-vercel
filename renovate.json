@@ -39,6 +39,16 @@
       "addLabels": [
         "blocked-by-volar"
       ]
+    },
+    {
+      "description": "Nuxt's Nitro server (@nuxt/nitro-server) still runs on h3 1.x, so h3 2.x types do not match the runtime event and its test helper createEvent is gone. Revisit once @nuxt/nitro-server depends on h3 2.x.",
+      "matchPackageNames": [
+        "h3"
+      ],
+      "allowedVersions": "<2.0.0",
+      "addLabels": [
+        "blocked-by-nitro"
+      ]
     }
   ]
 }
