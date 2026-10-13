@@ -461,6 +461,19 @@ describe('setup page', () => {
           expect(button.text()).toContain('enlarge ▸')
         }
       })
+
+      it('names each enlarge button after its screenshot, so step 02\'s two differ', async () => {
+        const page = await mountSuspended(SetupPage)
+
+        const buttons = page.findAll('section[aria-labelledby="step-records"] details button')
+        const names = buttons.map(button => button.attributes('aria-label'))
+        expect(names).toHaveLength(2)
+        expect(names[0]).not.toBe(names[1])
+        buttons.forEach((button, i) => {
+          expect(names[i]).toMatch(/^Enlarge screenshot/)
+          expect(names[i]).toContain(button.get('img').attributes('alt'))
+        })
+      })
     })
   })
 

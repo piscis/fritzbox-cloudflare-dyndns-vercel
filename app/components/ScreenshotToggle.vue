@@ -96,7 +96,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
       :ui="MODAL_UI"
       @update:open="resetView"
     >
-      <button type="button" class="shot-enlarge" aria-label="Enlarge screenshot">
+      <button type="button" class="shot-enlarge" :aria-label="`Enlarge screenshot: ${shot.alt}`">
         <img :src="shot.src" :alt="shot.alt" loading="lazy">
         <span class="shot-hint" aria-hidden="true">enlarge ▸</span>
       </button>
