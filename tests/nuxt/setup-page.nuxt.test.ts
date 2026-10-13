@@ -317,6 +317,15 @@ describe('setup page', () => {
         return document.getElementById(element.getAttribute('aria-labelledby')!)?.textContent?.trim()
       }
 
+      /** Step 02's two screenshot buttons: the A record, then the AAAA record. */
+      function recordButtons(page: Page) {
+        return page.findAll('section[aria-labelledby="step-records"] details button')
+      }
+
+      function pressEscape() {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      }
+
       afterEach(async () => {
         mounted?.unmount()
         mounted = undefined
@@ -351,16 +360,14 @@ describe('setup page', () => {
           expect(close?.textContent).toContain('×')
           close!.click()
         }],
-        ['Esc', () => {
-          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
-        }],
+        ['Esc', pressEscape],
         ['an overlay click', () => {
           document.querySelector('[data-slot="overlay"]')!
             .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
         }],
       ])('closes on %s and hands focus back to the screenshot', async (_, close) => {
         const page = await mountAttached()
-        const button = page.findAll('section[aria-labelledby="step-records"] details button')[1]!
+        const button = recordButtons(page)[1]!
 
         await enlarge(button)
         close(dialog()!)
@@ -379,6 +386,11 @@ describe('setup page', () => {
             Object.defineProperty(image, key, { configurable: true, value })
           ;(event === 'resize' ? window : image).dispatchEvent(new Event(event))
           await settle()
+        }
+
+        /** Lays out the AAAA-record screenshot shrunk to a phone's width. */
+        function layOutShrunk(options?: { event?: string }) {
+          return layOut([1537, 741], [370, 178], options)
         }
 
         /** Clicks the enlarged screenshot the way a mouse does. */
@@ -400,8 +412,8 @@ describe('setup page', () => {
 
         /** Opens step 02's AAAA-record screenshot, shrunk to a phone's width. */
         async function enlargeShrunk(page: VueWrapper) {
-          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
-          await layOut([1537, 741], [370, 178])
+          await enlarge(recordButtons(page)[1]!)
+          await layOutShrunk()
         }
 
         it('switches a shrunk screenshot to native size and back on click', async () => {
@@ -427,23 +439,23 @@ describe('setup page', () => {
           await clickScreenshot()
           expect(shown()).toEqual(NATIVE)
 
-          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+          pressEscape()
           await settle()
           expect(dialog()).toBeNull()
 
-          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[index]!)
+          await enlarge(recordButtons(page)[index]!)
           expect(shown().width).toBeNull()
-          await layOut([1537, 741], [370, 178])
+          await layOutShrunk()
           expect(shown()).toEqual(FITTED)
         })
 
         it('offers zoom once a window resize shrinks the screenshot', async () => {
           const page = await mountAttached()
-          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
+          await enlarge(recordButtons(page)[1]!)
           await layOut([1537, 741], [1537, 741])
           expect(shown().cursor).toBe('')
 
-          await layOut([1537, 741], [370, 178], { event: 'resize' })
+          await layOutShrunk({ event: 'resize' })
 
           expect(shown()).toEqual(FITTED)
         })
@@ -466,14 +478,14 @@ describe('setup page', () => {
           const page = await mountAttached()
           expect(listening.size).toBe(0)
 
-          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
+          await enlarge(recordButtons(page)[1]!)
           expect(listening.size).toBe(1)
 
-          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+          pressEscape()
           await settle()
           expect(listening.size).toBe(0)
 
-          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[0]!)
+          await enlarge(recordButtons(page)[0]!)
           expect(listening.size).toBe(1)
           page.unmount()
           mounted = undefined
@@ -509,7 +521,7 @@ describe('setup page', () => {
       it('names each enlarge button after its screenshot, so step 02\'s two differ', async () => {
         const page = await mountSuspended(SetupPage)
 
-        const buttons = page.findAll('section[aria-labelledby="step-records"] details button')
+        const buttons = recordButtons(page)
         const names = buttons.map(button => button.attributes('aria-label'))
         expect(names).toHaveLength(2)
         expect(names[0]).not.toBe(names[1])
