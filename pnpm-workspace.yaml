@@ -84,7 +84,7 @@ packages:
 overrides:
   ajv@8: ^8.20.0
   esbuild: ^0.28.2
-  fast-uri: ^4.2.1
+  fast-uri: ^4.2.2
   webpack: ^5.111.1
 
 allowBuilds:
