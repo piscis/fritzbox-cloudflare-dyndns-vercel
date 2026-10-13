@@ -247,19 +247,27 @@ describe('/setup at phone width, AAAA-record screenshot', () => {
     const box = (await image.boundingBox())!
     const inside = { x: viewport.width / 2, y: Math.min(box.y + box.height, viewport.height) / 2 }
 
-    // A finger swipe right-to-left, upwards.
+    // A finger swipe right-to-left, upwards, as raw touch events. CDP's
+    // synthesizeScrollGesture never scrolls in Linux's headless shell.
     const cdp = await page.context().newCDPSession(page)
-    await cdp.send('Input.synthesizeScrollGesture', {
-      ...inside,
-      xDistance: -200,
-      yDistance: -100,
-      gestureSourceType: 'touch',
-    })
+    const finger = (step: number) => [{ id: 1, x: inside.x - 20 * step, y: inside.y - 10 * step }]
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: finger(0) })
+    for (let step = 1; step <= 10; step++)
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: finger(step) })
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
     await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(0)
+    expect(await dialog.isVisible()).toBe(true)
 
+    // Back to the left edge once the swipe's fling has stopped, then a wheel pans it again.
+    await expect.poll(async () => {
+      const left = (await scrollArea(image)).left
+      await page.waitForTimeout(100)
+      return (await scrollArea(image)).left === left
+    }).toBe(true)
+    await image.evaluate((img: HTMLImageElement) => img.parentElement!.scrollTo(0, 0))
     await page.mouse.move(inside.x, inside.y)
     await page.mouse.wheel(150, 0)
-    await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(200)
+    await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(0)
 
     expect(await dialog.isVisible()).toBe(true)
     const drawn = await drawnSize(image)
