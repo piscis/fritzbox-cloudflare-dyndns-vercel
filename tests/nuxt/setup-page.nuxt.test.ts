@@ -286,6 +286,251 @@ describe('setup page', () => {
       expect(alts[1]).toContain('TTL 1 min')
       expect(alts[2]).toContain('TTL 1 min')
     })
+
+    describe('enlarged in a modal', () => {
+      let mounted: VueWrapper | undefined
+
+      /** The page attached to the document, so focus behaves as in a browser. */
+      async function mountAttached() {
+        mounted = await mountSuspended(SetupPage, { attachTo: document.body })
+        return mounted
+      }
+
+      /** Lets Vue and Reka finish: Reka arms outside clicks and returns focus a macrotask later. */
+      async function settle() {
+        await flushPromises()
+        await new Promise(resolve => setTimeout(resolve, 0))
+      }
+
+      /** Focuses and clicks a screenshot button, as a click in a browser does. */
+      async function enlarge(button: ReturnType<VueWrapper['get']>) {
+        ;(button.element as HTMLButtonElement).focus()
+        await button.trigger('click')
+        await settle()
+      }
+
+      // The dialog is teleported into document.body, outside the page wrapper.
+      const dialog = () => document.querySelector<HTMLElement>('[role="dialog"]')
+
+      /** The dialog's accessible name, read from the element aria-labelledby names. */
+      function dialogName(element: HTMLElement) {
+        return document.getElementById(element.getAttribute('aria-labelledby')!)?.textContent?.trim()
+      }
+
+      /** Step 02's two screenshot buttons: the A record, then the AAAA record. */
+      function recordButtons(page: Page) {
+        return page.findAll('section[aria-labelledby="step-records"] details button')
+      }
+
+      function pressEscape() {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      }
+
+      afterEach(async () => {
+        mounted?.unmount()
+        mounted = undefined
+        await settle()
+        vi.restoreAllMocks()
+      })
+
+      it.each([
+        ['step-token', 0, '/setup/cloudflare-token.png', '01'],
+        ['step-records', 0, '/setup/a-record.png', '02'],
+        ['step-records', 1, '/setup/aaaa-record.png', '02'],
+        ['step-fritzbox', 0, '/setup/fritzbox-dyndns.png', '03'],
+      ])('%s screenshot %i opens alone in a dialog titled by its step', async (step, index, src, number) => {
+        const page = await mountAttached()
+        const button = page.findAll(`section[aria-labelledby="${step}"] details button`)[index]!
+        expect(dialog()).toBeNull()
+
+        await enlarge(button)
+
+        const open = dialog()
+        expect(open).not.toBeNull()
+        expect(dialogName(open!)).toBe(`Screenshot · step ${number}`)
+        const images = [...open!.querySelectorAll('img')]
+        expect(images).toHaveLength(1)
+        expect(images[0]!.getAttribute('src')).toBe(src)
+        expect(images[0]!.getAttribute('alt')).toBe(button.get('img').attributes('alt'))
+      })
+
+      it.each([
+        ['the close button', (open: HTMLElement) => {
+          const close = [...open.querySelectorAll('button')].find(b => b.getAttribute('aria-label') === 'Close')
+          expect(close?.textContent).toContain('×')
+          close!.click()
+        }],
+        ['Esc', pressEscape],
+        ['an overlay click', () => {
+          document.querySelector('[data-slot="overlay"]')!
+            .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+        }],
+      ])('closes on %s and hands focus back to the screenshot', async (_, close) => {
+        const page = await mountAttached()
+        const button = recordButtons(page)[1]!
+
+        await enlarge(button)
+        close(dialog()!)
+        await settle()
+
+        expect(dialog()).toBeNull()
+        expect(document.activeElement).toBe(button.element)
+      })
+
+      describe('fitted or at native size', () => {
+        /** The enlarged screenshot, laid out as a browser would: happy-dom computes no layout. */
+        async function layOut(natural: [number, number], rendered: [number, number], { event = 'load' } = {}) {
+          const image = dialog()!.querySelector('img')!
+          const sizes = { naturalWidth: natural[0], naturalHeight: natural[1], clientWidth: rendered[0], clientHeight: rendered[1] }
+          for (const [key, value] of Object.entries(sizes))
+            Object.defineProperty(image, key, { configurable: true, value })
+          ;(event === 'resize' ? window : image).dispatchEvent(new Event(event))
+          await settle()
+        }
+
+        /** Lays out the AAAA-record screenshot shrunk to a phone's width. */
+        function layOutShrunk(options?: { event?: string }) {
+          return layOut([1537, 741], [370, 178], options)
+        }
+
+        /** Clicks the enlarged screenshot the way a mouse does. */
+        async function clickScreenshot() {
+          const image = dialog()!.querySelector('img')!
+          image.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+          image.click()
+          await settle()
+        }
+
+        /** What the visitor sees: the zoom cursor offered, and the width the screenshot is drawn at. */
+        function shown() {
+          const image = dialog()!.querySelector('img')!
+          return { cursor: image.style.cursor, width: image.getAttribute('width') }
+        }
+
+        const FITTED = { cursor: 'zoom-in', width: null }
+        const NATIVE = { cursor: 'zoom-out', width: '1537' }
+
+        /** Opens step 02's AAAA-record screenshot, shrunk to a phone's width. */
+        async function enlargeShrunk(page: VueWrapper) {
+          await enlarge(recordButtons(page)[1]!)
+          await layOutShrunk()
+        }
+
+        it('switches a shrunk screenshot to native size and back on click', async () => {
+          const page = await mountAttached()
+          await enlargeShrunk(page)
+          expect(shown()).toEqual(FITTED)
+
+          await clickScreenshot()
+          expect(shown()).toEqual(NATIVE)
+          expect(dialog()).not.toBeNull()
+
+          await clickScreenshot()
+          expect(shown()).toEqual(FITTED)
+          expect(dialog()).not.toBeNull()
+        })
+
+        it.each([
+          ['the same screenshot', 1],
+          ['another screenshot', 0],
+        ])('opens %s fitted after one was closed at native size', async (_, index) => {
+          const page = await mountAttached()
+          await enlargeShrunk(page)
+          await clickScreenshot()
+          expect(shown()).toEqual(NATIVE)
+
+          pressEscape()
+          await settle()
+          expect(dialog()).toBeNull()
+
+          await enlarge(recordButtons(page)[index]!)
+          expect(shown().width).toBeNull()
+          await layOutShrunk()
+          expect(shown()).toEqual(FITTED)
+        })
+
+        it('offers zoom once a window resize shrinks the screenshot', async () => {
+          const page = await mountAttached()
+          await enlarge(recordButtons(page)[1]!)
+          await layOut([1537, 741], [1537, 741])
+          expect(shown().cursor).toBe('')
+
+          await layOutShrunk({ event: 'resize' })
+
+          expect(shown()).toEqual(FITTED)
+        })
+
+        it('listens for window resizes only while a screenshot is enlarged', async () => {
+          const listening = new Set<unknown>()
+          const add = window.addEventListener.bind(window)
+          const remove = window.removeEventListener.bind(window)
+          vi.spyOn(window, 'addEventListener').mockImplementation((type: string, listener: any, options?: any) => {
+            if (type === 'resize')
+              listening.add(listener)
+            add(type, listener, options)
+          })
+          vi.spyOn(window, 'removeEventListener').mockImplementation((type: string, listener: any, options?: any) => {
+            if (type === 'resize')
+              listening.delete(listener)
+            remove(type, listener, options)
+          })
+
+          const page = await mountAttached()
+          expect(listening.size).toBe(0)
+
+          await enlarge(recordButtons(page)[1]!)
+          expect(listening.size).toBe(1)
+
+          pressEscape()
+          await settle()
+          expect(listening.size).toBe(0)
+
+          await enlarge(recordButtons(page)[0]!)
+          expect(listening.size).toBe(1)
+          page.unmount()
+          mounted = undefined
+          expect(listening.size).toBe(0)
+        })
+
+        it('offers no zoom and stays open when the screenshot already shows 1:1', async () => {
+          const page = await mountAttached()
+          await enlarge(page.get('section[aria-labelledby="step-token"] details button'))
+          await layOut([884, 784], [884, 784])
+          expect(shown()).toEqual({ cursor: '', width: null })
+
+          await clickScreenshot()
+
+          expect(dialog()).not.toBeNull()
+          expect(shown()).toEqual({ cursor: '', width: null })
+        })
+      })
+
+      it('makes every screenshot in a toggle an enlarge button with a hint', async () => {
+        const page = await mountSuspended(SetupPage)
+
+        const buttons = page.findAll('details').flatMap(toggle => toggle.findAll('button'))
+        expect(buttons).toHaveLength(4)
+        for (const button of buttons) {
+          expect(button.attributes('type')).toBe('button')
+          expect(button.attributes('aria-label')).toMatch(/^Enlarge screenshot/)
+          expect(button.find('img').exists()).toBe(true)
+          expect(button.text()).toContain('enlarge ▸')
+        }
+      })
+
+      it('names each enlarge button after its screenshot, so step 02\'s two differ', async () => {
+        const page = await mountSuspended(SetupPage)
+
+        const buttons = recordButtons(page)
+        const names = buttons.map(button => button.attributes('aria-label'))
+        expect(names).toHaveLength(2)
+        expect(names[0]).not.toBe(names[1])
+        buttons.forEach((button, i) => {
+          expect(names[i]).toMatch(/^Enlarge screenshot/)
+          expect(names[i]).toContain(button.get('img').attributes('alt'))
+        })
+      })
+    })
   })
 
   describe('the builder', () => {

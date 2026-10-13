@@ -238,7 +238,7 @@ const TROUBLE = [
             run your own →
           </ULink>
         </p>
-        <ScreenshotToggle :shots="SCREENSHOTS.token" />
+        <ScreenshotToggle :shots="SCREENSHOTS.token" :step="STEPS.token.number" />
       </section>
 
       <section aria-labelledby="step-records">
@@ -301,7 +301,7 @@ const TROUBLE = [
           Skip the record for an IP family your line doesn't have: pick the IP families above that
           it does have, and the Update URL in step 03 follows.
         </p>
-        <ScreenshotToggle :shots="SCREENSHOTS.records" />
+        <ScreenshotToggle :shots="SCREENSHOTS.records" :step="STEPS.records.number" />
       </section>
 
       <section aria-labelledby="step-fritzbox">
@@ -320,7 +320,7 @@ const TROUBLE = [
           <code>&lt;ip6addr&gt;</code> become your current addresses. Click
           <em>Apply (Übernehmen)</em>.
         </p>
-        <ScreenshotToggle :shots="SCREENSHOTS.fritzbox" />
+        <ScreenshotToggle :shots="SCREENSHOTS.fritzbox" :step="STEPS.fritzbox.number" />
       </section>
 
       <section aria-labelledby="step-check">
