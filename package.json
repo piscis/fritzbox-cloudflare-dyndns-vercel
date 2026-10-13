@@ -28,7 +28,7 @@
     "analyze": "nuxi analyze",
     "postinstall": "nuxt prepare",
     "test": "vitest run --project '!browser'",
-    "test:watch": "vitest",
+    "test:watch": "vitest --project '!browser'",
     "test:unit": "vitest run --project unit",
     "test:e2e": "vitest run --project e2e",
     "test:browser": "vitest run --project browser",
