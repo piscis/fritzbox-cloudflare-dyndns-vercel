@@ -15,6 +15,8 @@ home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary ta
   auto-import as a bare global in `server/`, also register it in
   `tests/setup/nitro-globals.ts`.
 - A change is done when `pnpm lint:fix`, `pnpm typecheck` and `pnpm test` all pass.
+  `pnpm test:browser` also passes when the change touches `app/`. It runs Chromium,
+  installed once with `pnpm exec playwright-core install --only-shell chromium`.
   ESLint (`@antfu/eslint-config`) is the only formatter.
 - Renovate owns every version bump, including `pnpm-lock.yaml`. TypeScript stays on
   6.x on purpose, because vue-tsc cannot use TS 7's Go compiler yet.
