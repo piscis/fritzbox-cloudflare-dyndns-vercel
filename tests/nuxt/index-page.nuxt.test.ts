@@ -193,7 +193,7 @@ describe('index page', () => {
       const primary = buttons.filter(button => button.classes().includes('bg-(--fritz-yellow)'))
 
       expect(buttons[0]!.attributes('href')).toBe('/setup')
-      expect(buttons[0]!.text()).toContain('Set up FRITZ!Box →')
+      expect(buttons[0]!.text()).toContain('Setup FRITZ!Box DynDNS →')
       // Primary is the yellow fill, and only one button may carry it.
       expect(primary).toHaveLength(1)
       expect(primary[0]!.attributes('href')).toBe('/setup')

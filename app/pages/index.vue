@@ -49,7 +49,7 @@ const { state } = useHealthCheck()
           slot. A plain route, so no `external`: /setup is a page of this app.
         -->
         <BracketButton to="/setup" tone="primary">
-          Set up FRITZ!Box →
+          Setup FRITZ!Box DynDNS →
         </BracketButton>
         <!--
           The live Scalar reference rather than the README: it is one path away
