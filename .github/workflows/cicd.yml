@@ -108,11 +108,62 @@ jobs:
           path: coverage/
           retention-days: 7
 
+  browser:
+    timeout-minutes: 12
+    name: Browser 🌐
+    needs: [setup-stage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check Environment
+        run: |
+          echo "Environment: ${{ needs.setup-stage.outputs.env-name }}"
+
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Read playwright-core version
+        id: playwright
+        shell: bash
+        run: |
+          echo "version=$(node -p "require('playwright-core/package.json').version")" >> $GITHUB_OUTPUT
+
+      # Keyed on the playwright-core version, because each release pins its own
+      # Chromium build. Only Renovate bumps then download it again.
+      - name: Cache Chromium
+        id: chromium-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: chromium-${{ runner.os }}-playwright-core-${{ steps.playwright.outputs.version }}
+
+      # playwright-core's own installer, so the browser always matches the library.
+      # @nuxt/test-utils launches Chromium headless, which needs only the shell.
+      - name: Install Chromium
+        if: steps.chromium-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          pnpm exec playwright-core install --with-deps --only-shell chromium
+
+      # The cache holds the browser, not the apt packages it runs on.
+      - name: Install Chromium system dependencies
+        if: steps.chromium-cache.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          pnpm exec playwright-core install-deps chromium-headless-shell
+
+      - name: Browser Test App
+        shell: bash
+        run: |
+          pnpm run test:browser
+
   build-deploy:
     timeout-minutes: 10
     name: Build 🏗️ & Deploy 🚀 (${{ needs.setup-stage.outputs.env-name }})
     environment: ${{ needs.setup-stage.outputs.env-name }}
-    needs: [setup-stage, lint, typecheck, test]
+    needs: [setup-stage, lint, typecheck, test, browser]
     # push to main -> staging, push to released -> production. Each stage has its
     # own CF_WORKER_NAME and CF_ROUTE_PATTERN in Phase, so they deploy separate
     # Workers and staging cannot overwrite production.
