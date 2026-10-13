@@ -19,7 +19,10 @@ const { shots, step } = defineProps<{
 /**
  * UModal restyled in the CRT look. Replacer form, so none of Nuxt UI's card
  * look (rounded corners, ring, shadow, `max-w-lg`) survives to be merged away.
- * Below the page's 820px breakpoint the modal fills the screen less a thin margin.
+ * The content box covers the viewport and centres the screenshot, so the close
+ * button sits in the viewport's corner, clear of the screenshot wherever there
+ * is room. Below the page's 820px breakpoint the screenshot may fill the
+ * screen less a thin margin.
  *
  * The content box lets clicks through (`!` beats the inline `pointer-events:
  * auto` Reka sets), so a tap on the dark area around a fitted screenshot counts
@@ -32,12 +35,18 @@ const MODAL_UI = {
     'data-[state=open]:animate-[fade-in_200ms_var(--ease-out)] data-[state=closed]:animate-[fade-out_200ms_var(--ease-out)]',
   ].join(' '),
   content: () => [
-    'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center focus:outline-none pointer-events-none!',
-    'max-w-[95vw] max-h-[90vh]',
-    'max-[819px]:w-[calc(100vw-1rem)] max-[819px]:h-[calc(100dvh-1rem)] max-[819px]:max-w-none max-[819px]:max-h-none',
+    'fixed inset-0 flex items-center justify-center focus:outline-none pointer-events-none! max-[819px]:p-2',
     'data-[state=open]:animate-[scale-in_200ms_var(--ease-out)] data-[state=closed]:animate-[scale-out_200ms_var(--ease-out)]',
   ].join(' '),
 }
+
+/**
+ * Set once mounted on the client: without JavaScript nothing enlarges, so the
+ * hint and the zoom cursor appear only then. SSR and hydration both render it
+ * false, so they match.
+ */
+const enhanced = ref(false)
+onMounted(() => enhanced.value = true)
 
 /** The frame both views draw around the screenshot: a phosphor border and glow, never past the modal. */
 const FRAME = 'max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]'
@@ -96,7 +105,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
 </script>
 
 <template>
-  <details class="shot">
+  <details class="shot" :class="{ 'shot-enhanced': enhanced }">
     <summary>show screenshot ▸</summary>
     <UModal
       v-for="shot in shots"
@@ -107,7 +116,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
     >
       <button type="button" class="shot-enlarge" :aria-label="`Enlarge screenshot: ${shot.alt}`">
         <img :src="shot.src" :alt="shot.alt" loading="lazy">
-        <span class="shot-hint" aria-hidden="true">enlarge ▸</span>
+        <span v-if="enhanced" class="shot-hint" aria-hidden="true">enlarge ▸</span>
       </button>
 
       <template #content="{ close }">
@@ -182,6 +191,9 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
   background: none;
   font: inherit;
   text-align: left;
+}
+
+.shot-enhanced .shot-enlarge {
   cursor: zoom-in;
 }
 
