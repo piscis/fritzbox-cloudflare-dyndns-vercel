@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.11.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.4...2.11.0) (2026-10-13)
+
+### Features
+
+* **setup:** enlarge setup screenshots in a modal ([#293](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/293)) ([c7bb3e2](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/c7bb3e25e519005050b6bb24f92d775de5d17a62)), references [#291](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/291) [#292](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/292)
+
 ## [2.10.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.3...2.10.4) (2026-10-13)
 
 ### Bug Fixes
