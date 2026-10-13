@@ -321,6 +321,7 @@ describe('setup page', () => {
         mounted?.unmount()
         mounted = undefined
         await settle()
+        vi.restoreAllMocks()
       })
 
       it.each([
@@ -371,12 +372,12 @@ describe('setup page', () => {
 
       describe('fitted or at native size', () => {
         /** The enlarged screenshot, laid out as a browser would: happy-dom computes no layout. */
-        async function layOut(natural: [number, number], rendered: [number, number]) {
+        async function layOut(natural: [number, number], rendered: [number, number], { event = 'load' } = {}) {
           const image = dialog()!.querySelector('img')!
           const sizes = { naturalWidth: natural[0], naturalHeight: natural[1], clientWidth: rendered[0], clientHeight: rendered[1] }
           for (const [key, value] of Object.entries(sizes))
             Object.defineProperty(image, key, { configurable: true, value })
-          image.dispatchEvent(new Event('load'))
+          ;(event === 'resize' ? window : image).dispatchEvent(new Event(event))
           await settle()
         }
 
@@ -434,6 +435,49 @@ describe('setup page', () => {
           expect(shown().width).toBeNull()
           await layOut([1537, 741], [370, 178])
           expect(shown()).toEqual(FITTED)
+        })
+
+        it('offers zoom once a window resize shrinks the screenshot', async () => {
+          const page = await mountAttached()
+          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
+          await layOut([1537, 741], [1537, 741])
+          expect(shown().cursor).toBe('')
+
+          await layOut([1537, 741], [370, 178], { event: 'resize' })
+
+          expect(shown()).toEqual(FITTED)
+        })
+
+        it('listens for window resizes only while a screenshot is enlarged', async () => {
+          const listening = new Set<unknown>()
+          const add = window.addEventListener.bind(window)
+          const remove = window.removeEventListener.bind(window)
+          vi.spyOn(window, 'addEventListener').mockImplementation((type: string, listener: any, options?: any) => {
+            if (type === 'resize')
+              listening.add(listener)
+            add(type, listener, options)
+          })
+          vi.spyOn(window, 'removeEventListener').mockImplementation((type: string, listener: any, options?: any) => {
+            if (type === 'resize')
+              listening.delete(listener)
+            remove(type, listener, options)
+          })
+
+          const page = await mountAttached()
+          expect(listening.size).toBe(0)
+
+          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
+          expect(listening.size).toBe(1)
+
+          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+          await settle()
+          expect(listening.size).toBe(0)
+
+          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[0]!)
+          expect(listening.size).toBe(1)
+          page.unmount()
+          mounted = undefined
+          expect(listening.size).toBe(0)
         })
 
         it('offers no zoom and stays open when the screenshot already shows 1:1', async () => {

@@ -39,6 +39,9 @@ const MODAL_UI = {
   ].join(' '),
 }
 
+/** The frame both views draw around the screenshot: a phosphor border and glow, never past the modal. */
+const FRAME = 'max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]'
+
 /**
  * The open modal's view. It opens `fitted`; when the screenshot is drawn
  * smaller than its native size, a click shows it at `native` size in a
@@ -47,9 +50,11 @@ const MODAL_UI = {
  */
 const view = ref<'fitted' | 'native'>('fitted')
 /** The screenshot's native size, once the fitted one has loaded. */
-const natural = ref<{ width: number, height: number }>()
+const nativeSize = ref<{ width: number, height: number }>()
 /** Whether the fitted screenshot is drawn smaller than its native size. */
 const shrunk = ref(false)
+/** The zoom the next click gives; none when the screenshot already shows 1:1. */
+const cursor = computed(() => view.value === 'native' ? 'zoom-out' : shrunk.value ? 'zoom-in' : undefined)
 let fittedImage: HTMLImageElement | null = null
 
 function measure() {
@@ -57,11 +62,11 @@ function measure() {
   // Nothing to measure before the screenshot has decoded.
   if (view.value !== 'fitted' || !image?.naturalWidth)
     return
-  natural.value = { width: image.naturalWidth, height: image.naturalHeight }
+  nativeSize.value = { width: image.naturalWidth, height: image.naturalHeight }
   shrunk.value = image.naturalWidth > image.clientWidth || image.naturalHeight > image.clientHeight
 }
 
-function trackFitted(element: unknown) {
+function bindFittedImage(element: unknown) {
   fittedImage = element instanceof HTMLImageElement ? element : null
   // A screenshot already in the cache may finish loading before the listener exists.
   if (fittedImage?.complete)
@@ -76,13 +81,17 @@ function toggleView() {
     view.value = 'native'
 }
 
-function resetView() {
+/** Starts every open and close fitted, and re-measures on resizes only while open. */
+function onOpenChange(open: boolean) {
   view.value = 'fitted'
-  natural.value = undefined
+  nativeSize.value = undefined
   shrunk.value = false
+  if (open)
+    window.addEventListener('resize', measure)
+  else
+    window.removeEventListener('resize', measure)
 }
 
-onMounted(() => window.addEventListener('resize', measure))
 onBeforeUnmount(() => window.removeEventListener('resize', measure))
 </script>
 
@@ -94,7 +103,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
       :key="shot.src"
       :title="`Screenshot · step ${step}`"
       :ui="MODAL_UI"
-      @update:open="resetView"
+      @update:open="onOpenChange"
     >
       <button type="button" class="shot-enlarge" :aria-label="`Enlarge screenshot: ${shot.alt}`">
         <img :src="shot.src" :alt="shot.alt" loading="lazy">
@@ -105,26 +114,28 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
         <!-- Native: drawn at natural size in a scroll area that takes the pans itself, so they never reach the overlay. -->
         <div
           v-if="view === 'native'"
-          class="pointer-events-auto overflow-auto overscroll-contain max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]"
+          class="pointer-events-auto overflow-auto overscroll-contain"
+          :class="FRAME"
         >
           <img
             :src="shot.src"
             :alt="shot.alt"
-            :width="natural?.width"
-            :height="natural?.height"
+            :width="nativeSize?.width"
+            :height="nativeSize?.height"
             class="block max-w-none"
-            style="cursor: zoom-out"
+            :style="{ cursor }"
             @click="toggleView"
           >
         </div>
         <!-- Fitted: never cropped, and an <img> left at auto size never grows past its native size. -->
         <img
           v-else
-          :ref="trackFitted"
+          :ref="bindFittedImage"
           :src="shot.src"
           :alt="shot.alt"
-          :style="shrunk ? { cursor: 'zoom-in' } : undefined"
-          class="block w-auto h-auto max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full pointer-events-auto border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]"
+          class="block w-auto h-auto pointer-events-auto"
+          :class="FRAME"
+          :style="{ cursor }"
           @load="measure"
           @click="toggleView"
         >
