@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.4](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.3...2.10.4) (2026-10-13)
+
+### Bug Fixes
+
+* **app:** rename setup button to setup fritz!box dyndns ([#288](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/288)) ([3651ac1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/3651ac19518a8df534067da54e64dd1b3f61e899))
+
 ## [2.10.3](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.2...2.10.3) (2026-10-13)
 
 ### Dependencies
