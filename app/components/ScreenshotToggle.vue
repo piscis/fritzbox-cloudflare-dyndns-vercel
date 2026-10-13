@@ -23,7 +23,8 @@ const { shots, step } = defineProps<{
  *
  * The content box lets clicks through (`!` beats the inline `pointer-events:
  * auto` Reka sets), so a tap on the dark area around a fitted screenshot counts
- * as outside and closes the modal. The screenshot and close button take clicks.
+ * as outside and closes the modal. The screenshot, its native-size scroll area
+ * and the close button take clicks.
  */
 const MODAL_UI = {
   overlay: () => [
@@ -37,23 +38,95 @@ const MODAL_UI = {
     'data-[state=open]:animate-[scale-in_200ms_var(--ease-out)] data-[state=closed]:animate-[scale-out_200ms_var(--ease-out)]',
   ].join(' '),
 }
+
+/**
+ * The open modal's view. It opens `fitted`; when the screenshot is drawn
+ * smaller than its native size, a click shows it at `native` size in a
+ * scroll area, and another click fits it again. Only one modal is open at a
+ * time, so one state serves them all, reset on every open and close.
+ */
+const view = ref<'fitted' | 'native'>('fitted')
+/** The screenshot's native size, once the fitted one has loaded. */
+const natural = ref<{ width: number, height: number }>()
+/** Whether the fitted screenshot is drawn smaller than its native size. */
+const shrunk = ref(false)
+let fittedImage: HTMLImageElement | null = null
+
+function measure() {
+  const image = fittedImage
+  // Nothing to measure before the screenshot has decoded.
+  if (view.value !== 'fitted' || !image?.naturalWidth)
+    return
+  natural.value = { width: image.naturalWidth, height: image.naturalHeight }
+  shrunk.value = image.naturalWidth > image.clientWidth || image.naturalHeight > image.clientHeight
+}
+
+function trackFitted(element: unknown) {
+  fittedImage = element instanceof HTMLImageElement ? element : null
+  // A screenshot already in the cache may finish loading before the listener exists.
+  if (fittedImage?.complete)
+    measure()
+}
+
+function toggleView() {
+  measure()
+  if (view.value === 'native')
+    view.value = 'fitted'
+  else if (shrunk.value)
+    view.value = 'native'
+}
+
+function resetView() {
+  view.value = 'fitted'
+  natural.value = undefined
+  shrunk.value = false
+}
+
+onMounted(() => window.addEventListener('resize', measure))
+onBeforeUnmount(() => window.removeEventListener('resize', measure))
 </script>
 
 <template>
   <details class="shot">
     <summary>show screenshot ▸</summary>
-    <UModal v-for="shot in shots" :key="shot.src" :title="`Screenshot · step ${step}`" :ui="MODAL_UI">
+    <UModal
+      v-for="shot in shots"
+      :key="shot.src"
+      :title="`Screenshot · step ${step}`"
+      :ui="MODAL_UI"
+      @update:open="resetView"
+    >
       <button type="button" class="shot-enlarge" aria-label="Enlarge screenshot">
         <img :src="shot.src" :alt="shot.alt" loading="lazy">
         <span class="shot-hint" aria-hidden="true">enlarge ▸</span>
       </button>
 
       <template #content="{ close }">
+        <!-- Native: drawn at natural size in a scroll area that takes the pans itself, so they never reach the overlay. -->
+        <div
+          v-if="view === 'native'"
+          class="pointer-events-auto overflow-auto overscroll-contain max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]"
+        >
+          <img
+            :src="shot.src"
+            :alt="shot.alt"
+            :width="natural?.width"
+            :height="natural?.height"
+            class="block max-w-none"
+            style="cursor: zoom-out"
+            @click="toggleView"
+          >
+        </div>
         <!-- Fitted: never cropped, and an <img> left at auto size never grows past its native size. -->
         <img
+          v-else
+          :ref="trackFitted"
           :src="shot.src"
           :alt="shot.alt"
+          :style="shrunk ? { cursor: 'zoom-in' } : undefined"
           class="block w-auto h-auto max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full pointer-events-auto border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]"
+          @load="measure"
+          @click="toggleView"
         >
         <BracketButton
           tone="quiet"

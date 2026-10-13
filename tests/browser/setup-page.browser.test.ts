@@ -1,3 +1,4 @@
+import type { Locator } from 'playwright-core'
 import { createPage, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
 
@@ -29,8 +30,8 @@ type Viewport = (typeof VIEWPORTS)[number]
 type Shot = (typeof SHOTS)[number]
 
 /** Opens /setup, opens the screenshot's toggle and clicks the screenshot. */
-async function enlarge(viewport: Viewport, shot: Shot) {
-  const page = await createPage('/setup', { viewport })
+async function enlarge(viewport: Viewport, shot: Shot, { hasTouch = false } = {}) {
+  const page = await createPage('/setup', { viewport, hasTouch })
   const step = page.locator(`section[aria-labelledby="${shot.step}"]`)
   await step.getByText('show screenshot ▸').click()
 
@@ -128,14 +129,125 @@ describe.each(VIEWPORTS)('/setup at $name width', (viewport) => {
     expect(await page.evaluate(focusedScreenshot)).toBe(shot.src)
     await page.close()
   })
+})
 
-  it('stays open when the enlarged screenshot itself is clicked', async () => {
-    const shot = SHOTS[0]!
-    const { page, dialog } = await enlarge(viewport, shot)
+/** The enlarged screenshot's drawn size and native size, and the cursor it shows. */
+function measure(image: Locator) {
+  return image.evaluate((img: HTMLImageElement) => {
+    const box = img.getBoundingClientRect()
+    return {
+      x: box.x,
+      y: box.y,
+      width: box.width,
+      height: box.height,
+      naturalWidth: img.naturalWidth,
+      cursor: getComputedStyle(img).cursor,
+    }
+  })
+}
 
-    await dialog.locator(`img[src="${shot.src}"]`).click()
+/** The scroll position and extent of the area around the enlarged screenshot. */
+function scrollArea(image: Locator) {
+  return image.evaluate((img: HTMLImageElement) => {
+    const area = img.parentElement!
+    return { left: area.scrollLeft, top: area.scrollTop, scrollWidth: area.scrollWidth, clientWidth: area.clientWidth }
+  })
+}
+
+describe('/setup at phone width, AAAA-record screenshot', () => {
+  const viewport = VIEWPORTS[0]!
+  const shot = SHOTS[2]!
+
+  /** Enlarges the screenshot on a touch screen and taps it once, to native size. */
+  async function enlargeNative() {
+    const { page, dialog } = await enlarge(viewport, shot, { hasTouch: true })
+    const image = dialog.locator(`img[src="${shot.src}"]`)
+    await image.tap()
+    return { page, dialog, image }
+  }
+
+  it('switches between fitted and native size on tap', async () => {
+    const { page, dialog } = await enlarge(viewport, shot, { hasTouch: true })
+    const image = dialog.locator(`img[src="${shot.src}"]`)
+
+    const fitted = await measure(image)
+    expect(fitted.cursor).toBe('zoom-in')
+    expect(fitted.width).toBeLessThan(fitted.naturalWidth)
+    expect(fitted.x).toBeGreaterThanOrEqual(0)
+    expect(fitted.x + fitted.width).toBeLessThanOrEqual(viewport.width)
+    expect(fitted.y + fitted.height).toBeLessThanOrEqual(viewport.height)
+
+    await image.tap()
+    const native = await measure(image)
+    expect(native.width).toBe(native.naturalWidth)
+    expect(native.cursor).toBe('zoom-out')
+    const area = await scrollArea(image)
+    expect(area.scrollWidth).toBeGreaterThan(area.clientWidth)
+    expect([area.left, area.top]).toEqual([0, 0])
+
+    await image.tap()
+    expect(await measure(image)).toEqual(fitted)
+
+    await page.close()
+  })
+
+  it('pans the native view on a swipe or wheel and stays open', async () => {
+    const { page, dialog, image } = await enlargeNative()
+    const box = (await image.boundingBox())!
+    const inside = { x: viewport.width / 2, y: Math.min(box.y + box.height, viewport.height) / 2 }
+
+    // A finger swipe right-to-left, upwards.
+    const cdp = await page.context().newCDPSession(page)
+    await cdp.send('Input.synthesizeScrollGesture', {
+      ...inside,
+      xDistance: -200,
+      yDistance: -100,
+      gestureSourceType: 'touch',
+    })
+    await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(0)
+
+    await page.mouse.move(inside.x, inside.y)
+    await page.mouse.wheel(150, 0)
+    await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(200)
 
     expect(await dialog.isVisible()).toBe(true)
+    expect((await measure(image)).width).toBe((await measure(image)).naturalWidth)
+    await page.close()
+  })
+
+  it('keeps the close button on top and reachable in the native view', async () => {
+    const { page, dialog, image } = await enlargeNative()
+    await image.evaluate((img: HTMLImageElement) => img.parentElement!.scrollTo(300, 200))
+
+    const close = dialog.getByRole('button', { name: 'Close' })
+    const box = (await close.boundingBox())!
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width)
+    expect(box.x + box.width / 2).toBeGreaterThan(viewport.width * 0.75)
+    expect(box.y + box.height / 2).toBeLessThan(viewport.height * 0.25)
+
+    await close.tap()
+    await dialog.waitFor({ state: 'detached' })
+    await page.close()
+  })
+})
+
+describe('/setup at desktop width, Cloudflare token screenshot', () => {
+  const viewport = VIEWPORTS[1]!
+  const shot = SHOTS[0]!
+
+  it('shows it 1:1 with no zoom cursor, and a click changes nothing', async () => {
+    const { page, dialog } = await enlarge(viewport, shot)
+    const image = dialog.locator(`img[src="${shot.src}"]`)
+
+    const before = await measure(image)
+    // The box includes the 1 px border on each side.
+    expect(before.width).toBe(before.naturalWidth + 2)
+    expect(before.cursor).not.toMatch(/zoom/)
+
+    await image.click()
+
+    expect(await dialog.isVisible()).toBe(true)
+    expect(await measure(image)).toEqual(before)
     await page.close()
   })
 })

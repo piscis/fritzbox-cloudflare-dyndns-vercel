@@ -369,16 +369,84 @@ describe('setup page', () => {
         expect(document.activeElement).toBe(button.element)
       })
 
-      it('stays open when the enlarged screenshot itself is clicked', async () => {
-        const page = await mountAttached()
-        await enlarge(page.get('section[aria-labelledby="step-token"] details button'))
+      describe('fitted or at native size', () => {
+        /** The enlarged screenshot, laid out as a browser would: happy-dom computes no layout. */
+        async function layOut(natural: [number, number], rendered: [number, number]) {
+          const image = dialog()!.querySelector('img')!
+          const sizes = { naturalWidth: natural[0], naturalHeight: natural[1], clientWidth: rendered[0], clientHeight: rendered[1] }
+          for (const [key, value] of Object.entries(sizes))
+            Object.defineProperty(image, key, { configurable: true, value })
+          image.dispatchEvent(new Event('load'))
+          await settle()
+        }
 
-        const image = dialog()!.querySelector('img')!
-        image.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
-        image.click()
-        await settle()
+        /** Clicks the enlarged screenshot the way a mouse does. */
+        async function clickScreenshot() {
+          const image = dialog()!.querySelector('img')!
+          image.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+          image.click()
+          await settle()
+        }
 
-        expect(dialog()).not.toBeNull()
+        /** What the visitor sees: the zoom cursor offered, and the width the screenshot is drawn at. */
+        function shown() {
+          const image = dialog()!.querySelector('img')!
+          return { cursor: image.style.cursor, width: image.getAttribute('width') }
+        }
+
+        const FITTED = { cursor: 'zoom-in', width: null }
+        const NATIVE = { cursor: 'zoom-out', width: '1537' }
+
+        /** Opens step 02's AAAA-record screenshot, shrunk to a phone's width. */
+        async function enlargeShrunk(page: VueWrapper) {
+          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[1]!)
+          await layOut([1537, 741], [370, 178])
+        }
+
+        it('switches a shrunk screenshot to native size and back on click', async () => {
+          const page = await mountAttached()
+          await enlargeShrunk(page)
+          expect(shown()).toEqual(FITTED)
+
+          await clickScreenshot()
+          expect(shown()).toEqual(NATIVE)
+          expect(dialog()).not.toBeNull()
+
+          await clickScreenshot()
+          expect(shown()).toEqual(FITTED)
+          expect(dialog()).not.toBeNull()
+        })
+
+        it.each([
+          ['the same screenshot', 1],
+          ['another screenshot', 0],
+        ])('opens %s fitted after one was closed at native size', async (_, index) => {
+          const page = await mountAttached()
+          await enlargeShrunk(page)
+          await clickScreenshot()
+          expect(shown()).toEqual(NATIVE)
+
+          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+          await settle()
+          expect(dialog()).toBeNull()
+
+          await enlarge(page.findAll('section[aria-labelledby="step-records"] details button')[index]!)
+          expect(shown().width).toBeNull()
+          await layOut([1537, 741], [370, 178])
+          expect(shown()).toEqual(FITTED)
+        })
+
+        it('offers no zoom and stays open when the screenshot already shows 1:1', async () => {
+          const page = await mountAttached()
+          await enlarge(page.get('section[aria-labelledby="step-token"] details button'))
+          await layOut([884, 784], [884, 784])
+          expect(shown()).toEqual({ cursor: '', width: null })
+
+          await clickScreenshot()
+
+          expect(dialog()).not.toBeNull()
+          expect(shown()).toEqual({ cursor: '', width: null })
+        })
       })
 
       it('makes every screenshot in a toggle an enlarge button with a hint', async () => {
