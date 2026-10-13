@@ -45,6 +45,21 @@ export default defineConfig({
         },
       },
 
+      // The real /setup page in Chromium, for tests that need actual layout. Set up
+      // like e2e, plus `browser: true` in each file's setup(). Needs a local
+      // Chromium, so `test` and `test:coverage` skip it; run it with `test:browser`.
+      {
+        resolve: { alias: nuxtAlias },
+        test: {
+          name: 'browser',
+          include: ['tests/browser/**/*.{test,spec}.ts'],
+          environment: 'node',
+          testTimeout: 30_000,
+          hookTimeout: 300_000,
+          fileParallelism: false,
+        },
+      },
+
       await defineVitestProject({
         test: {
           name: 'nuxt',
