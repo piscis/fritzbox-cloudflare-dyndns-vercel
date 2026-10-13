@@ -286,6 +286,114 @@ describe('setup page', () => {
       expect(alts[1]).toContain('TTL 1 min')
       expect(alts[2]).toContain('TTL 1 min')
     })
+
+    describe('enlarged in a modal', () => {
+      let mounted: VueWrapper | undefined
+
+      /** The page attached to the document, so focus behaves as in a browser. */
+      async function mountAttached() {
+        mounted = await mountSuspended(SetupPage, { attachTo: document.body })
+        return mounted
+      }
+
+      /** Lets Vue and Reka finish: Reka arms outside clicks and returns focus a macrotask later. */
+      async function settle() {
+        await flushPromises()
+        await new Promise(resolve => setTimeout(resolve, 0))
+      }
+
+      /** Focuses and clicks a screenshot button, as a click in a browser does. */
+      async function enlarge(button: ReturnType<VueWrapper['get']>) {
+        ;(button.element as HTMLButtonElement).focus()
+        await button.trigger('click')
+        await settle()
+      }
+
+      // The dialog is teleported into document.body, outside the page wrapper.
+      const dialog = () => document.querySelector<HTMLElement>('[role="dialog"]')
+
+      /** The dialog's accessible name, read from the element aria-labelledby names. */
+      function dialogName(element: HTMLElement) {
+        return document.getElementById(element.getAttribute('aria-labelledby')!)?.textContent?.trim()
+      }
+
+      afterEach(async () => {
+        mounted?.unmount()
+        mounted = undefined
+        await settle()
+      })
+
+      it.each([
+        ['step-token', 0, '/setup/cloudflare-token.png', '01'],
+        ['step-records', 0, '/setup/a-record.png', '02'],
+        ['step-records', 1, '/setup/aaaa-record.png', '02'],
+        ['step-fritzbox', 0, '/setup/fritzbox-dyndns.png', '03'],
+      ])('%s screenshot %i opens alone in a dialog titled by its step', async (step, index, src, number) => {
+        const page = await mountAttached()
+        const button = page.findAll(`section[aria-labelledby="${step}"] details button`)[index]!
+        expect(dialog()).toBeNull()
+
+        await enlarge(button)
+
+        const open = dialog()
+        expect(open).not.toBeNull()
+        expect(dialogName(open!)).toBe(`Screenshot · step ${number}`)
+        const images = [...open!.querySelectorAll('img')]
+        expect(images).toHaveLength(1)
+        expect(images[0]!.getAttribute('src')).toBe(src)
+        expect(images[0]!.getAttribute('alt')).toBe(button.get('img').attributes('alt'))
+      })
+
+      it.each([
+        ['the close button', (open: HTMLElement) => {
+          const close = [...open.querySelectorAll('button')].find(b => b.getAttribute('aria-label') === 'Close')
+          expect(close?.textContent).toContain('×')
+          close!.click()
+        }],
+        ['Esc', () => {
+          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+        }],
+        ['an overlay click', () => {
+          document.querySelector('[data-slot="overlay"]')!
+            .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+        }],
+      ])('closes on %s and hands focus back to the screenshot', async (_, close) => {
+        const page = await mountAttached()
+        const button = page.findAll('section[aria-labelledby="step-records"] details button')[1]!
+
+        await enlarge(button)
+        close(dialog()!)
+        await settle()
+
+        expect(dialog()).toBeNull()
+        expect(document.activeElement).toBe(button.element)
+      })
+
+      it('stays open when the enlarged screenshot itself is clicked', async () => {
+        const page = await mountAttached()
+        await enlarge(page.get('section[aria-labelledby="step-token"] details button'))
+
+        const image = dialog()!.querySelector('img')!
+        image.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+        image.click()
+        await settle()
+
+        expect(dialog()).not.toBeNull()
+      })
+
+      it('makes every screenshot in a toggle an enlarge button with a hint', async () => {
+        const page = await mountSuspended(SetupPage)
+
+        const buttons = page.findAll('details').flatMap(toggle => toggle.findAll('button'))
+        expect(buttons).toHaveLength(4)
+        for (const button of buttons) {
+          expect(button.attributes('type')).toBe('button')
+          expect(button.attributes('aria-label')).toMatch(/^Enlarge screenshot/)
+          expect(button.find('img').exists()).toBe(true)
+          expect(button.text()).toContain('enlarge ▸')
+        }
+      })
+    })
   })
 
   describe('the builder', () => {
