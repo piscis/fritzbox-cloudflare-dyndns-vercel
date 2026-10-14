@@ -6,10 +6,8 @@ Only the latest release is supported. Fixes are not backported.
 
 ## Reporting a vulnerability
 
-Please report privately rather than opening a public issue:
-
-- GitHub → **Security** → **Report a vulnerability** (preferred), or
-- email **326163+piscis@users.noreply.github.com**
+Please report privately through GitHub → **Security** → **Report a vulnerability**
+rather than opening a public issue.
 
 You can expect an acknowledgement within 72 hours.
 
