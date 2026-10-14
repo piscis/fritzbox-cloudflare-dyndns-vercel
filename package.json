@@ -58,7 +58,7 @@
     "@vue/test-utils": "^2.5.1",
     "eslint": "^10.12.0",
     "h3": "^1.15.11",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.1",
     "node-mock-http": "^1.0.5",
     "playwright-core": "^1.64.0",
     "release-it": "^21.1.1",
