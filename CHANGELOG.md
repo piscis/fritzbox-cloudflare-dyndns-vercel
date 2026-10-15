@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.11.1](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.0...2.11.1) (2026-10-15)
+
+### Dependencies
+
+* **deps:** update all non-major dependencies ([#295](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/295)) ([ef4261b](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/ef4261b848f6dd8dbf9f5950a4d22e4486416370))
+* **deps:** update devdependency happy-dom to v21 ([#296](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/296)) ([d92138b](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/d92138b40796d58531fa7b0ffe50a5dfe70d8828))
+* **deps:** update devdependency wrangler to ^4.150.0 ([#298](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/298)) ([07ac917](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/07ac917e51fc3a27a77827fb2484cc62039ab689))
+
 ## [2.11.0](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.10.4...2.11.0) (2026-10-13)
 
 ### Features
