@@ -37,7 +37,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.145",
+    "@iconify-json/lucide": "^1.2.146",
     "@nuxt/ui": "^4.12.0",
     "@orpc/openapi": "^1.15.7",
     "@orpc/server": "^1.15.7",
@@ -66,6 +66,6 @@
     "typescript": "^6.0.3",
     "vitest": "^5.0.5",
     "vue-tsc": "^3.3.13",
-    "wrangler": "^4.151.1"
+    "wrangler": "^4.151.2"
   }
 }
