@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.11.6](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.5...2.11.6) (2026-10-20)
+
+### Dependencies
+
+* **deps:** lock file maintenance ([#228](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/228)) ([7dff34c](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/7dff34c2c8e0f07fc8e962aeb37e91056bb91380))
+
 ## [2.11.5](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.4...2.11.5) (2026-10-19)
 
 ### Dependencies
