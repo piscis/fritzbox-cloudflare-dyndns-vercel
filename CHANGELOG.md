@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.11.8](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.7...2.11.8) (2026-10-22)
+
+### Dependencies
+
+* **deps:** lock file maintenance ([#309](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/309)) ([b024b04](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b024b047a719331370eac62f78790ed2d91983f2))
+* **deps:** update all non-major dependencies ([#306](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/306)) ([6ee1001](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/6ee1001b51d2c203f810d5f4c38d1d1c3f7c4570))
+* **deps:** update orpc monorepo to v1.16.0 ([#307](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/307)) ([58ab18c](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/58ab18cc32f07fd85a8f189049497e9a544bc4ab))
+* **deps:** update pnpm to v12.15.0 ([#308](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/308)) ([0e7ab60](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/0e7ab604b390b69b199533f75703b19977bdaa73))
+
 ## [2.11.7](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.6...2.11.7) (2026-10-20)
 
 ### Dependencies
