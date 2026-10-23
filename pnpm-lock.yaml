@@ -5066,8 +5066,8 @@ packages:
   nanotar@0.3.0:
     resolution: {integrity: sha512-Kv2JYYiCzt16Kt5QwAc9BFG89xfPNBx+oQL4GQXD9nLqPkZBiNaqaCWtwnbk/q7UVsTYevvM1b0UF8zmEI4pCg==}
 
-  napi-postinstall@0.3.6:
-    resolution: {integrity: sha512-RzlO2IIhNxWEahiVrwUYvk+PRoP2SdKLTUt7Yfmwjstc2MRULti2uwc9EkBRTMwkYtfITwVzgBLkS4K4esCRGg==}
+  napi-postinstall@0.3.7:
+    resolution: {integrity: sha512-jyU4cU4kVAmy/3qjP+DcoQTNXfINHc+dFw54gGqWC8nu0mpV0kOnk7kff+J+Q18SbX0k3Np8Rm7yFjd3phatNQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     hasBin: true
 
@@ -12043,7 +12043,7 @@ snapshots:
 
   nanotar@0.3.0: {}
 
-  napi-postinstall@0.3.6: {}
+  napi-postinstall@0.3.7: {}
 
   natural-compare@1.4.0: {}
 
@@ -13486,7 +13486,7 @@ snapshots:
 
   unrs-resolver@1.12.2:
     dependencies:
-      napi-postinstall: 0.3.6
+      napi-postinstall: 0.3.7
     optionalDependencies:
       '@unrs/resolver-binding-android-arm-eabi': 1.12.2
       '@unrs/resolver-binding-android-arm64': 1.12.2
