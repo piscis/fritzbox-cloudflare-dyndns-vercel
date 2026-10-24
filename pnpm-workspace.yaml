@@ -85,7 +85,7 @@ overrides:
   ajv@8: ^8.20.0
   esbuild: ^0.28.2
   fast-uri: ^4.2.3
-  webpack: ^5.112.0
+  webpack: ^5.112.1
 
 allowBuilds:
   '@parcel/watcher': true
