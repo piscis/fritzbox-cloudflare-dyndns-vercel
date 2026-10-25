@@ -244,9 +244,18 @@ describe('setup page', () => {
 
   describe('screenshots', () => {
     it.each([
-      ['step-token', ['/setup/cloudflare-token.png']],
-      ['step-records', ['/setup/a-record.png', '/setup/aaaa-record.png']],
-      ['step-fritzbox', ['/setup/fritzbox-dyndns.png']],
+      [
+        'step-token',
+        ['/setup/cloudflare-token.png'],
+      ],
+      [
+        'step-records',
+        ['/setup/a-record.png', '/setup/aaaa-record.png'],
+      ],
+      [
+        'step-fritzbox',
+        ['/setup/fritzbox-dyndns.png'],
+      ],
     ])('%s keeps its screenshots behind a closed toggle', async (step, sources) => {
       const page = await mountSuspended(SetupPage)
       const toggle = page.find(`section[aria-labelledby="${step}"] details`)
@@ -334,10 +343,30 @@ describe('setup page', () => {
       })
 
       it.each([
-        ['step-token', 0, '/setup/cloudflare-token.png', '01'],
-        ['step-records', 0, '/setup/a-record.png', '02'],
-        ['step-records', 1, '/setup/aaaa-record.png', '02'],
-        ['step-fritzbox', 0, '/setup/fritzbox-dyndns.png', '03'],
+        [
+          'step-token',
+          0,
+          '/setup/cloudflare-token.png',
+          '01',
+        ],
+        [
+          'step-records',
+          0,
+          '/setup/a-record.png',
+          '02',
+        ],
+        [
+          'step-records',
+          1,
+          '/setup/aaaa-record.png',
+          '02',
+        ],
+        [
+          'step-fritzbox',
+          0,
+          '/setup/fritzbox-dyndns.png',
+          '03',
+        ],
       ])('%s screenshot %i opens alone in a dialog titled by its step', async (step, index, src, number) => {
         const page = await mountAttached()
         const button = page.findAll(`section[aria-labelledby="${step}"] details button`)[index]!
@@ -348,23 +377,33 @@ describe('setup page', () => {
         const open = dialog()
         expect(open).not.toBeNull()
         expect(dialogName(open!)).toBe(`Screenshot · step ${number}`)
-        const images = [...open!.querySelectorAll('img')]
+        const images = [
+          ...open!.querySelectorAll('img'),
+        ]
         expect(images).toHaveLength(1)
         expect(images[0]!.getAttribute('src')).toBe(src)
         expect(images[0]!.getAttribute('alt')).toBe(button.get('img').attributes('alt'))
       })
 
       it.each([
-        ['the close button', (open: HTMLElement) => {
-          const close = [...open.querySelectorAll('button')].find(b => b.getAttribute('aria-label') === 'Close')
-          expect(close?.textContent).toContain('×')
-          close!.click()
-        }],
+        [
+          'the close button',
+          (open: HTMLElement) => {
+            const close = [
+              ...open.querySelectorAll('button'),
+            ].find(b => b.getAttribute('aria-label') === 'Close')
+            expect(close?.textContent).toContain('×')
+            close!.click()
+          },
+        ],
         ['Esc', pressEscape],
-        ['an overlay click', () => {
-          document.querySelector('[data-slot="overlay"]')!
-            .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
-        }],
+        [
+          'an overlay click',
+          () => {
+            document.querySelector('[data-slot="overlay"]')!
+              .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
+          },
+        ],
       ])('closes on %s and hands focus back to the screenshot', async (_, close) => {
         const page = await mountAttached()
         const button = recordButtons(page)[1]!
@@ -381,10 +420,17 @@ describe('setup page', () => {
         /** The enlarged screenshot, laid out as a browser would: happy-dom computes no layout. */
         async function layOut(natural: [number, number], rendered: [number, number], { event = 'load' } = {}) {
           const image = dialog()!.querySelector('img')!
-          const sizes = { naturalWidth: natural[0], naturalHeight: natural[1], clientWidth: rendered[0], clientHeight: rendered[1] }
+          const sizes = {
+            naturalWidth: natural[0],
+            naturalHeight: natural[1],
+            clientWidth: rendered[0],
+            clientHeight: rendered[1],
+          }
           for (const [key, value] of Object.entries(sizes))
             Object.defineProperty(image, key, { configurable: true, value })
-          ;(event === 'resize' ? window : image).dispatchEvent(new Event(event))
+          ;(event === 'resize'
+            ? window
+            : image).dispatchEvent(new Event(event))
           await settle()
         }
 
@@ -404,7 +450,10 @@ describe('setup page', () => {
         /** What the visitor sees: the zoom cursor offered, and the width the screenshot is drawn at. */
         function shown() {
           const image = dialog()!.querySelector('img')!
-          return { cursor: image.style.cursor, width: image.getAttribute('width') }
+          return {
+            cursor: image.style.cursor,
+            width: image.getAttribute('width'),
+          }
         }
 
         const FITTED = { cursor: 'zoom-in', width: null }
@@ -756,9 +805,18 @@ describe('setup page', () => {
     })
 
     it.each([
-      ['IPv4 + IPv6', ['A', 'AAAA']],
-      ['IPv4 only', ['A']],
-      ['IPv6 only', ['AAAA']],
+      [
+        'IPv4 + IPv6',
+        ['A', 'AAAA'],
+      ],
+      [
+        'IPv4 only',
+        ['A'],
+      ],
+      [
+        'IPv6 only',
+        ['AAAA'],
+      ],
     ])('%s shows only the matching records', async (choice, types) => {
       const page = await mountSuspended(SetupPage)
 

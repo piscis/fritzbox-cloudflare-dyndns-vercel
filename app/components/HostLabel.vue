@@ -13,8 +13,12 @@ const host = useSiteHost()
 // indexOf rather than split('.'), so `localhost:3000` degrades to a single bold
 // label instead of an empty tail.
 const separator = computed(() => host.value.indexOf('.'))
-const lead = computed(() => (separator.value < 0 ? host.value : host.value.slice(0, separator.value)))
-const rest = computed(() => (separator.value < 0 ? '' : host.value.slice(separator.value)))
+const lead = computed(() => (separator.value < 0
+  ? host.value
+  : host.value.slice(0, separator.value)))
+const rest = computed(() => (separator.value < 0
+  ? ''
+  : host.value.slice(separator.value)))
 </script>
 
 <template>

@@ -63,7 +63,9 @@ const nativeSize = ref<{ width: number, height: number }>()
 /** Whether the fitted screenshot is drawn smaller than its native size. */
 const shrunk = ref(false)
 /** The zoom the next click gives; none when the screenshot already shows 1:1. */
-const cursor = computed(() => view.value === 'native' ? 'zoom-out' : shrunk.value ? 'zoom-in' : undefined)
+const cursor = computed(() => view.value === 'native'
+  ? 'zoom-out'
+  : shrunk.value ? 'zoom-in' : undefined)
 let fittedImage: HTMLImageElement | null = null
 
 function measure() {
@@ -76,7 +78,9 @@ function measure() {
 }
 
 function bindFittedImage(element: unknown) {
-  fittedImage = element instanceof HTMLImageElement ? element : null
+  fittedImage = element instanceof HTMLImageElement
+    ? element
+    : null
   // A screenshot already in the cache may finish loading before the listener exists.
   if (fittedImage?.complete)
     measure()

@@ -4,19 +4,36 @@ import { describe, expect, it, vi } from 'vitest'
 import { fritzDynDnsRoute } from '~~/server/router/procedures/fritz-dyndns'
 import { createNitroContextStub } from '../helpers/h3'
 
-const cf = vi.hoisted(() => ({ ctor: vi.fn() }))
+const cf = vi.hoisted(() => ({
+  ctor: vi.fn(),
+}))
 
 vi.mock('cloudflare', () => ({
   default: class Cloudflare {
-    zones = { list: vi.fn() }
-    dns = { records: { list: vi.fn(), update: vi.fn() } }
+    zones = {
+      list: vi.fn(),
+    }
+
+    dns = {
+      records: {
+        list: vi.fn(),
+        update: vi.fn(),
+      },
+    }
+
     constructor(opts: { apiToken: string }) {
       cf.ctor(opts)
     }
   },
 }))
 
-vi.mock('~~/server/utils/useLogger', () => ({ default: () => ({ logger: { error: vi.fn() } }) }))
+vi.mock('~~/server/utils/useLogger', () => ({
+  default: () => ({
+    logger: {
+      error: vi.fn(),
+    },
+  }),
+}))
 
 const VALID = {
   token: 'cf-token',
@@ -63,7 +80,10 @@ describe('fritz-dyndns · input validation', () => {
   })
 
   it('rejects a non-string ipv4', async () => {
-    await expectBadRequest({ ...VALID, ipv4: { nope: true } })
+    await expectBadRequest({
+      ...VALID,
+      ipv4: { nope: true },
+    })
   })
 
   it('never constructs a Cloudflare client when validation fails', async () => {

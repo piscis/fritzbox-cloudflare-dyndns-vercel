@@ -21,15 +21,22 @@ const cf = vi.hoisted(() => ({
 vi.mock('cloudflare', () => ({
   default: class Cloudflare {
     zones = { list: cf.zonesList }
-    dns = { records: { list: cf.recordsList, update: cf.recordsUpdate } }
+    dns = {
+      records: { list: cf.recordsList, update: cf.recordsUpdate },
+    }
+
     constructor(opts: { apiToken: string }) {
       cf.ctor(opts)
     }
   },
 }))
 
-const log = vi.hoisted(() => ({ error: vi.fn() }))
-vi.mock('~~/server/utils/useLogger', () => ({ default: () => ({ logger: log }) }))
+const log = vi.hoisted(() => ({
+  error: vi.fn(),
+}))
+vi.mock('~~/server/utils/useLogger', () => ({
+  default: () => ({ logger: log }),
+}))
 
 const BASE_QUERY = {
   token: 'cf-token',
@@ -180,7 +187,9 @@ describe('fritz-dyndns · not found', () => {
   })
 
   it('returns 404 when no zone matches the requested name', async () => {
-    cf.zonesList.mockReturnValue(asyncIterable([{ id: 'z9', name: 'other.com' }]))
+    cf.zonesList.mockReturnValue(asyncIterable([
+      { id: 'z9', name: 'other.com' },
+    ]))
 
     const error = await expectOrpcError(invoke({ ...BASE_QUERY, ipv4: '9.9.9.9' }).result)
 
@@ -215,15 +224,24 @@ describe('fritz-dyndns · not found', () => {
 
 describe('fritz-dyndns · upstream failures', () => {
   it.each([
-    ['zone listing', () => cf.zonesList.mockReturnValue(throwingAsyncIterable(new Error('cf down')))],
-    ['record listing', () => {
-      cf.zonesList.mockReturnValue(asyncIterable([ZONE]))
-      cf.recordsList.mockReturnValue(throwingAsyncIterable(new Error('403')))
-    }],
-    ['record update', () => {
-      arrangeHappyPath()
-      cf.recordsUpdate.mockRejectedValue(new Error('rate limited'))
-    }],
+    [
+      'zone listing',
+      () => cf.zonesList.mockReturnValue(throwingAsyncIterable(new Error('cf down'))),
+    ],
+    [
+      'record listing',
+      () => {
+        cf.zonesList.mockReturnValue(asyncIterable([ZONE]))
+        cf.recordsList.mockReturnValue(throwingAsyncIterable(new Error('403')))
+      },
+    ],
+    [
+      'record update',
+      () => {
+        arrangeHappyPath()
+        cf.recordsUpdate.mockRejectedValue(new Error('rate limited'))
+      },
+    ],
   ])('maps a failure during %s to 503', async (_label, arrange) => {
     arrange()
 

@@ -44,7 +44,9 @@ const zoneEdit = ref<string | null>(null)
 const zoneInput = computed({
   // Auto-filled from the hostname until the visitor edits it; then the edit
   // sticks, for zones like `example.co.uk`.
-  get: () => zoneEdit.value ?? (normalizeName(hostnameInput.value) ? guessZone(normalizeName(hostnameInput.value)) : ''),
+  get: () => zoneEdit.value ?? (normalizeName(hostnameInput.value)
+    ? guessZone(normalizeName(hostnameInput.value))
+    : ''),
   set: (value: string) => {
     zoneEdit.value = value
   },
@@ -152,8 +154,18 @@ const updateUrl = computed(() =>
 
 const fritzboxFields = computed<Field[]>(() => [
   { label: 'Update URL (Update-URL)', value: updateUrl.value, copy: true },
-  { label: 'Domain name (Domainnamen)', value: hostname.value, note: 'the full hostname from the Update URL', copy: true },
-  { label: 'Username (Benutzername)', value: 'fritz', note: 'any value, the service ignores it', copy: true },
+  {
+    label: 'Domain name (Domainnamen)',
+    value: hostname.value,
+    note: 'the full hostname from the Update URL',
+    copy: true,
+  },
+  {
+    label: 'Username (Benutzername)',
+    value: 'fritz',
+    note: 'any value, the service ignores it',
+    copy: true,
+  },
   { label: 'Password (Kennwort)', value: '●●●●●●', note: 'your Cloudflare API token from step 01' },
 ])
 

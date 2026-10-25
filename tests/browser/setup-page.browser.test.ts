@@ -48,7 +48,9 @@ async function showScreenshot(viewport: Viewport, shot: Shot, { hasTouch = false
   const step = page.locator(`section[aria-labelledby="${shot.step}"]`)
   await step.getByText('show screenshot ▸').click()
   const button = step.getByRole('button', { name: 'Enlarge screenshot' })
-    .filter({ has: page.locator(`img[src="${shot.src}"]`) })
+    .filter({
+      has: page.locator(`img[src="${shot.src}"]`),
+    })
   return { page, button }
 }
 
@@ -203,7 +205,12 @@ function drawnSize(image: Locator) {
 function scrollArea(image: Locator) {
   return image.evaluate((img: HTMLImageElement) => {
     const area = img.parentElement!
-    return { left: area.scrollLeft, top: area.scrollTop, scrollWidth: area.scrollWidth, clientWidth: area.clientWidth }
+    return {
+      left: area.scrollLeft,
+      top: area.scrollTop,
+      scrollWidth: area.scrollWidth,
+      clientWidth: area.clientWidth,
+    }
   })
 }
 
@@ -250,10 +257,19 @@ describe('/setup at phone width, AAAA-record screenshot', () => {
     // A finger swipe right-to-left, upwards, as raw touch events. CDP's
     // synthesizeScrollGesture never scrolls in Linux's headless shell.
     const cdp = await page.context().newCDPSession(page)
-    const finger = (step: number) => [{ id: 1, x: inside.x - 20 * step, y: inside.y - 10 * step }]
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: finger(0) })
-    for (let step = 1; step <= 10; step++)
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: finger(step) })
+    const finger = (step: number) => [
+      { id: 1, x: inside.x - 20 * step, y: inside.y - 10 * step },
+    ]
+    await cdp.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: finger(0),
+    })
+    for (let step = 1; step <= 10; step++) {
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchMove',
+        touchPoints: finger(step),
+      })
+    }
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
     await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(0)
     expect(await dialog.isVisible()).toBe(true)
@@ -348,7 +364,10 @@ describe('/setup without JavaScript', () => {
     const images = step.locator('details img')
     await images.last().waitFor({ state: 'visible' })
 
-    expect(await images.evaluateAll((imgs: HTMLImageElement[]) => imgs.map(img => [img.loading, img.alt !== '']))).toEqual([['lazy', true], ['lazy', true]])
+    expect(await images.evaluateAll((imgs: HTMLImageElement[]) => imgs.map(img => [img.loading, img.alt !== '']))).toEqual([
+      ['lazy', true],
+      ['lazy', true],
+    ])
     expect(await step.getByText('enlarge ▸').count()).toBe(0)
     expect(await images.first().evaluate(img => getComputedStyle(img).cursor)).not.toMatch(/zoom/)
   })
