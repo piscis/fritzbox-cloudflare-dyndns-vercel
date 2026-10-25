@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.11.10](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.9...2.11.10) (2026-10-25)
+
+### Dependencies
+
+* **deps:** lock file maintenance ([#312](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/312)) ([4b9ff5d](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/4b9ff5d39fcb86e9f42e83230b4145ace703268a))
+* **deps:** update all non-major dependencies ([#311](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/311)) ([30465bd](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/30465bd3c8c774fa8b9aac97f1e13191a99b99f4))
+* **deps:** update devdependency @antfu/eslint-config to v10 ([#313](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/313)) ([1f27ecb](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/1f27ecb6a9e9d7612a244f54c69333234d2278d7))
+
 ## [2.11.9](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.8...2.11.9) (2026-10-23)
 
 ### Dependencies
