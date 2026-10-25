@@ -78,7 +78,9 @@ function drawLive(ctx: CanvasRenderingContext2D, w: number, h: number): void {
     const x = i * gap + gap * 0.15
     const bw = gap * 0.6
 
-    ctx.fillStyle = level > 0.55 ? leaf : mid
+    ctx.fillStyle = level > 0.55
+      ? leaf
+      : mid
     ctx.globalAlpha = 0.4 + level * 0.55
     ctx.fillRect(x, h - barH, bw, barH)
   }

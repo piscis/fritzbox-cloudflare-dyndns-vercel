@@ -45,7 +45,9 @@ onBeforeUnmount(() => clearTimeout(reset))
 function buttonText(row: number): string {
   if (copyState.value?.row !== row)
     return 'copy'
-  return copyState.value.result === 'copied' ? 'copied' : 'blocked, select it'
+  return copyState.value.result === 'copied'
+    ? 'copied'
+    : 'blocked, select it'
 }
 </script>
 

@@ -47,7 +47,10 @@ function stubAudioContext(): void {
     resume = vi.fn(() => Promise.resolve())
     close = vi.fn(() => Promise.resolve())
     createAnalyser = vi.fn(() => new FakeAnalyser())
-    createMediaElementSource = vi.fn(() => ({ connect: vi.fn() }))
+    createMediaElementSource = vi.fn(() => ({
+      connect: vi.fn(),
+    }))
+
     get destination() {
       return {}
     }
@@ -58,7 +61,10 @@ function stubAudioContext(): void {
 
 describe('index page', () => {
   beforeEach(() => {
-    health = { status: 200, body: { state: 'ok', timestamp: 1_700_000_000_000 } }
+    health = {
+      status: 200,
+      body: { state: 'ok', timestamp: 1_700_000_000_000 },
+    }
     // happy-dom implements no media playback.
     HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve())
     HTMLMediaElement.prototype.pause = vi.fn()
@@ -153,7 +159,10 @@ describe('index page', () => {
     })
 
     it('goes amber when the service reports its own trouble', async () => {
-      health = { status: 503, body: { state: 'error', timestamp: 1 } }
+      health = {
+        status: 503,
+        body: { state: 'error', timestamp: 1 },
+      }
 
       const page = await mountSuspended(IndexPage)
       await flushPromises()

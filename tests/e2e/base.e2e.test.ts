@@ -23,7 +23,9 @@ describe('pages', () => {
   it('renders the 404 page for an unknown route', async () => {
     // Without an HTML Accept header Nitro answers with its JSON error payload
     // rather than rendering error.vue.
-    const res = await fetch('/no-such-page', { headers: { accept: 'text/html' } })
+    const res = await fetch('/no-such-page', {
+      headers: { accept: 'text/html' },
+    })
     const body = await res.text()
 
     expect(res.status).toBe(404)
@@ -36,7 +38,9 @@ describe('pages', () => {
   it('never reflects the query string into the 404', async () => {
     // A mistyped DynDNS update URL carries a live Cloudflare token. Only a real
     // render proves it does not reach the HTML.
-    const res = await fetch('/api/typo?token=SUPER_SECRET_TOKEN', { headers: { accept: 'text/html' } })
+    const res = await fetch('/api/typo?token=SUPER_SECRET_TOKEN', {
+      headers: { accept: 'text/html' },
+    })
     const body = await res.text()
 
     expect(body).not.toContain('SUPER_SECRET_TOKEN')
@@ -55,10 +59,19 @@ describe('pages', () => {
   it('sends X-Robots-Tag on every kind of response, not just HTML', async () => {
     // A <meta> tag cannot reach JSON, and most of what this host serves is
     // JSON. The header is the only directive an API response can carry.
-    const paths = ['/', '/setup', '/no-such-page', '/api/health-check', '/api/spec.json', '/api/']
+    const paths = [
+      '/',
+      '/setup',
+      '/no-such-page',
+      '/api/health-check',
+      '/api/spec.json',
+      '/api/',
+    ]
 
     for (const path of paths) {
-      const tag = (await fetch(path, { headers: { accept: 'text/html' } })).headers.get('x-robots-tag')
+      const tag = (await fetch(path, {
+        headers: { accept: 'text/html' },
+      })).headers.get('x-robots-tag')
 
       expect(tag, `missing on ${path}`).toBeTruthy()
       expect(tag, `not noindex on ${path}`).toContain('noindex')
@@ -87,7 +100,9 @@ describe('pages', () => {
   })
 
   it('serves the setup guide prerendered, with the same head as the index page', async () => {
-    const res = await fetch('/setup', { headers: { accept: 'text/html' } })
+    const res = await fetch('/setup', {
+      headers: { accept: 'text/html' },
+    })
     const html = await res.text()
 
     expect(res.status).toBe(200)
@@ -104,7 +119,9 @@ describe('pages', () => {
   it('gives the error page the same head as the rest of the site', async () => {
     // error.vue renders instead of app.vue and mounts no layout, so these come
     // from `app.head` in nuxt.config. They used to be missing entirely here.
-    const html = await (await fetch('/no-such-page', { headers: { accept: 'text/html' } })).text()
+    const html = await (await fetch('/no-such-page', {
+      headers: { accept: 'text/html' },
+    })).text()
 
     expect(html).toContain('<title>FRITZ!Box DynDNS Service</title>')
     expect(html).toContain('class="dark"')

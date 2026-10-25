@@ -72,7 +72,10 @@ export default function redactToken(value: unknown, secret?: string, depth = 0):
 
   if (value !== null && typeof value === 'object') {
     return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [key, redactToken(entry, secret, depth + 1)]),
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        redactToken(entry, secret, depth + 1),
+      ]),
     )
   }
 

@@ -146,7 +146,9 @@ export default defineNuxtConfig({
     // WORKERS_CI). Both one-click deploy buttons run the plain `build` script
     // and have nowhere to pass NITRO_PRESET, so they depend on that detection.
     ...(env('NITRO_PRESET')
-      ? { preset: env('NITRO_PRESET') }
+      ? {
+          preset: env('NITRO_PRESET'),
+        }
       : {}),
     cloudflare: {
       deployConfig: true,
@@ -155,7 +157,9 @@ export default defineNuxtConfig({
         // Nitro merges this object *over* the root wrangler.jsonc, and defu
         // treats '' as a value rather than an absence — so setting an empty
         // name here would mask the one the deploy button writes into that file.
-        ...(workerName ? { name: workerName } : {}),
+        ...(workerName
+          ? { name: workerName }
+          : {}),
         preview_urls: false,
         // Our own deployments are reached through the custom domain below, so
         // the workers.dev subdomain stays off. A fork has no domain to attach:
@@ -177,7 +181,9 @@ export default defineNuxtConfig({
         // Emitted only when there is a pattern to attach — `custom_domain: true`
         // against an empty pattern is a route wrangler cannot create.
         ...(routePattern
-          ? { route: { pattern: routePattern, custom_domain: true } }
+          ? {
+              route: { pattern: routePattern, custom_domain: true },
+            }
           : {}),
       },
     },

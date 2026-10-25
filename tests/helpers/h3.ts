@@ -25,7 +25,11 @@ export function createNitroContextStub() {
   return {
     setHeader,
     context: {
-      nitroContext: { node: { res: { setHeader } } } as unknown as H3Event,
+      nitroContext: {
+        node: {
+          res: { setHeader },
+        },
+      } as unknown as H3Event,
     },
   }
 }

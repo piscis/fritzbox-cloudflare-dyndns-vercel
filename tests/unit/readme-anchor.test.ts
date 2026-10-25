@@ -20,7 +20,9 @@ function readmeSlugs(): Set<string> {
       continue
     }
 
-    const heading = inFence ? null : /^#{1,6} (\S.*)$/.exec(line)
+    const heading = inFence
+      ? null
+      : /^#{1,6} (\S.*)$/.exec(line)
 
     if (!heading)
       continue
@@ -33,7 +35,9 @@ function readmeSlugs(): Set<string> {
     const count = seen.get(base) ?? 0
 
     seen.set(base, count + 1)
-    slugs.add(count ? `${base}-${count}` : base)
+    slugs.add(count
+      ? `${base}-${count}`
+      : base)
   }
 
   return slugs

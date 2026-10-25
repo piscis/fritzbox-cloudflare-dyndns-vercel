@@ -5,7 +5,10 @@ import { createNitroContextStub } from '../helpers/h3'
 
 function invoke() {
   const { context, setHeader } = createNitroContextStub()
-  return { setHeader, result: call(healthCheck, undefined as never, { context } as never) }
+  return {
+    setHeader,
+    result: call(healthCheck, undefined as never, { context } as never),
+  }
 }
 
 afterEach(() => {

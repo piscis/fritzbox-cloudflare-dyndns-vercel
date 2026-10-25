@@ -24,7 +24,9 @@ const signal = computed(() => {
   if (isNotFound.value) {
     return 'NO CARRIER'
   }
-  return code.value >= 500 ? 'LINE BUSY' : 'ERROR'
+  return code.value >= 500
+    ? 'LINE BUSY'
+    : 'ERROR'
 })
 
 /**

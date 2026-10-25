@@ -6,14 +6,24 @@ function invoke() {
   const next = vi.fn().mockResolvedValue({ output: 'ok', context: {} })
 
   const options = {
-    context: { nitroContext: { node: { res: { setHeader } } } },
+    context: {
+      nitroContext: {
+        node: {
+          res: { setHeader },
+        },
+      },
+    },
     next,
     path: [],
     procedure: {},
     errors: {},
   } as never
 
-  return { setHeader, next, result: noCacheHeaders(options, undefined as never, (o: unknown) => o as never) }
+  return {
+    setHeader,
+    next,
+    result: noCacheHeaders(options, undefined as never, (o: unknown) => o as never),
+  }
 }
 
 describe('noCacheHeaders middleware', () => {

@@ -18,7 +18,11 @@ function errorWith(statusCode: number, url?: string, message = 'boom'): NuxtErro
 }
 
 function mountError(statusCode: number, url?: string, message?: string) {
-  return mountSuspended(ErrorPage, { props: { error: errorWith(statusCode, url, message) } })
+  return mountSuspended(ErrorPage, {
+    props: {
+      error: errorWith(statusCode, url, message),
+    },
+  })
 }
 
 describe('error page', () => {

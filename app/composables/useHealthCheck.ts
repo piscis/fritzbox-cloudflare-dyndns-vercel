@@ -46,7 +46,9 @@ export function useHealthCheck() {
       const body = response._data
 
       if (response.status === 200 && body?.state === 'ok') {
-        state.value = elapsed >= SLOW_MS ? 'degraded' : 'ok'
+        state.value = elapsed >= SLOW_MS
+          ? 'degraded'
+          : 'ok'
       }
       else if (response.status === 503 || body?.state === 'error') {
         // Reachable, and self-reporting upstream trouble.

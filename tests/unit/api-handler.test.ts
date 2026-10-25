@@ -4,12 +4,23 @@ import { createH3Event } from '../helpers/h3'
 
 // Any request reaching the real SDK would hit api.cloudflare.com, so the module
 // is stubbed even though these tests only exercise routing and validation.
-const cf = vi.hoisted(() => ({ ctor: vi.fn() }))
+const cf = vi.hoisted(() => ({
+  ctor: vi.fn(),
+}))
 
 vi.mock('cloudflare', () => ({
   default: class Cloudflare {
-    zones = { list: vi.fn() }
-    dns = { records: { list: vi.fn(), update: vi.fn() } }
+    zones = {
+      list: vi.fn(),
+    }
+
+    dns = {
+      records: {
+        list: vi.fn(),
+        update: vi.fn(),
+      },
+    }
+
     constructor(opts: { apiToken: string }) {
       cf.ctor(opts)
     }
@@ -77,7 +88,13 @@ describe('api catch-all handler', () => {
     const op = spec.paths['/fritz-dyndns'].get
 
     expect(op.parameters.map((p: { name: string }) => p.name).sort())
-      .toStrictEqual(['ipv4', 'ipv6', 'record', 'token', 'zone'])
+      .toStrictEqual([
+        'ipv4',
+        'ipv6',
+        'record',
+        'token',
+        'zone',
+      ])
     expect(op.responses['404']).toBeDefined()
     expect(op.responses['503']).toBeDefined()
   })

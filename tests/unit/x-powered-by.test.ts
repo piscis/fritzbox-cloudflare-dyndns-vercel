@@ -3,7 +3,9 @@ import xPoweredByPlugin from '~~/server/plugins/x-powered-by'
 
 function register() {
   const hook = vi.fn()
-  xPoweredByPlugin({ hooks: { hook } } as never)
+  xPoweredByPlugin({
+    hooks: { hook },
+  } as never)
 
   const [event, callback] = hook.mock.calls[0] as [string, (r: unknown) => void]
   return { hook, event, callback }
@@ -35,7 +37,9 @@ describe('x-powered-by plugin', () => {
 
   it('deletes the lowercase header on its own', () => {
     const { callback } = register()
-    const response = { headers: { 'x-powered-by': 'Nitro' } }
+    const response = {
+      headers: { 'x-powered-by': 'Nitro' },
+    }
 
     callback(response)
 
