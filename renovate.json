@@ -49,6 +49,16 @@
       "addLabels": [
         "blocked-by-nitro"
       ]
+    },
+    {
+      "description": "Node stays on the 24.x LTS line on purpose: Node 26 only became LTS on 2026-10-28 and is too new to run here yet. Patch and minor updates within 24.x still flow. Lift this cap by hand once we decide to move to Node 26.",
+      "matchDepNames": [
+        "node"
+      ],
+      "allowedVersions": "<25.0.0",
+      "addLabels": [
+        "held-on-node-24"
+      ]
     }
   ]
 }
