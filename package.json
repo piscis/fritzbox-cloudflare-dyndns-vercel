@@ -1,7 +1,7 @@
 {
   "name": "fritzbox-cloudflare-dyndns-vercel",
   "type": "module",
-  "version": "2.11.15",
+  "version": "2.11.16",
   "private": true,
   "packageManager": "pnpm@12.16.1",
   "author": "piscis",
