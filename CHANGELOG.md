@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.17](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.16...2.11.17) (2026-11-06)
+
+### Dependencies
+
+* **deps:** update all non-major dependencies ([#333](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/333)) ([e914e75](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/e914e75e62bbc4b4cbb91f86b5ba70746dfa91f1))
+* **deps:** update dependency nuxt to ^4.6.4 ([#330](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/330)) ([9a06830](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/9a0683094b1f92bb2854acec49dfb7feaee1b3c9))
+
 ## [2.11.16](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.15...2.11.16) (2026-11-05)
 
 ### Dependencies
