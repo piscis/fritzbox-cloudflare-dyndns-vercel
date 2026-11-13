@@ -5,7 +5,7 @@
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/ai-review/SKILL.md",
-      "computedHash": "b57cc659e74771ff7b7de614ec125160257579ca4285c8f16a9b15845d3479af"
+      "computedHash": "4ea0ba909fb468f75b9428df072718a994f9c86229dd225eb0261a1761f3e253"
     },
     "ask-matt": {
       "source": "mattpocock/skills",
@@ -17,7 +17,7 @@
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/ask-me/SKILL.md",
-      "computedHash": "6eec006b8663e34c3c0a0f091e98e9b92bef33918d94ea3859ca0efe1b765769"
+      "computedHash": "726b0cc59e1b77f952796dd04119a15ac4fd443df3b8f171515bb8b8061618ae"
     },
     "code-review": {
       "source": "mattpocock/skills",
@@ -35,13 +35,13 @@
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/commit-push-pr/SKILL.md",
-      "computedHash": "f561f8205d576d32775cf8b600fe61811400c390eccf4d5bb5a8588df41223fe"
+      "computedHash": "feb963488a2373cf4933d74814a47ae8b2910c34f662a5109910bf6d4ea84fa7"
     },
     "conventional-commit": {
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/conventional-commit/SKILL.md",
-      "computedHash": "d5db299c3a594c5b1c57eb18db5132b5e460f4237e9adde6e353d6fcb103e1ba"
+      "computedHash": "952e856268c4f5d8657484301a745a22781f1d98ca6d4217028d39ca85fa893e"
     },
     "diagnosing-bugs": {
       "source": "mattpocock/skills",
@@ -101,7 +101,7 @@
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/orpc-api/SKILL.md",
-      "computedHash": "0225043b15f77ccaabfe9f47a5012408d681cc7dfa6a43b1441cd80c666dc9a8"
+      "computedHash": "14b01a7e4a594fb44ee8e7de23928a88770a6d3fb6e2b8a13bb2bf5d1c44f0a2"
     },
     "pr": {
       "source": "mattpocock/skills",
@@ -173,7 +173,7 @@
       "source": "piscis/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/update-issue/SKILL.md",
-      "computedHash": "9883c2277bbd7d58a8b5fed25ed9d727f06ae8d6940c91cf0ffb30dcbcb57a30"
+      "computedHash": "c63eabbd85b77c63bc3d05f8774f829f0e1e4a2fc55154f20ff73272508c53f4"
     },
     "vitest": {
       "source": "antfu/skills",
