@@ -38,7 +38,10 @@ home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary ta
 - Fetch and rebase onto `origin/main` before every push.
 - After `pnpm lint:fix`, `git diff --stat` must list only your files. Revert the rest:
   it is another agent's work in flight.
-- The machine's default Node is 22. Run pnpm as `fnm exec --using=.nvmrc pnpm …`.
+- The toolchain comes from [proto](https://moonrepo.dev/docs/proto/install). Its shims
+  read the Node version from `.nvmrc` and the pnpm version from `packageManager` in
+  `package.json`, so run plain `pnpm …` inside the repo. `proto status` shows which
+  versions resolve here, and `proto install` fetches a missing one.
 - Ship each change as its own PR by following
   `.agents/skills/commit-push-pr/SKILL.md` by hand (it is not model-invocable).
 
