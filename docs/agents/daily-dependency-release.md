@@ -17,8 +17,8 @@ The schedule's prompt is a single line: `Follow docs/agents/daily-dependency-rel
   and leave every Dependency Dashboard checkbox unticked.
 - **Renovate decides what to bump.** Apply only updates that Renovate lists. Renovate
   owns every version bump in this repo. You are replaying its decisions on a daily clock.
-- **Workflow.** CLAUDE.md's Workflow rules (worktree isolation, rebasing, Node via
-  `fnm`) hold for every step.
+- **Workflow.** CLAUDE.md's Workflow rules (worktree isolation, rebasing, Node and pnpm
+  via proto) hold for every step.
 - **Token hygiene.** CLAUDE.md's rule on the `?token=` query parameter holds in PR
   bodies, comments and issues too.
 
@@ -65,9 +65,8 @@ release earlier unreleased commits.
 ### 3. Apply
 
 `git worktree add ../fritzdns-deps-<date> -b chore/deps-<date> origin/main`, then work
-inside it. Run `fnm exec --using=.nvmrc pnpm install` once first, then record the
-baseline audit before you edit anything:
-`fnm exec --using=.nvmrc pnpm audit --json > /tmp/audit-base-<date>.json`.
+inside it. Run `pnpm install` once first, then record the baseline audit before you
+edit anything: `pnpm audit --json > /tmp/audit-base-<date>.json`.
 
 Apply the non-major updates as a single commit titled like Renovate's group
 (`chore(deps): update all non-major dependencies`). Give each major its own branch
@@ -76,8 +75,8 @@ Apply the non-major updates as a single commit titled like Renovate's group
 
 - Edit the file Renovate detected it in. Keep the existing range style (`^x.y.z`). A
   `pnpm` update changes `packageManager` in `package.json`.
-- Run `fnm exec --using=.nvmrc pnpm install`. If pnpm rejects a transitive dependency
-  as too young, drop that update from today's run.
+- Run `pnpm install`. If pnpm rejects a transitive dependency as too young, drop that
+  update from today's run.
 - If install leaves auto-installed peers stale, delete **both** `pnpm-lock.yaml` and
   `node_modules` and install again. Deleting only the lockfile rebuilds it from
   `node_modules/.pnpm/lock.yaml`.
@@ -89,7 +88,7 @@ Done when: each branch installs cleanly with no age rejections.
 
 ### 4. Verify locally
 
-On each branch, run `pnpm lint:fix`, `pnpm typecheck` and `pnpm test` through `fnm exec`.
+On each branch, run `pnpm lint:fix`, `pnpm typecheck` and `pnpm test`.
 `git diff --stat` must show only the files you meant to change. If `lint:fix` touched
 anything else, revert those files.
 
@@ -147,8 +146,8 @@ Then release from a new worktree. Step 5's merge deleted the deps worktree, so c
 this one first and run every command below inside it:
 
 1. `git worktree add ../fritzdns-release-<date> -b chore/release-<date> origin/main`,
-   then `fnm exec --using=.nvmrc pnpm install --frozen-lockfile`.
-2. `fnm exec --using=.nvmrc pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
+   then `pnpm install --frozen-lockfile`.
+2. `pnpm exec release-it -i patch --ci --no-git.requireUpstream --no-git.push --no-github.release`.
    Plain `pnpm release:patch` fails in a worktree. `.release-it.json` lists
    `chore(deps)` commits under `### Dependencies`, so the new `CHANGELOG.md` section is
    complete as generated.
