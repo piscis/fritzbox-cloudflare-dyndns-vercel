@@ -7,6 +7,10 @@
     "nuxt-ui": {
       "type": "http",
       "url": "https://ui.nuxt.com/mcp"
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
     }
   }
 }

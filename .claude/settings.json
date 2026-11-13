@@ -1,6 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "NotebookEdit"
+    ]
+  },
+  "enabledPlugins": {
+    "cowork-plugin-management@knowledge-work-plugins": false
+  },
   "autoMemoryEnabled": false,
+  "disableClaudeAiConnectors": true,
+  "disableWorkflows": true,
+  "disableBundledSkills": true,
+  "disableArtifacts": true,
+  "enabledMcpjsonServers": [
+    "context7",
+    "nuxt",
+    "nuxt-ui"
+  ],
   "hooks": {
     "PreToolUse": [
       {
