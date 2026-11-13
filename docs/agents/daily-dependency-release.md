@@ -17,8 +17,8 @@ The schedule's prompt is a single line: `Follow docs/agents/daily-dependency-rel
   and leave every Dependency Dashboard checkbox unticked.
 - **Renovate decides what to bump.** Apply only updates that Renovate lists. Renovate
   owns every version bump in this repo. You are replaying its decisions on a daily clock.
-- **Workflow.** CLAUDE.md's Workflow rules (worktree isolation, rebasing, Node and pnpm
-  via proto) hold for every step.
+- **Workflow.** CLAUDE.md's Workflow rules (worktree isolation, rebasing, the pinned
+  Node and pnpm versions) hold for every step.
 - **Token hygiene.** CLAUDE.md's rule on the `?token=` query parameter holds in PR
   bodies, comments and issues too.
 
