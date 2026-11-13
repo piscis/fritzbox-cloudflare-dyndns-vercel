@@ -151,10 +151,11 @@ A health endpoint is available at `/api/health-check`.
 - Node.js 24 — pinned in [`.nvmrc`](./.nvmrc)
 - pnpm 12 — pinned by the `packageManager` field in [`package.json`](./package.json)
 
-[proto](https://moonrepo.dev/docs/proto/install) reads both pins without extra
-configuration: install it, then `proto install` in the project root and both tools
-resolve to the pinned versions. With another toolchain manager, select Node with
-`nvm use` (or your manager's equivalent) and let `corepack enable` pick up pnpm.
+Those two versions are the only requirement; no particular version manager is. Most
+of them read `.nvmrc` for Node, and `corepack enable` picks pnpm up from
+`packageManager`. Installing both by hand works just as well. `node -v` and `pnpm -v`
+in the project root should match the pins, and every `pnpm` command below then works
+as written.
 
 ### Setup
 
