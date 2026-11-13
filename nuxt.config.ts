@@ -72,16 +72,15 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      // Rendered in the foot line. Read from package.json so it cannot drift
-      // from the released version the way a hardcoded string would.
+      // Rendered in the foot line, and reported as the OpenAPI `info.version`
+      // by `server/routes/api/[...].ts`. Read from package.json so it cannot
+      // drift from the released version the way a hardcoded string would.
       version: pkg.version,
       // Seeds the title bar before hydration. Each environment builds with its
       // own CF_ROUTE_PATTERN, so the prerendered HTML already names the right
       // host; the client corrects it from window.location on mount.
       //
-      // Deliberately under `public` — `server/routes/api/[...].ts` destructures
-      // top-level `appName`/`appVersion`, and defining those would silently
-      // rewrite /api/spec.json and the e2e assertion that pins its title.
+      // Deliberately under `public`: the title bar needs it on the client.
       siteHost: routePattern,
     },
   },

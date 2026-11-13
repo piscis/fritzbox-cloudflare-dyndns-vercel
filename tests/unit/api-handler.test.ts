@@ -75,8 +75,9 @@ describe('api catch-all handler', () => {
     const spec = await (out as Response).json()
 
     expect(spec.openapi).toMatch(/^3\./)
-    // nuxt.config.ts declares no runtimeConfig, so both fall back.
     expect(spec.info.title).toBe('Fritzbox Cloudflare DynDNS')
+    // tests/setup/nitro-globals.ts stubs useRuntimeConfig() with no config, so
+    // this is the fallback. tests/e2e pins the real version off a built app.
     expect(spec.info.version).toBe('0.0.0')
     expect(spec.paths['/fritz-dyndns']).toBeDefined()
     expect(spec.paths['/health-check']).toBeDefined()

@@ -8,7 +8,15 @@ import redactToken from '~~/server/utils/redactToken'
 import useLogger from '~~/server/utils/useLogger'
 
 const { logger } = useLogger()
-const { appName, appVersion } = useRuntimeConfig()
+// `public.version` is `package.json`'s version, injected by nuxt.config.ts, so
+// the spec reports the released version instead of a placeholder. The landing
+// page foot line reads the same key, so the two can never disagree.
+//
+// This used to destructure top-level `appName`/`appVersion`, which nothing ever
+// declared, so every deployed environment served `info.version: "0.0.0"`.
+// `public` is still undefined in the `unit` project, which stubs
+// `useRuntimeConfig()` with an empty object, hence the fallback below.
+const { public: publicConfig } = useRuntimeConfig()
 
 const openAPIHandler = new OpenAPIHandler(router, {
   eventIteratorKeepAliveEnabled: true,
@@ -29,8 +37,8 @@ const openAPIHandler = new OpenAPIHandler(router, {
       ],
       specGenerateOptions: {
         info: {
-          title: appName as string || 'Fritzbox Cloudflare DynDNS',
-          version: appVersion as string || '0.0.0',
+          title: 'Fritzbox Cloudflare DynDNS',
+          version: publicConfig?.version as string || '0.0.0',
         },
       },
     }),
