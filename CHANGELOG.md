@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.11.23](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.22...2.11.23) (2026-11-13)
+
+### Dependencies
+
+* **deps:** lock file maintenance ([#337](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/337)) ([4903c2c](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/4903c2c6f5e11ce4ee46493309465fe73a2750f9))
+* **deps:** update @iconify-json/lucide to ^1.2.154 ([#344](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/344)) ([5abfd6b](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/5abfd6bfcb918bf6068222c98f2ea6af99e5b367))
+* **deps:** update wrangler to ^4.161.0 ([#345](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/345)) ([3c90133](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/3c90133a8394e7802e544d0b315933b0cbade62d))
+
 ## [2.11.22](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.21...2.11.22) (2026-11-13)
 
 ### Dependencies
