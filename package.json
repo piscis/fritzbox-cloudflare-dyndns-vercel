@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.11.26",
   "private": true,
-  "packageManager": "pnpm@12.18.0",
+  "packageManager": "pnpm@12.21.0",
   "author": "piscis",
   "license": "MIT",
   "homepage": "https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel",
@@ -56,16 +56,16 @@
     "@release-it/conventional-changelog": "^12.0.2",
     "@vitest/coverage-v8": "5.1.0",
     "@vue/test-utils": "^2.5.1",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "h3": "^1.15.11",
     "happy-dom": "^21.0.4",
     "node-mock-http": "^1.0.5",
-    "playwright-core": "^1.65.0",
+    "playwright-core": "^1.65.1",
     "release-it": "^21.1.2",
     "rimraf": "^6.1.4",
     "typescript": "^6.0.3",
     "vitest": "^5.1.0",
     "vue-tsc": "^3.3.14",
-    "wrangler": "^4.161.0"
+    "wrangler": "^4.162.0"
   }
 }
