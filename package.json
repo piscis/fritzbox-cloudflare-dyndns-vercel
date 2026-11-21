@@ -37,11 +37,11 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.156",
-    "@nuxt/ui": "^4.12.2",
-    "@orpc/openapi": "^1.16.2",
-    "@orpc/server": "^1.16.2",
-    "@orpc/zod": "^1.16.2",
+    "@iconify-json/lucide": "^1.2.157",
+    "@nuxt/ui": "^4.13.0",
+    "@orpc/openapi": "^1.16.4",
+    "@orpc/server": "^1.16.4",
+    "@orpc/zod": "^1.16.4",
     "cloudflare": "^7.3.0",
     "consola": "^3.4.2",
     "nuxt": "^4.6.4",
@@ -54,7 +54,7 @@
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/test-utils": "^4.4.0",
     "@release-it/conventional-changelog": "^12.0.2",
-    "@vitest/coverage-v8": "5.1.0",
+    "@vitest/coverage-v8": "5.1.1",
     "@vue/test-utils": "^2.6.0",
     "eslint": "^10.15.0",
     "h3": "^1.15.11",
@@ -64,8 +64,8 @@
     "release-it": "^21.1.2",
     "rimraf": "^6.1.4",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.0",
+    "vitest": "^5.1.1",
     "vue-tsc": "^3.3.14",
-    "wrangler": "^4.164.0"
+    "wrangler": "^4.165.0"
   }
 }
