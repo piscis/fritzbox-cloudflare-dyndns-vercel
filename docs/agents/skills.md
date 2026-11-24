@@ -1,8 +1,8 @@
 # Skills
 
-Each skill's files live in `.agents/skills/<name>/`, `.claude/skills/<name>` is a symlink
-to them, and `skills-lock.json` pins the skill to its source. `npx skills@latest` writes
-all three, and the next update overwrites anything else, so change skills only through
+Each skill's files live in `.agents/skills/<name>/`, `.claude/skills` is one committed
+symlink to `../.agents/skills`, and `skills-lock.json` pins the skill to its source.
+`npx skills@latest` writes the files and the lock, and the next update overwrites anything else, so change skills only through
 the CLI or upstream. Commit skill changes as `chore(agents): …`.
 
 ## Add
@@ -11,14 +11,15 @@ the CLI or upstream. Commit skill changes as `chore(agents): …`.
 npx skills@latest add <source> --skill <name> -a universal -a claude-code -y
 ```
 
-Pass both agents: `-a universal` puts the files in `.agents/skills/` and links Claude
-Code to them, while `-a claude-code` alone copies a plain folder into `.claude/skills/`.
+Pass both agents: `-a universal` puts the files in `.agents/skills/`, and Claude Code
+reads them through the directory symlink.
 
-Done when `ls -l .claude/skills/<name>` shows a symlink.
+Done when `.agents/skills/<name>/SKILL.md` exists, `test -L .claude/skills` still
+passes, and `git status` shows nothing new under `.claude/`.
 
 ## Remove
 
-`npx skills@latest remove <name> -y` removes the files, the symlink and the lock entry.
+`npx skills@latest remove <name> -y` removes the files and the lock entry.
 
 ## Update one source
 
