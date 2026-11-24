@@ -12,12 +12,15 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
-Edit the right-hand column to match whatever vocabulary you actually use.
+Edit the "Label in our tracker" column to match whatever vocabulary you actually use.
 
-## Type labels
+## Labels that are not triage roles
 
-Type labels sit beside the triage roles and say what kind of issue it is.
+`no-triage` and `spec` are **not** triage roles, so never count them as one.
 
-| Label  | Apply to                                                                |
-| ------ | ----------------------------------------------------------------------- |
-| `spec` | Every spec, such as one `/to-spec` publishes. Its tickets don't get it. |
+- **`no-triage`** takes an issue out of triage entirely: `/triage` skips it in every
+  bucket and it never gets a role. See
+  [Not triage material](./issue-tracker.md#not-triage-material).
+- **`spec`** says what an issue is, and sits next to its triage role (a spec from
+  `/to-spec` carries `spec,ready-for-agent`). The tickets cut from a spec don't get it.
+  See [Specs](./issue-tracker.md#specs).

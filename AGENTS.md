@@ -65,7 +65,17 @@ before you add, update, remove or edit one.
 
 ## Agent skills
 
-- **Issue tracker:** GitHub Issues via `gh`. See `docs/agents/issue-tracker.md`.
-- **Triage labels:** see `docs/agents/triage-labels.md`.
-- **Domain docs:** a single context, `GLOSSARY.md` plus `docs/adr/`, created lazily. See
-  `docs/agents/domain.md`.
+### Issue tracker
+
+GitHub Issues on `piscis/fritzbox-cloudflare-dyndns-vercel`, driven with `gh`, plus the
+PR and merge conventions. See [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md).
+
+### Triage labels
+
+The five canonical roles, each label equal to its role; `spec` and `no-triage` are not
+roles. See [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md).
+
+### Domain docs
+
+Single-context: a root `GLOSSARY.md` plus `docs/adr/`, both created lazily. See
+[`docs/agents/domain.md`](docs/agents/domain.md).
