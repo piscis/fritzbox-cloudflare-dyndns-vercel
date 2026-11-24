@@ -14,8 +14,8 @@ dist
 .vercel
 coverage
 
-# Agent config: the skills symlinks, settings.json and hooks are shared, everything else is
-# local (Claude Code writes .claude/settings.local.json and .claude/worktrees/).
+# agent config: only the skills symlink, the project settings and the hooks are shared;
+# settings.local.json and everything else stay local
 .claude/*
 !.claude/skills
 !.claude/settings.json
