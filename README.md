@@ -351,11 +351,12 @@ to turn on client sourcemaps, without which `.vue` coverage is inaccurate.
 
 ## Working with AI agents
 
-[`CLAUDE.md`](./CLAUDE.md) is the entry point: the conventions that are not obvious
-from the code. `AGENTS.md` is a symlink to it for tools that read that name.
+[`AGENTS.md`](./AGENTS.md) is the entry point: the conventions that are not obvious
+from the code. `CLAUDE.md` holds a single `@AGENTS.md` import, so Claude Code reads the
+same guide.
 
 Skills live in [`.agents/skills/`](./.agents/skills/) (the canonical, vendor-neutral
-location). `.claude/skills/<name>` are committed relative symlinks into it, so the
+location). `.claude/skills` is one committed relative symlink to that directory, so the
 same set is available to Claude Code and to any tool that reads `.agents/`.
 
 Every skill is pinned in [`skills-lock.json`](./skills-lock.json) — manage them with
@@ -364,13 +365,15 @@ folders. The repo-specific `orpc-api` skill is authored in
 [`piscis/agent-skills`](https://github.com/piscis/agent-skills); change it there, then
 run `npx skills@latest update -p`.
 
-> On Windows, git needs `core.symlinks true` and a fresh checkout, or the symlinks
-> (skills and `AGENTS.md`) materialise as plain text files.
+> On Windows, git needs `core.symlinks true` and a fresh checkout, or the
+> `.claude/skills` symlink materialises as a plain text file.
 
-Two MCP servers are registered per project in [`.mcp.json`](./.mcp.json) for Claude
-Code. They point at Nuxt's hosted documentation endpoints — `https://nuxt.com/mcp` and
+Three MCP servers are registered per project in [`.mcp.json`](./.mcp.json) for Claude
+Code. Two point at Nuxt's hosted documentation endpoints — `https://nuxt.com/mcp` and
 `https://ui.nuxt.com/mcp` — so an agent can look up current Nuxt APIs instead of
-recalling them from training data. They carry no credentials.
+recalling them from training data. They carry no credentials. The third is
+[Context7](https://context7.com) for other libraries' docs. It sends the
+`CONTEXT7_API_KEY` environment variable as a header, so set that variable in your shell.
 
 > Claude Code asks for approval the first time it sees a project `.mcp.json`. Answer
 > yes once per clone — `claude mcp reset-project-choices` clears the answer.
@@ -380,7 +383,7 @@ recalling them from training data. They carry no credentials.
 Fork, branch, and open a PR against `main`. Please use
 [Conventional Commits](https://www.conventionalcommits.org/) — `CHANGELOG.md` is
 generated from them. Run `pnpm lint:fix && pnpm typecheck && pnpm test` before
-opening the PR, and read [`CLAUDE.md`](./CLAUDE.md) first.
+opening the PR, and read [`AGENTS.md`](./AGENTS.md) first.
 
 Security issues should go through [`SECURITY.md`](./SECURITY.md), not a public issue.
 
