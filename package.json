@@ -38,10 +38,10 @@
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.158",
-    "@nuxt/ui": "^4.13.0",
-    "@orpc/openapi": "^1.16.4",
-    "@orpc/server": "^1.16.4",
-    "@orpc/zod": "^1.16.4",
+    "@nuxt/ui": "^4.13.1",
+    "@orpc/openapi": "^1.16.5",
+    "@orpc/server": "^1.16.5",
+    "@orpc/zod": "^1.16.5",
     "cloudflare": "^7.3.0",
     "consola": "^3.4.2",
     "nuxt": "^4.6.4",
@@ -66,6 +66,6 @@
     "typescript": "^6.0.3",
     "vitest": "^5.1.1",
     "vue-tsc": "^3.3.14",
-    "wrangler": "^4.166.0"
+    "wrangler": "^4.167.0"
   }
 }
