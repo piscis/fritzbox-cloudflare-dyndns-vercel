@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.11.37](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.36...2.11.37) (2026-11-26)
+
+### Dependencies
+
+* **deps:** update all non-major dependencies ([#374](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/374)) ([b9a9ad7](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b9a9ad7fba0f54dae55a5c634360353332f7dcbb))
+
 ## [2.11.36](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.35...2.11.36) (2026-11-25)
 
 ### Dependencies
