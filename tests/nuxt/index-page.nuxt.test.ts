@@ -159,9 +159,15 @@ describe('index page', () => {
     })
 
     it('goes amber when the service reports its own trouble', async () => {
+      // The body oRPC sends for the procedure's declared 503 error.
       health = {
         status: 503,
-        body: { state: 'error', timestamp: 1 },
+        body: {
+          defined: true,
+          code: 'INTERNAL_SERVER_ERROR',
+          status: 503,
+          message: 'Service Unavailable',
+        },
       }
 
       const page = await mountSuspended(IndexPage)
