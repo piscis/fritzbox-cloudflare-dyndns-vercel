@@ -15,13 +15,6 @@
       "computedHash": "80eac906bd0c5df8971e21e5f88b3f216d5660e328444197d8e9ccb5a129d211",
       "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
     },
-    "update-issue": {
-      "source": "piscis/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/update-issue/SKILL.md",
-      "computedHash": "c63eabbd85b77c63bc3d05f8774f829f0e1e4a2fc55154f20ff73272508c53f4",
-      "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
     "vitest": {
       "source": "antfu/skills",
       "sourceType": "github",
