@@ -1,20 +1,6 @@
 {
   "version": 2,
   "skills": {
-    "ask-me": {
-      "source": "piscis/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/ask-me/SKILL.md",
-      "computedHash": "726b0cc59e1b77f952796dd04119a15ac4fd443df3b8f171515bb8b8061618ae",
-      "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
-    "commit-push-pr": {
-      "source": "piscis/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/commit-push-pr/SKILL.md",
-      "computedHash": "feb963488a2373cf4933d74814a47ae8b2910c34f662a5109910bf6d4ea84fa7",
-      "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
     "conventional-commit": {
       "source": "piscis/agent-skills",
       "sourceType": "github",
