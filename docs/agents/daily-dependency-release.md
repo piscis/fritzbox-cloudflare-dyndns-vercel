@@ -100,19 +100,30 @@ Done when: all three commands are green on every branch you still intend to ship
 
 ### 5. Pull request and merge
 
-Follow the steps of the `commit-push-pr` skill
-(`.agents/skills/commit-push-pr/SKILL.md`), but skip its Step 6 preview-and-STOP. This
-procedure is your standing confirmation. The PR body lists every update as
-`pkg from → to`, plus any updates you dropped and why.
+This procedure is your standing confirmation to push and open PRs, so no step waits for
+a reply. Ship each of your branches in turn:
 
-Before each push: `git fetch origin && git rebase origin/main`, then rerun step 4 if the
-lockfile changed. Then:
+1. **Guard.** `git status` shows no merge, rebase or cherry-pick in progress, and
+   `gh pr view --json number,url` finds no PR for the branch. If a PR exists, carry on
+   from item 5 with it.
+2. **Commit.** `git add -A`, then fold everything into the branch's single commit:
+   `git commit --amend --no-edit`, or `git commit -m "<title>"` with step 3's title if
+   the branch has no commit yet. The title is a Conventional Commits subject with no
+   body.
+3. **Rebase.** `git fetch origin && git rebase origin/main`. If the lockfile changed,
+   rerun step 4.
+4. **Push and open.** `git push -u origin HEAD`, then
+   `gh pr create --base main --head <branch> --title "<title>" --body-file -`, with the
+   commit title as the PR title. The body lists every update as `pkg from → to`, plus
+   any updates you dropped and why. If the push succeeds and `gh pr create` fails, name
+   the pushed branch in step 8's report.
+5. **Checks.** `gh pr checks <pr> --watch`. `lint`, `typecheck` and `test` must all pass.
+6. **Merge.** `gh pr merge <pr> --squash --delete-branch`. This also deletes the PR's
+   worktree.
 
-1. `gh pr checks <pr> --watch`. `lint`, `typecheck` and `test` must all pass.
-2. `gh pr merge <pr> --squash --delete-branch`. This also deletes the PR's worktree.
-3. For each open Renovate PR from step 2: check out its branch, run step 4 on it, then
-   do the same two steps. If the PR conflicts with `main`, skip it silently: Renovate
-   rebases its own branches.
+Then, for each open Renovate PR from step 2: check out its branch, run step 4 on it, then
+items 5 and 6. If the PR conflicts with `main`, skip it silently: Renovate rebases its
+own branches.
 
 Merge PRs one at a time, and rebase each remaining one onto the new `origin/main`
 before merging it.
