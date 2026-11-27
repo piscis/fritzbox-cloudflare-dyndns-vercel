@@ -37,7 +37,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.159",
+    "@iconify-json/lucide": "^1.2.160",
     "@nuxt/ui": "^4.13.1",
     "@orpc/openapi": "^1.16.6",
     "@orpc/server": "^1.16.6",
