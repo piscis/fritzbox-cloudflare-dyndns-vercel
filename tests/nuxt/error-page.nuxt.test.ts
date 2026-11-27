@@ -37,9 +37,6 @@ describe('error page', () => {
       expect(page.text()).toContain('ATDT /no-such-page')
     })
 
-    // The Cloudflare token travels in the query string because a FRITZ!Box
-    // cannot send headers, so a mistyped update URL must not render a live
-    // credential into the page.
     it('never echoes the query string back', async () => {
       const page = await mountError(404, '/api/fritz-dyndns?token=SUPER_SECRET_TOKEN&zone=example.dev')
 
@@ -94,8 +91,6 @@ describe('error page', () => {
       expect(page.text()).toContain('This one is on us, not on you')
     })
 
-    // Upstream Cloudflare messages can embed the caller's token, so the page
-    // deliberately renders fixed prose instead of error.message.
     it('never surfaces the raw upstream message', async () => {
       const page = await mountError(503, undefined, 'Upstream unavailable')
 

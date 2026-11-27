@@ -3,18 +3,19 @@ import { describe, expect, it } from 'vitest'
 import pkg from '~~/package.json'
 import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
 
-// One setup() for the whole file: each call builds and boots its own server.
 await setup({
   setupTimeout: 300_000,
   nuxtConfig: {
-    // setup() does not set nuxt.options.test, so vue-tsc would otherwise run
-    // inside the e2e build. The dedicated CI typecheck job covers that.
     typescript: { typeCheck: false },
-    // A developer with NITRO_PRESET=cloudflare_module in their environment would
-    // otherwise build a Worker that setup() cannot boot as a node server.
     nitro: { preset: 'node-server' },
   },
 })
+
+function fetchHtml(path: string) {
+  return fetch(path, {
+    headers: { accept: 'text/html' },
+  })
+}
 
 describe('pages', () => {
   it('index page is callable', async () => {
@@ -22,27 +23,17 @@ describe('pages', () => {
     expect(doc).toContain('DOCTYPE')
   })
 
-  it('renders the 404 page for an unknown route', async () => {
-    // Without an HTML Accept header Nitro answers with its JSON error payload
-    // rather than rendering error.vue.
-    const res = await fetch('/no-such-page', {
-      headers: { accept: 'text/html' },
-    })
+  it('renders the 404 page, echoing the path, for an unknown route', async () => {
+    const res = await fetchHtml('/no-such-page')
     const body = await res.text()
 
     expect(res.status).toBe(404)
     expect(body).toContain('NO CARRIER')
-    // The path echo is the point of the design's 404, and only a real render
-    // proves it survives SSR — no component test can.
     expect(body).toContain('/no-such-page')
   })
 
   it('never reflects the query string into the 404', async () => {
-    // A mistyped DynDNS update URL carries a live Cloudflare token. Only a real
-    // render proves it does not reach the HTML.
-    const res = await fetch('/api/typo?token=SUPER_SECRET_TOKEN', {
-      headers: { accept: 'text/html' },
-    })
+    const res = await fetchHtml('/api/typo?token=SUPER_SECRET_TOKEN')
     const body = await res.text()
 
     expect(body).not.toContain('SUPER_SECRET_TOKEN')
@@ -50,8 +41,6 @@ describe('pages', () => {
   })
 
   it('serves the API reference the front page links to', async () => {
-    // The button needs `external`, because /api has no vue-router match; if it
-    // ever loses that, this stays green but the click 404s. Guard the target.
     const res = await fetch('/api/')
 
     expect(res.status).toBe(200)
@@ -59,8 +48,6 @@ describe('pages', () => {
   })
 
   it('sends X-Robots-Tag on every kind of response, not just HTML', async () => {
-    // A <meta> tag cannot reach JSON, and most of what this host serves is
-    // JSON. The header is the only directive an API response can carry.
     const paths = [
       '/',
       '/setup',
@@ -71,9 +58,7 @@ describe('pages', () => {
     ]
 
     for (const path of paths) {
-      const tag = (await fetch(path, {
-        headers: { accept: 'text/html' },
-      })).headers.get('x-robots-tag')
+      const tag = (await fetchHtml(path)).headers.get('x-robots-tag')
 
       expect(tag, `missing on ${path}`).toBeTruthy()
       expect(tag, `not noindex on ${path}`).toContain('noindex')
@@ -102,15 +87,11 @@ describe('pages', () => {
   })
 
   it('serves the setup guide prerendered, with the same head as the index page', async () => {
-    const res = await fetch('/setup', {
-      headers: { accept: 'text/html' },
-    })
+    const res = await fetchHtml('/setup')
     const html = await res.text()
 
     expect(res.status).toBe(200)
-    // Nitro serves prerendered pages as public assets, which carry a
-    // Last-Modified header that a per-request SSR render never sends.
-    expect(res.headers.get('last-modified')).toBeTruthy()
+    expect(res.headers.get('last-modified'), 'prerendered assets carry Last-Modified').toBeTruthy()
     expect(html).toContain('04')
     expect(html).toContain('Check it')
     expect(html).toContain('noindex, nofollow')
@@ -119,11 +100,7 @@ describe('pages', () => {
   })
 
   it('gives the error page the same head as the rest of the site', async () => {
-    // error.vue renders instead of app.vue and mounts no layout, so these come
-    // from `app.head` in nuxt.config. They used to be missing entirely here.
-    const html = await (await fetch('/no-such-page', {
-      headers: { accept: 'text/html' },
-    })).text()
+    const html = await (await fetchHtml('/no-such-page')).text()
 
     expect(html).toContain('<title>FRITZ!Box DynDNS Service</title>')
     expect(html).toContain('class="dark"')
@@ -153,12 +130,7 @@ describe('static assets', () => {
   })
 
   it('lets crawlers fetch, so they can actually read the noindex', async () => {
-    // Counterintuitive but load-bearing: `Disallow: /` would stop a crawler
-    // fetching the page and therefore stop it seeing `noindex`, leaving a
-    // linked URL eligible for a bare listing. The README links this host.
     const body = await (await fetch('/robots.txt')).text()
-    // Directives only — the file explains itself in comments, and those quote
-    // the very directive this asserts is absent.
     const directives = body
       .split('\n')
       .map(line => line.trim())
@@ -173,18 +145,14 @@ describe('static assets', () => {
     '/setup/a-record.png',
     '/setup/aaaa-record.png',
     '/setup/fritzbox-dyndns.png',
-  ])('serves the setup screenshot %s', async (path) => {
-    // The setup page only lazy-loads these when a toggle opens, so no page
-    // test would notice one going missing.
+  ])('serves the lazy-loaded setup screenshot %s', async (path) => {
     const res = await fetch(path)
 
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('image/png')
   })
 
-  it('still serves the modem clip', async () => {
-    // The clip is only reachable through the dial-up button now, so nothing
-    // else would catch it going missing.
+  it('serves the modem clip the dial-up button plays', async () => {
     expect((await fetch('/sounds/modem-dial-up.mp3')).status).toBe(200)
   })
 })
@@ -220,16 +188,11 @@ describe('api', () => {
     const spec = await $fetch<Record<string, any>>('/api/spec.json')
 
     expect(spec.info.title).toBe('Fritzbox Cloudflare DynDNS')
-    // Guards the regression that shipped 0.0.0 to every environment: the spec
-    // must report package.json's version from the built runtime config.
     expect(spec.info.version).toBe(pkg.version)
     expect(spec.paths['/fritz-dyndns']).toBeDefined()
     expect(spec.paths['/health-check']).toBeDefined()
   })
 
-  // Only validation failures are safe to exercise over HTTP: input validation
-  // runs before `new Cloudflare()`, so no request reaches the real API.
-  // Never e2e-test the DynDNS happy path.
   it('rejects a DynDNS call with neither ipv4 nor ipv6', async () => {
     const res = await fetch('/api/fritz-dyndns?token=x&zone=example.com&record=fritz.example.com')
 

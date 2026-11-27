@@ -7,8 +7,7 @@ function servers() {
 }
 
 describe('mcp config', () => {
-  it('declares an http type on every server', () => {
-    // Claude Code reads a `url` with no `type` as a stdio server and skips it.
+  it('declares an http type on every server, without which Claude Code skips it', () => {
     for (const server of Object.values(servers())) {
       expect(server.type).toBe('http')
       expect(server.url).toMatch(/^https:\/\//)

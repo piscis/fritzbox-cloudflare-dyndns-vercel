@@ -13,10 +13,9 @@ sides show, such as the DynDNS error messages, lives in `shared/`.
 - Load the `orpc-api` skill before you touch `server/router/` or `server/routes/api/`.
 - Server code imports through `~~/server/...`.
 - Code carries no comments: the `local/no-comments` lint rule bans them. Put the *why* in
-  `docs/adr/` and a workaround in an issue. `eslint-suppressions.json` allows only the
-  comments already in `tests/`. When you delete one, run
-  `pnpm exec eslint . --prune-suppressions`, and never add an entry. `/delete-comment`
-  clears the rest.
+  `docs/adr/` and a workaround in an issue. Never suppress the rule. `/delete-comment`
+  clears the comments the rule reports and those it cannot see, such as in CSS or
+  `.gitignore`.
 - The `unit` and `e2e` test projects do not boot Nuxt. If you use a new Nitro
   auto-import as a bare global in `server/`, also register it in
   `tests/setup/nitro-globals.ts`.

@@ -15,10 +15,6 @@ export function createH3Event(url = '/', method = 'GET', host = 'localhost:3000'
   return { event: event as H3Event, req, res }
 }
 
-/**
- * The only part of the Nitro context an oRPC procedure touches is
- * `nitroContext.node.res.setHeader`, via the noCacheHeaders middleware.
- */
 export function createNitroContextStub() {
   const setHeader = vi.fn()
 

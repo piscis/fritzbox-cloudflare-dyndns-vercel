@@ -14,13 +14,9 @@ dist
 .vercel
 coverage
 
-# agent config: only the skills symlink, the project settings and the hooks are shared;
-# settings.local.json and everything else stay local
 .claude/*
 !.claude/skills
 !.claude/settings.json
 !.claude/hooks
 
-# Page snapshots and console logs the Playwright MCP server drops in the repo
-# root while an agent drives the app.
 .playwright-mcp

@@ -1,7 +1,6 @@
 import type { VueWrapper } from '@vue/test-utils'
 import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-// Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler } from 'h3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
@@ -9,7 +8,6 @@ import SetupPage from '~/pages/setup.vue'
 
 type Page = Pick<VueWrapper, 'findAll' | 'get'>
 
-/** The form control a visitor finds by its visible label. */
 function field(page: Page, label: string) {
   const match = page.findAll('label').find(l => l.text().replace(/\s+/g, ' ').trim().startsWith(label))
   if (!match)
@@ -17,7 +15,6 @@ function field(page: Page, label: string) {
   return page.get(`#${match.attributes('for')}`)
 }
 
-/** The value shown next to a field label in one of the field lists. */
 function valueOf(page: Page, label: string, term?: Element): string {
   term ??= page.findAll('dt').find(dt => dt.text().startsWith(label))?.element
   if (!term)
@@ -25,8 +22,6 @@ function valueOf(page: Page, label: string, term?: Element): string {
   return term.nextElementSibling!.querySelector('code')!.textContent ?? ''
 }
 
-// Without this the title bar's health check would silently exercise its
-// `down` path against the in-memory h3 app.
 registerEndpoint('/api/health-check', defineEventHandler(() => ({ state: 'ok', timestamp: 1_700_000_000_000 })))
 
 describe('setup page', () => {
@@ -181,11 +176,10 @@ describe('setup page', () => {
   })
 
   describe('step 04', () => {
-    it('describes what success looks like', async () => {
+    it('describes what success looks like on the FRITZ!OS overview page', async () => {
       const page = await mountSuspended(SetupPage)
       const text = page.text()
 
-      // FRITZ!OS shows the DynDNS state on the overview page, not on the DynDNS tab.
       expect(text).toContain('Übersicht')
       expect(text).toContain('Komfortfunktionen')
       expect(text).toContain('IPv4-Status: angemeldet')
@@ -289,10 +283,8 @@ describe('setup page', () => {
       expect(alts[1]).toMatch(/\bA record\b/)
       expect(alts[2]).toMatch(/\bAAAA record\b/)
       expect(alts[3]).toMatch(/FRITZ!Box.*DynDNS/)
-      // The screenshot shows the German interface, so the alt text names its labels.
       expect(alts[3]).toContain('Internet → Freigaben')
       expect(alts[3]).toContain('DynDns aktiv')
-      // Both record screenshots show the TTL step 02 asks for.
       expect(alts[1]).toContain('TTL 1 min')
       expect(alts[2]).toContain('TTL 1 min')
     })
@@ -300,34 +292,28 @@ describe('setup page', () => {
     describe('enlarged in a modal', () => {
       let mounted: VueWrapper | undefined
 
-      /** The page attached to the document, so focus behaves as in a browser. */
       async function mountAttached() {
         mounted = await mountSuspended(SetupPage, { attachTo: document.body })
         return mounted
       }
 
-      /** Lets Vue and Reka finish: Reka arms outside clicks and returns focus a macrotask later. */
       async function settle() {
         await flushPromises()
         await new Promise(resolve => setTimeout(resolve, 0))
       }
 
-      /** Focuses and clicks a screenshot button, as a click in a browser does. */
       async function enlarge(button: ReturnType<VueWrapper['get']>) {
         ;(button.element as HTMLButtonElement).focus()
         await button.trigger('click')
         await settle()
       }
 
-      // The dialog is teleported into document.body, outside the page wrapper.
       const dialog = () => document.querySelector<HTMLElement>('[role="dialog"]')
 
-      /** The dialog's accessible name, read from the element aria-labelledby names. */
       function dialogName(element: HTMLElement) {
         return document.getElementById(element.getAttribute('aria-labelledby')!)?.textContent?.trim()
       }
 
-      /** Step 02's two screenshot buttons: the A record, then the AAAA record. */
       function recordButtons(page: Page) {
         return page.findAll('section[aria-labelledby="step-records"] details button')
       }
@@ -418,7 +404,6 @@ describe('setup page', () => {
       })
 
       describe('fitted or at native size', () => {
-        /** The enlarged screenshot, laid out as a browser would: happy-dom computes no layout. */
         async function layOut(natural: [number, number], rendered: [number, number], { event = 'load' } = {}) {
           const image = dialog()!.querySelector('img')!
           const sizes = {
@@ -435,12 +420,10 @@ describe('setup page', () => {
           await settle()
         }
 
-        /** Lays out the AAAA-record screenshot shrunk to a phone's width. */
         function layOutShrunk(options?: { event?: string }) {
           return layOut([1537, 741], [370, 178], options)
         }
 
-        /** Clicks the enlarged screenshot the way a mouse does. */
         async function clickScreenshot() {
           const image = dialog()!.querySelector('img')!
           image.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 }))
@@ -448,7 +431,6 @@ describe('setup page', () => {
           await settle()
         }
 
-        /** What the visitor sees: the zoom cursor offered, and the width the screenshot is drawn at. */
         function shown() {
           const image = dialog()!.querySelector('img')!
           return {
@@ -460,7 +442,6 @@ describe('setup page', () => {
         const FITTED = { cursor: 'zoom-in', width: null }
         const NATIVE = { cursor: 'zoom-out', width: '1537' }
 
-        /** Opens step 02's AAAA-record screenshot, shrunk to a phone's width. */
         async function enlargeShrunk(page: VueWrapper) {
           await enlarge(recordButtons(page)[1]!)
           await layOutShrunk()
@@ -832,7 +813,6 @@ describe('setup page', () => {
       const page = await mountSuspended(SetupPage)
       const labels = page.findAll('label').map(l => l.text().toLowerCase())
 
-      // Not even a field: the token goes into the FRITZ!Box and nowhere else.
       expect(page.findAll('input[type="password"], textarea')).toHaveLength(0)
       expect(labels.length).toBeGreaterThan(0)
       for (const label of labels) {

@@ -1,16 +1,9 @@
 import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-// Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler, setResponseStatus } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import IndexPage from '~/pages/index.vue'
 
-/**
- * The nuxt environment routes every root-relative fetch to an in-memory h3 app,
- * so without this the page's health check would silently exercise its `down`
- * path. `registerEndpoint` has to run at module scope, hence the mutable
- * `health` the individual tests re-point.
- */
 let health: { status: number, body: unknown } = {
   status: 200,
   body: { state: 'ok', timestamp: 1_700_000_000_000 },
@@ -21,11 +14,9 @@ registerEndpoint('/api/health-check', defineEventHandler((event) => {
   return health.body
 }))
 
-/** Counts constructions so tests can assert Web Audio stayed untouched. */
 let audioContextConstructed = 0
 
 function stubAudioContext(): void {
-  // happy-dom has no Web Audio; the composable must still play through <audio>.
   class FakeAnalyser {
     frequencyBinCount = 128
     fftSize = 256
@@ -65,7 +56,6 @@ describe('index page', () => {
       status: 200,
       body: { state: 'ok', timestamp: 1_700_000_000_000 },
     }
-    // happy-dom implements no media playback.
     HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve())
     HTMLMediaElement.prototype.pause = vi.fn()
     audioContextConstructed = 0
@@ -79,10 +69,7 @@ describe('index page', () => {
 
       expect(audio.exists()).toBe(true)
       expect(audio.attributes('src')).toBe('/sounds/modem-dial-up.mp3')
-      // 852 KB stays unfetched until the visitor clicks dial up.
       expect(audio.attributes('preload')).toBe('none')
-      // No HTML autoplay attribute: that path is blocked unmuted and used to
-      // render as an inert grey player mid-layout.
       expect(audio.attributes()).not.toHaveProperty('controls')
       expect(audio.attributes()).not.toHaveProperty('autoplay')
       expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled()
@@ -144,7 +131,6 @@ describe('index page', () => {
       await toggle.trigger('click')
       await flushPromises()
 
-      // A button that claims to be playing when it is not is a lying button.
       expect(toggle.attributes('aria-pressed')).toBe('false')
     })
   })
@@ -159,7 +145,6 @@ describe('index page', () => {
     })
 
     it('goes amber when the service reports its own trouble', async () => {
-      // The body oRPC sends for the procedure's declared 503 error.
       health = {
         status: 503,
         body: {
@@ -209,7 +194,6 @@ describe('index page', () => {
 
       expect(buttons[0]!.attributes('href')).toBe('/setup')
       expect(buttons[0]!.text()).toContain('Setup FRITZ!Box DynDNS →')
-      // Primary is the yellow fill, and only one button may carry it.
       expect(primary).toHaveLength(1)
       expect(primary[0]!.attributes('href')).toBe('/setup')
     })
@@ -230,7 +214,6 @@ describe('index page', () => {
       expect(link.attributes('target')).toBe('_blank')
       expect(link.attributes('rel')).toContain('noopener')
       expect(link.text()).toContain('GitHub')
-      // Leading mark — prerendered via icon.clientBundle, not a runtime fetch.
       expect(
         link.find('svg').exists()
         || link.html().includes('i-lucide-github')

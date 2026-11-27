@@ -2,13 +2,10 @@ import type { Locator, Page } from 'playwright-core'
 import { createPage, setup, url } from '@nuxt/test-utils/e2e'
 import { afterEach, describe, expect, it } from 'vitest'
 
-// One setup() for the whole file: each call builds and boots its own server.
 await setup({
   setupTimeout: 300_000,
   browser: true,
   nuxtConfig: {
-    // Same build options as the e2e project, for the same reasons: the CI
-    // typecheck job covers vue-tsc, and setup() can only boot a node server.
     typescript: { typeCheck: false },
     nitro: { preset: 'node-server' },
   },
@@ -29,9 +26,10 @@ const SHOTS = [
 type Viewport = (typeof VIEWPORTS)[number]
 type Shot = (typeof SHOTS)[number]
 
+const BORDER_PX_BOTH_SIDES = 2
+
 const opened: Page[] = []
 
-/** Opens /setup in a new page, closed again after the test even when it fails. */
 async function openSetup(options: Parameters<typeof createPage>[1]) {
   const page = await createPage('/setup', options)
   opened.push(page)
@@ -42,7 +40,6 @@ afterEach(async () => {
   await Promise.all(opened.splice(0).map(page => page.close()))
 })
 
-/** Opens the screenshot's toggle on /setup and returns its enlarge button. */
 async function showScreenshot(viewport: Viewport, shot: Shot, { hasTouch = false } = {}) {
   const page = await openSetup({ viewport, hasTouch })
   const step = page.locator(`section[aria-labelledby="${shot.step}"]`)
@@ -54,35 +51,30 @@ async function showScreenshot(viewport: Viewport, shot: Shot, { hasTouch = false
   return { page, button }
 }
 
-/**
- * Waits for the dialog to open, its images to load and its open animation to finish,
- * so boxes are measured at their final size.
- */
 async function openedDialog(page: Page) {
   const dialog = page.getByRole('dialog')
   await dialog.waitFor({ state: 'visible' })
-  // decode() also rejects on a broken image, so a missing screenshot fails here.
   await dialog.evaluate(el => Promise.all([
     ...el.querySelectorAll('img'),
   ].map(img => img.decode())))
-  // Only the dialog's own animations: the page behind it runs endless CRT animations.
   await dialog.evaluate(el => Promise.all(el.getAnimations({ subtree: true }).map(a => a.finished)))
   return dialog
 }
 
-/** Opens /setup, opens the screenshot's toggle and clicks the screenshot. */
 async function enlarge(viewport: Viewport, shot: Shot, { hasTouch = false } = {}) {
   const { page, button } = await showScreenshot(viewport, shot, { hasTouch })
   await button.click()
   return { page, dialog: await openedDialog(page) }
 }
 
-/** The enlarged screenshot inside the dialog. */
+function darkOverlayPoint(viewport: Viewport): [number, number] {
+  return [12, viewport.height - 12]
+}
+
 function screenshotIn(dialog: Locator, shot: Shot) {
   return dialog.locator(`img[src="${shot.src}"]`)
 }
 
-/** Checks the close button is thumb-sized and sits in the viewport's top-right corner. */
 async function expectCloseTopRight(close: Locator, viewport: Viewport) {
   const box = (await close.boundingBox())!
   expect(box.width).toBeGreaterThanOrEqual(44)
@@ -94,7 +86,6 @@ async function expectCloseTopRight(close: Locator, viewport: Viewport) {
   return box
 }
 
-/** The `src` of the screenshot inside the focused element, if any. */
 function focusedScreenshot() {
   return document.activeElement?.querySelector('img')?.getAttribute('src')
 }
@@ -122,9 +113,8 @@ describe.each(VIEWPORTS)('/setup at $name width', (viewport) => {
     expect(box.y).toBeGreaterThanOrEqual(0)
     expect(box.x + box.width).toBeLessThanOrEqual(viewport.width)
     expect(box.y + box.height).toBeLessThanOrEqual(viewport.height)
-    // The box includes the 1 px border on each side.
-    expect(box.width).toBeLessThanOrEqual(natural.width + 2)
-    expect(box.height).toBeLessThanOrEqual(natural.height + 2)
+    expect(box.width).toBeLessThanOrEqual(natural.width + BORDER_PX_BOTH_SIDES)
+    expect(box.height).toBeLessThanOrEqual(natural.height + BORDER_PX_BOTH_SIDES)
   })
 
   it.each(SHOTS)('puts a thumb-sized close button in the viewport\'s top-right corner over $src', async (shot) => {
@@ -163,8 +153,7 @@ describe.each(VIEWPORTS)('/setup at $name width', (viewport) => {
     const { page } = await enlarge(viewport, SHOTS[2]!)
     const scrollY = await page.evaluate(() => window.scrollY)
 
-    // Near the bottom-left corner: dark overlay at every width, clear of the screenshot.
-    await page.mouse.move(12, viewport.height - 12)
+    await page.mouse.move(...darkOverlayPoint(viewport))
     await page.mouse.wheel(0, 600)
     await page.waitForTimeout(300)
 
@@ -185,15 +174,13 @@ describe.each(VIEWPORTS)('/setup at $name width', (viewport) => {
     const shot = SHOTS[2]!
     const { page, dialog } = await enlarge(viewport, shot)
 
-    // Near the bottom-left corner: dark overlay at every width, clear of the screenshot.
-    await page.mouse.click(12, viewport.height - 12)
+    await page.mouse.click(...darkOverlayPoint(viewport))
 
     await dialog.waitFor({ state: 'detached' })
     expect(await page.evaluate(focusedScreenshot)).toBe(shot.src)
   })
 })
 
-/** The enlarged screenshot's drawn box and native width, and the cursor it shows. */
 function drawnSize(image: Locator) {
   return image.evaluate((img: HTMLImageElement) => {
     const box = img.getBoundingClientRect()
@@ -208,7 +195,6 @@ function drawnSize(image: Locator) {
   })
 }
 
-/** The scroll position and extent of the area around the enlarged screenshot. */
 function scrollArea(image: Locator) {
   return image.evaluate((img: HTMLImageElement) => {
     const area = img.parentElement!
@@ -225,7 +211,6 @@ describe('/setup at phone width, AAAA-record screenshot', () => {
   const viewport = VIEWPORTS[0]!
   const shot = SHOTS[2]!
 
-  /** Enlarges the screenshot on a touch screen and taps it once, to native size. */
   async function enlargeNative() {
     const { page, dialog } = await enlarge(viewport, shot, { hasTouch: true })
     const image = screenshotIn(dialog, shot)
@@ -261,8 +246,6 @@ describe('/setup at phone width, AAAA-record screenshot', () => {
     const box = (await image.boundingBox())!
     const inside = { x: viewport.width / 2, y: Math.min(box.y + box.height, viewport.height) / 2 }
 
-    // A finger swipe right-to-left, upwards, as raw touch events. CDP's
-    // synthesizeScrollGesture never scrolls in Linux's headless shell.
     const cdp = await page.context().newCDPSession(page)
     const finger = (step: number) => [
       { id: 1, x: inside.x - 20 * step, y: inside.y - 10 * step },
@@ -281,7 +264,6 @@ describe('/setup at phone width, AAAA-record screenshot', () => {
     await expect.poll(async () => (await scrollArea(image)).left).toBeGreaterThan(0)
     expect(await dialog.isVisible()).toBe(true)
 
-    // Back to the left edge once the swipe's fling has stopped, then a wheel pans it again.
     await expect.poll(async () => {
       const left = (await scrollArea(image)).left
       await page.waitForTimeout(100)
@@ -318,8 +300,7 @@ describe('/setup at desktop width, Cloudflare token screenshot', () => {
     const image = screenshotIn(dialog, shot)
 
     const before = await drawnSize(image)
-    // The box includes the 1 px border on each side.
-    expect(before.width).toBe(before.naturalWidth + 2)
+    expect(before.width).toBe(before.naturalWidth + BORDER_PX_BOTH_SIDES)
     expect(before.cursor).not.toMatch(/zoom/)
 
     await image.click()

@@ -42,9 +42,7 @@ describe('health-check', () => {
     expect(HealthCheckStatusCodes.ERROR).toBe('error')
   })
 
-  it('passes its own output schema', async () => {
-    // Guards z.enum(HealthCheckStatusCodes) against a Zod major bump: a schema
-    // mismatch surfaces as an output-validation INTERNAL_SERVER_ERROR.
+  it('passes its own output schema, built on z.enum(HealthCheckStatusCodes)', async () => {
     await expect(invoke().result).resolves.toBeDefined()
   })
 
