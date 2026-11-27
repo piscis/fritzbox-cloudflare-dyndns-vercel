@@ -3,7 +3,9 @@
 Each skill's files live in `.agents/skills/<name>/`, `.claude/skills` is one committed
 symlink to `../.agents/skills`, and `skills-lock.json` pins the skill to its source.
 `npx skills@latest` writes the files and the lock, and the next update overwrites anything else, so change skills only through
-the CLI or upstream. Commit skill changes as `chore(agents): …`.
+the CLI or upstream. `eslint.config.ts` ignores every vendored skill, because a lint fix
+would rewrite its files and break the lock hash. First-party skills have no lock entry
+and stay linted. Commit skill changes as `chore(agents): …`.
 
 ## Add
 

@@ -1,12 +1,3 @@
-/**
- * Shared dial-up easter egg: one HTMLAudioElement, one Web Audio graph.
- *
- * Module-scoped on purpose — the landing page mounts a single toggle and a
- * single spectrum, and MediaElementSource can only be created once per element.
- * Lazy: AudioContext + analyser appear on the first click so prerender / SSR
- * never touch Web Audio. The clip stays `preload="none"` until that click.
- */
-
 const SOUND = '/sounds/modem-dial-up.mp3'
 
 const playing = ref(false)
@@ -16,12 +7,6 @@ let ctx: AudioContext | null = null
 let analyser: AnalyserNode | null = null
 let sourceBound = false
 
-/**
- * Only called from the toggle click. An AudioContext constructed without a
- * user activation starts `suspended` (and Chrome logs a warning), while
- * `createMediaElementSource` has already rerouted the element's output into
- * that frozen graph — the clip would play silently behind a pressed button.
- */
 function ensureGraph(): AnalyserNode | null {
   if (!import.meta.client || !audioEl || sourceBound)
     return analyser
@@ -45,8 +30,6 @@ function ensureGraph(): AnalyserNode | null {
     sourceBound = true
   }
   catch {
-    // happy-dom, missing Web Audio, or a second bind attempt — play still works
-    // through the element if the graph never attached.
     ctx = null
     analyser = null
   }
@@ -75,7 +58,6 @@ async function play(): Promise<void> {
     playing.value = true
   }
   catch {
-    // NotAllowedError / NotSupportedError / AbortError — leave the button honest.
     playing.value = false
   }
 }
@@ -102,8 +84,6 @@ export function useModemDialup() {
     if (el === audioEl)
       return
 
-    // MediaElementSource is permanently tied to one element. Remounts (tests,
-    // client navigations) get a fresh graph.
     if (audioEl) {
       stop()
       tearDownGraph()

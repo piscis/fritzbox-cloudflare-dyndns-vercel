@@ -53,11 +53,6 @@ const trace = computed<LogLine[]>(() => (isNotFound.value
 </script>
 
 <template>
-  <!--
-    Nuxt renders error.vue *instead of* app.vue, so the <UApp> wrapper there does
-    not apply here and has to be repeated. Everything <head>-related now comes
-    from `app.head` in nuxt.config, because this file mounts no layout.
-  -->
   <UApp>
     <PhosphorFrame :status="isNotFound ? '404' : '5xx'">
       <template #bar>
@@ -87,20 +82,9 @@ const trace = computed<LogLine[]>(() => (isNotFound.value
           <TerminalLog :lines="trace" live class="mt-5.5" />
 
           <div class="mt-[clamp(24px,4vw,34px)] flex flex-wrap gap-(--sp-3)">
-            <!--
-              Plain `to="/"` is enough: Nuxt's router registers an afterEach
-              that clears the error on any successful client navigation, so no
-              clearError call and no `external` full reload are needed.
-            -->
             <UButton to="/" variant="primary">
               ← Redial
             </UButton>
-            <!--
-              `external` IS required here. /api is a Nitro route with no
-              vue-router match, so without it NuxtLink hands the click to the
-              router, which finds nothing and shows this very 404 — and it works
-              on a hard reload, so typing the URL by hand never catches it.
-            -->
             <UButton to="/api/" external>
               API docs
             </UButton>

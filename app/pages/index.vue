@@ -27,10 +27,6 @@ const { state } = useHealthCheck()
         FRITZ!Box · Cloudflare
       </p>
 
-      <!--
-        The only glowing text on either page: bloom sells the CRT at display
-        sizes and destroys anything smaller.
-      -->
       <h1 class="m-0 text-step-3 font-semibold tracking-[-0.035em] text-(--p-100) text-shadow-(--glow)">
         DynDNS<span class="cursor" aria-hidden="true" />
       </h1>
@@ -44,18 +40,9 @@ const { state } = useHealthCheck()
       </p>
 
       <div class="mt-[clamp(26px,4vw,38px)] flex flex-wrap gap-(--sp-3)">
-        <!--
-          The guide is what most visitors came for, so it takes the one primary
-          slot. A plain route, so no `external`: /setup is a page of this app.
-        -->
         <UButton to="/setup" variant="primary">
           Setup FRITZ!Box DynDNS →
         </UButton>
-        <!--
-          The live Scalar reference rather than the README: it is one path away
-          and it is what a visitor actually came for. The clickdummy pointed both
-          buttons at the repo only because /api was out of prototype scope.
-        -->
         <UButton to="/api/" external>
           API docs →
         </UButton>
@@ -72,11 +59,6 @@ const { state } = useHealthCheck()
       <span aria-hidden="true">·</span>
       <span>MIT</span>
       <span aria-hidden="true">·</span>
-      <!--
-        All three clauses are true of this codebase: colour mode is disabled so
-        nothing is persisted, there is no analytics, and errors are scrubbed
-        before they reach a log (server/utils/redactToken.ts).
-      -->
       <span>no cookies, no analytics, no logs of your token</span>
       <span class="ml-auto">
         <ULink

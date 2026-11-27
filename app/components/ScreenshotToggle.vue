@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/**
- * A closed "show screenshot" toggle, for a visitor unsure whether they're on
- * the right screen. The images load only once it opens. Each one is a button
- * that opens it alone, enlarged, in a modal. Without JavaScript the toggle and
- * the inline images still work; only the enlarging needs it.
- */
 export interface Screenshot {
   src: string
   alt: string
@@ -12,23 +6,9 @@ export interface Screenshot {
 
 const { shots, step } = defineProps<{
   shots: readonly Screenshot[]
-  /** The step's number, such as `02`, which names the enlarged screenshot's dialog. */
   step: string
 }>()
 
-/**
- * UModal restyled in the CRT look. Replacer form, so none of Nuxt UI's card
- * look (rounded corners, ring, shadow, `max-w-lg`) survives to be merged away.
- * The content box covers the viewport and centres the screenshot, so the close
- * button sits in the viewport's corner, clear of the screenshot wherever there
- * is room. Below the page's 820px breakpoint the screenshot may fill the
- * screen less a thin margin.
- *
- * The content box lets clicks through (`!` beats the inline `pointer-events:
- * auto` Reka sets), so a tap on the dark area around a fitted screenshot counts
- * as outside and closes the modal. The screenshot, its native-size scroll area
- * and the close button take clicks.
- */
 const MODAL_UI = {
   overlay: () => [
     'fixed inset-0 bg-(--crt-void)/90',
@@ -40,29 +20,14 @@ const MODAL_UI = {
   ].join(' '),
 }
 
-/**
- * Set once mounted on the client: without JavaScript nothing enlarges, so the
- * hint and the zoom cursor appear only then. SSR and hydration both render it
- * false, so they match.
- */
 const enhanced = ref(false)
 onMounted(() => enhanced.value = true)
 
-/** The frame both views draw around the screenshot: a phosphor border and glow, never past the modal. */
 const FRAME = 'max-w-[95vw] max-h-[90vh] max-[819px]:max-w-full max-[819px]:max-h-full border border-(--p-300) shadow-[0_0_22px_rgb(138_240_176/0.14)]'
 
-/**
- * The open modal's view. It opens `fitted`; when the screenshot is drawn
- * smaller than its native size, a click shows it at `native` size in a
- * scroll area, and another click fits it again. Only one modal is open at a
- * time, so one state serves them all, reset on every open and close.
- */
 const view = ref<'fitted' | 'native'>('fitted')
-/** The screenshot's native size, once the fitted one has loaded. */
 const nativeSize = ref<{ width: number, height: number }>()
-/** Whether the fitted screenshot is drawn smaller than its native size. */
 const shrunk = ref(false)
-/** The zoom the next click gives; none when the screenshot already shows 1:1. */
 const cursor = computed(() => view.value === 'native'
   ? 'zoom-out'
   : shrunk.value ? 'zoom-in' : undefined)
@@ -70,7 +35,6 @@ let fittedImage: HTMLImageElement | null = null
 
 function measure() {
   const image = fittedImage
-  // Nothing to measure before the screenshot has decoded.
   if (view.value !== 'fitted' || !image?.naturalWidth)
     return
   nativeSize.value = { width: image.naturalWidth, height: image.naturalHeight }
@@ -81,7 +45,6 @@ function bindFittedImage(element: unknown) {
   fittedImage = element instanceof HTMLImageElement
     ? element
     : null
-  // A screenshot already in the cache may finish loading before the listener exists.
   if (fittedImage?.complete)
     measure()
 }
@@ -94,7 +57,6 @@ function toggleView() {
     view.value = 'native'
 }
 
-/** Starts every open and close fitted, and re-measures on resizes only while open. */
 function onOpenChange(open: boolean) {
   view.value = 'fitted'
   nativeSize.value = undefined
@@ -124,7 +86,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
       </button>
 
       <template #content="{ close }">
-        <!-- Native: drawn at natural size in a scroll area that takes the pans itself, so they never reach the overlay. -->
         <div
           v-if="view === 'native'"
           class="pointer-events-auto overflow-auto overscroll-contain"
@@ -140,7 +101,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
             @click="toggleView"
           >
         </div>
-        <!-- Fitted: never cropped, and an <img> left at auto size never grows past its native size. -->
         <img
           v-else
           :ref="bindFittedImage"

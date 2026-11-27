@@ -9,15 +9,12 @@ on:
         type: string
   schedule:
     - cron: '5 4 * * 1'
-# Run weekly, at 04:05 every Monday.
 
 jobs:
   del_runs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs
-        # GitRML/delete-workflow-runs is archived (last push 2024-04) and its
-        # scheduled run has been failing. Mattraks is the maintained fork.
         uses: Mattraks/delete-workflow-runs@0cf693bc9909e5e867ee8f27b813224ba862939c # v2
         with:
           token: ${{ github.token }}

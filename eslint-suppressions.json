@@ -1,0 +1,97 @@
+{
+  "tests/browser/setup-page.browser.test.ts": {
+    "local/no-comments": {
+      "count": 22
+    }
+  },
+  "tests/e2e/base.e2e.test.ts": {
+    "local/no-comments": {
+      "count": 33
+    }
+  },
+  "tests/helpers/cloudflare-mock.ts": {
+    "local/no-comments": {
+      "count": 1
+    }
+  },
+  "tests/helpers/h3.ts": {
+    "local/no-comments": {
+      "count": 1
+    }
+  },
+  "tests/nuxt/app.nuxt.test.ts": {
+    "local/no-comments": {
+      "count": 3
+    }
+  },
+  "tests/nuxt/button-tones.nuxt.test.ts": {
+    "local/no-comments": {
+      "count": 1
+    }
+  },
+  "tests/nuxt/error-page.nuxt.test.ts": {
+    "local/no-comments": {
+      "count": 5
+    }
+  },
+  "tests/nuxt/index-page.nuxt.test.ts": {
+    "local/no-comments": {
+      "count": 12
+    }
+  },
+  "tests/nuxt/setup-page.nuxt.test.ts": {
+    "local/no-comments": {
+      "count": 20
+    }
+  },
+  "tests/setup/nitro-globals.ts": {
+    "local/no-comments": {
+      "count": 4
+    }
+  },
+  "tests/unit/api-handler.test.ts": {
+    "local/no-comments": {
+      "count": 3
+    }
+  },
+  "tests/unit/api-spec-version.test.ts": {
+    "local/no-comments": {
+      "count": 4
+    }
+  },
+  "tests/unit/dyndns-messages.test.ts": {
+    "local/no-comments": {
+      "count": 2
+    }
+  },
+  "tests/unit/favicon.test.ts": {
+    "local/no-comments": {
+      "count": 1
+    }
+  },
+  "tests/unit/fritz-dyndns-validation.test.ts": {
+    "local/no-comments": {
+      "count": 2
+    }
+  },
+  "tests/unit/fritz-dyndns.test.ts": {
+    "local/no-comments": {
+      "count": 8
+    }
+  },
+  "tests/unit/health-check.test.ts": {
+    "local/no-comments": {
+      "count": 2
+    }
+  },
+  "tests/unit/mcp-config.test.ts": {
+    "local/no-comments": {
+      "count": 1
+    }
+  },
+  "tests/unit/readme-anchor.test.ts": {
+    "local/no-comments": {
+      "count": 2
+    }
+  }
+}

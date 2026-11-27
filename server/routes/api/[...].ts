@@ -8,9 +8,6 @@ import redactToken from '~~/server/utils/redactToken'
 import useLogger from '~~/server/utils/useLogger'
 
 const { logger } = useLogger()
-// `public.version` is `package.json`'s version, injected by nuxt.config.ts, so
-// the spec reports the released version instead of a placeholder. The landing
-// page foot line reads the same key, so the two can never disagree.
 const { version } = useRuntimeConfig().public
 
 const openAPIHandler = new OpenAPIHandler(router, {
@@ -19,8 +16,6 @@ const openAPIHandler = new OpenAPIHandler(router, {
   eventIteratorKeepAliveComment: 'keep-alive',
   interceptors: [
     onError((error) => {
-      // No token in scope here, so this is the pattern-based pass only — it
-      // still catches `?token=…` and `Bearer …` in a serialised request.
       logger.error(redactToken(error))
     }),
   ],

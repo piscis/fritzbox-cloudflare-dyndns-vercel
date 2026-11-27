@@ -1,13 +1,4 @@
 <script setup lang="ts">
-/**
- * Field → value pairs for a form the visitor fills in somewhere else, the
- * Cloudflare dashboard or the FRITZ!Box admin page. Values are plain selectable
- * `<code>`, so they can be copied by hand.
- *
- * A field with `copy` also gets a `[copy]` button. It only appears once the page
- * runs in a browser with the Clipboard API, so the prerendered HTML and a page
- * without JS carry no button that does nothing.
- */
 export interface Field {
   label: string
   value: string
@@ -22,7 +13,6 @@ onMounted(() => {
   canCopy.value = Boolean(navigator.clipboard)
 })
 
-// Keyed by row, since labels can repeat (two `Permission` rows in step 01).
 const copyState = ref<{ row: number, result: 'copied' | 'failed' } | null>(null)
 let reset: ReturnType<typeof setTimeout> | undefined
 

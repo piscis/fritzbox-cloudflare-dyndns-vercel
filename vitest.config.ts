@@ -4,8 +4,6 @@ import { defineConfig } from 'vitest/config'
 
 const rootDir = fileURLToPath(new URL('./', import.meta.url)).replace(/\/$/, '')
 
-// Nuxt's rootDir/srcDir aliases, for the projects that do not boot Nuxt and so
-// do not get them for free.
 const nuxtAlias = {
   '~~': rootDir,
   '@@': rootDir,
@@ -16,8 +14,6 @@ const nuxtAlias = {
 export default defineConfig({
   test: {
     projects: [
-      // Plain Node. Covers everything under server/ with the Cloudflare SDK
-      // mocked, so it is fast and never touches the network.
       {
         resolve: { alias: nuxtAlias },
         test: {
@@ -30,9 +26,6 @@ export default defineConfig({
         },
       },
 
-      // End-to-end tests boot a real Nuxt server via `setup()`. They must NOT go
-      // through defineVitestProject — @nuxt/test-utils warns when the Nuxt client
-      // environment is applied to an e2e suite.
       {
         resolve: { alias: nuxtAlias },
         test: {
@@ -45,9 +38,6 @@ export default defineConfig({
         },
       },
 
-      // The real /setup page in Chromium, for tests that need actual layout. Set up
-      // like e2e, plus `browser: true` in each file's setup(). Needs a local
-      // Chromium, so the other test scripts skip it; run it with `test:browser`.
       {
         resolve: { alias: nuxtAlias },
         test: {
@@ -84,9 +74,6 @@ export default defineConfig({
         '**/node_modules/**',
         '**/*.d.ts',
       ],
-      // server/** currently sits at 100% across the board. These are set below
-      // that on purpose, so a dependency bump that adds an unreachable branch
-      // does not red the build — but far enough up to catch real regressions.
       thresholds: {
         lines: 90,
         functions: 90,

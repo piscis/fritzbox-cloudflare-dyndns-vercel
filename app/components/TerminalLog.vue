@@ -6,9 +6,7 @@ export interface LogLine {
 
 const { lines, replayable = false, live = false } = defineProps<{
   lines: LogLine[]
-  /** Front page: the handshake replays on click. */
   replayable?: boolean
-  /** Error page: the trace is announced rather than decorative. */
   live?: boolean
 }>()
 
@@ -20,12 +18,6 @@ const TONES: Record<NonNullable<LogLine['tone']>, string> = {
   warn: 'text-(--sig-amber)',
 }
 
-/**
- * Restart the CSS reveal by removing the trigger attribute, forcing a reflow,
- * and putting it back — no per-frame JS and no state churn. Under
- * `prefers-reduced-motion` the animation is off entirely, so this is a no-op
- * that leaves the log fully written.
- */
 function replay(): void {
   const element = listEl.value
   if (!element) {
@@ -45,10 +37,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!--
-    A real <button> when it is interactive: the design made the <ul> itself
-    clickable, which is unreachable by keyboard and announces nothing.
-  -->
   <component
     :is="replayable ? 'button' : 'div'"
     :type="replayable ? 'button' : undefined"

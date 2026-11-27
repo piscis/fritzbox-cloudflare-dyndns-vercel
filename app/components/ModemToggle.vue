@@ -1,11 +1,4 @@
 <script setup lang="ts">
-/**
- * The dial-up easter egg: click to play, click again to stop/restart.
- *
- * Markup stays SSR-safe (`<audio preload="none">`), and the Web Audio graph
- * lives in `useModemDialup` for the spectrum — built only on a click so the
- * button never claims to be playing over silence.
- */
 const {
   sound,
   playing,
