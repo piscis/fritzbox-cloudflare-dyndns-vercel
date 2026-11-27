@@ -1,7 +1,7 @@
 import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
+import pkg from '~~/package.json'
 import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
-import pkg from '../../package.json'
 
 // One setup() for the whole file: each call builds and boots its own server.
 await setup({

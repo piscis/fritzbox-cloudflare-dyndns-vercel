@@ -12,7 +12,7 @@ import {
   setResponseStatus,
   toWebRequest,
 } from 'h3'
-import pkg from '../../package.json'
+import pkg from '~~/package.json'
 
 Object.assign(globalThis, {
   defineEventHandler,
