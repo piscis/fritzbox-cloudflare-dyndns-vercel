@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { NuxtError } from '#app'
 import type { LogLine } from '~/components/TerminalLog.vue'
+import type { RenderedError } from '~/utils/requestedPath'
 
 const props = defineProps<{
-  error?: NuxtError
+  error?: RenderedError
 }>()
 
 const REPO = 'https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel'
@@ -29,36 +29,10 @@ const signal = computed(() => {
     : 'ERROR'
 })
 
-/**
- * Echoing the path back is the single most useful thing a 404 can do, and it
- * has three sources depending on how we got here.
- *
- * `url` is set on every server-rendered error but is absent on client-side
- * navigation, where Nuxt's router 404 puts the path in `data.path` instead. It
- * is real at runtime yet missing from the public `NuxtError` type, hence the
- * cast. `data` itself is dropped for unhandled or fatal errors, so `url` leads.
- */
 const MAX_ECHOED_PATH = 96
 
 const path = computed(() => {
-  const error = props.error as (NuxtError & { url?: string }) | undefined
-  const data = error?.data
-  const fromData = typeof data === 'object' && data !== null
-    ? (data as { path?: string }).path
-    : undefined
-
-  const requested = error?.url || fromData || router.currentRoute.value.fullPath
-
-  /**
-   * Strip the query and hash before echoing anything back.
-   *
-   * `error.url` is `pathname + search + hash`, and this service's Cloudflare
-   * credential travels in the query string (`?token=…`) because a FRITZ!Box
-   * cannot send headers. A mistyped update URL would otherwise render a live,
-   * unexpired API token into the 404 — and into any screenshot or edge log of
-   * that render. Same reason server/utils/redactToken.ts exists.
-   */
-  const pathOnly = requested.split(/[?#]/)[0] || '/'
+  const pathOnly = requestedPath(props.error, router.currentRoute.value.fullPath)
 
   return pathOnly.length > MAX_ECHOED_PATH
     ? `${pathOnly.slice(0, MAX_ECHOED_PATH)}…`

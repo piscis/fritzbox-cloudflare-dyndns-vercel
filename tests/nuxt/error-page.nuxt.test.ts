@@ -1,16 +1,11 @@
-import type { NuxtError } from '#app'
+import type { RenderedError } from '~/utils/requestedPath'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { describe, expect, it } from 'vitest'
 import { createError } from '#app'
 import ErrorPage from '~/error.vue'
 
-/**
- * `url` is what Nuxt sets on a server-rendered error and is how the page echoes
- * the path back. It is real at runtime but absent from the public NuxtError
- * type, so the fixture has to widen it the same way the page does.
- */
-function errorWith(statusCode: number, url?: string, message = 'boom'): NuxtError {
-  const error = createError({ statusCode, message }) as NuxtError & { url?: string }
+function errorWith(statusCode: number, url?: string, message = 'boom'): RenderedError {
+  const error: RenderedError = createError({ statusCode, message })
   if (url) {
     error.url = url
   }
