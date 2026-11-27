@@ -9,7 +9,6 @@ const vendoredSkills = Object.keys(lock.skills).map(name => `.agents/skills/${na
 export default withNuxt(antfu({
   ignores: [
     '.claude/worktrees/**',
-    'eslint-suppressions.json',
     '.nuxt/**',
     '.wrangler/**',
     '.vercel/**',

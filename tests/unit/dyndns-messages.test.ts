@@ -6,8 +6,6 @@ import {
   zoneNotFound,
 } from '~~/shared/dyndnsMessages'
 
-// The one place the wording is pinned. The procedure throws these messages and
-// the setup guide quotes them, so both follow a rewording here automatically.
 describe('dyndns messages', () => {
   it('names the zone that was not found', () => {
     expect(zoneNotFound('example.com')).toBe('Zone "example.com" not found.')

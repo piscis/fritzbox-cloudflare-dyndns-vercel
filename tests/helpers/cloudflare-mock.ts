@@ -1,10 +1,3 @@
-/**
- * Test doubles for the Cloudflare SDK.
- *
- * Both `zones.list()` and `dns.records.list()` are consumed with `for await`,
- * so the doubles have to be async-iterable rather than plain promises.
- */
-
 export interface CfZone {
   id: string
   name: string

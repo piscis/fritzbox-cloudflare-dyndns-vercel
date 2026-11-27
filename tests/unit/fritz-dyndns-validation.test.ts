@@ -88,8 +88,6 @@ describe('fritz-dyndns · input validation', () => {
   })
 
   it('never constructs a Cloudflare client when validation fails', async () => {
-    // This is what makes it safe to exercise the validation paths over HTTP in
-    // the e2e suite: no request can reach the real Cloudflare API.
     await expectBadRequest({ ...VALID })
 
     expect(cf.ctor).not.toHaveBeenCalled()

@@ -17,7 +17,6 @@ describe('favicon middleware', () => {
   })
 
   it('redirects a cache-busted /favicon.ico too', async () => {
-    // The guard uses startsWith, not ===.
     const { res } = await request('/favicon.ico?v=2')
 
     expect(res.statusCode).toBe(302)

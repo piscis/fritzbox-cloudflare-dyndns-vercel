@@ -53,7 +53,6 @@ function invoke(query: Record<string, unknown>) {
   }
 }
 
-/** Both list calls default to a single-zone, both-records world. */
 function arrangeHappyPath(records = [A_RECORD, AAAA_RECORD]) {
   cf.zonesList.mockReturnValue(asyncIterable([ZONE]))
   cf.recordsList.mockReturnValue(asyncIterable(records))
@@ -132,8 +131,8 @@ describe('fritz-dyndns · happy paths', () => {
 
     await invoke({
       ...BASE_QUERY,
-      ipv4: A_RECORD.content, // unchanged
-      ipv6: '2001:db8::99', // changed
+      ipv4: A_RECORD.content,
+      ipv6: '2001:db8::99',
     }).result
 
     expect(cf.recordsUpdate).toHaveBeenCalledExactlyOnceWith('aaaa-1', expect.anything())
@@ -148,7 +147,6 @@ describe('fritz-dyndns · happy paths', () => {
   })
 
   it('follows pagination when listing DNS records', async () => {
-    // A record that would sit on a later page must still be found.
     cf.zonesList.mockReturnValue(asyncIterable([ZONE]))
     cf.recordsList.mockReturnValue(asyncIterable([
       { ...A_RECORD, id: 'other', name: 'other.example.com' },
@@ -196,12 +194,10 @@ describe('fritz-dyndns · not found', () => {
 
     expect(error.code).toBe('NOT_FOUND')
     expect(error.message).toBe(zoneNotFound('example.com'))
-    // Regression guard: zoneId used to fall back to '' and issue a doomed list call.
     expect(cf.recordsList).not.toHaveBeenCalled()
   })
 
   it('returns 404 when the A record does not exist', async () => {
-    // Regression guard for the dead `&& !zone` term, which made this return 200.
     arrangeHappyPath([AAAA_RECORD])
 
     const error = await expectOrpcError(invoke({ ...BASE_QUERY, ipv4: '9.9.9.9' }).result)
@@ -249,8 +245,6 @@ describe('fritz-dyndns · upstream failures', () => {
     const error = await expectOrpcError(invoke({ ...BASE_QUERY, ipv4: '9.9.9.9' }).result)
 
     expect(error.code).toBe('INTERNAL_SERVER_ERROR')
-    // Regression guard: `new ORPCError(...)` ignored the .errors() declaration
-    // and produced 500 here.
     expect(error.status).toBe(503)
     expect(error.message).toBe('Service Unavailable')
     expect(log.error).toHaveBeenCalledOnce()

@@ -4,8 +4,6 @@ import apiHandler from '~~/server/routes/api/[...]'
 import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
 import { createH3Event } from '../helpers/h3'
 
-// Any request reaching the real SDK would hit api.cloudflare.com, so the module
-// is stubbed even though these tests only exercise routing and validation.
 const cf = vi.hoisted(() => ({
   ctor: vi.fn(),
 }))
@@ -31,7 +29,6 @@ vi.mock('cloudflare', () => ({
 
 async function hit(path: string, method = 'GET') {
   const { event, res } = createH3Event(path, method)
-  // toWebRequest short-circuits on event.web.request, so no socket faking.
   ;(event as unknown as { web: unknown }).web = {
     request: new Request(`http://localhost:3000${path}`, { method }),
   }

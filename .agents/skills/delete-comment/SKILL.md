@@ -6,24 +6,19 @@ disable-model-invocation: true
 
 # Delete comments
 
-This repo bans code comments with the `local/no-comments` lint rule (`eslint-rules/no-comments.ts`).
-`eslint-suppressions.json` is the ratchet: it lists how many comments each file may still
-carry, and lint fails when a file goes above its count or below it without a prune. Each run
-of this skill shrinks that file.
+This repo bans code comments with the `local/no-comments` lint rule (`eslint-rules/no-comments.ts`),
+with no suppressions. This skill clears the comments the rule cannot see, and any it reports.
 
-Arguments are optional: paths or globs to work on. With none, work on every file in
-`eslint-suppressions.json`, plus comments the rule cannot see (step 1).
+Arguments are optional: paths or globs to work on. With none, work on the whole repo,
+plus comments the rule cannot see (step 1).
 
 ## 1. Inventory
 
 Build the worktree first (`AGENTS.md` → Workflow). List every comment in scope:
 
 ```sh
-echo '{}' > /tmp/no-suppressions.json
-pnpm exec eslint <paths> --suppressions-location /tmp/no-suppressions.json -f json -o /tmp/comments.json
+pnpm exec eslint <paths> -f json -o /tmp/comments.json
 ```
-
-The empty suppressions file makes the rule report the comments the ratchet hides.
 
 Do a separate `grep` pass for comments the rule cannot parse: shell comments inside YAML `run: |`
 blocks, `app/assets/css/main.css`, Vue `<style>` blocks, `.gitignore`, `.env.example`.
@@ -78,18 +73,12 @@ Anything this prints must be the inside of a multi-line comment block.
 Done when every comment is gone, every excuse has an issue number, and every decision record
 is in an ADR.
 
-## 4. Ratchet down
+## 4. Check
 
-```sh
-pnpm exec eslint . --prune-suppressions
-```
+Run `pnpm lint:fix`, `pnpm typecheck`, `pnpm test`, and `pnpm test:browser` if `app/`
+changed. Never suppress the rule: a new comment gets fixed, not suppressed.
 
-Then run `pnpm lint:fix`, `pnpm typecheck`, `pnpm test`, and `pnpm test:browser` if `app/`
-changed. Never add entries to `eslint-suppressions.json` or raise a count. A new comment gets
-fixed, not suppressed.
-
-Done when all checks pass and `eslint-suppressions.json` has shrunk, or is gone because its
-last entry went.
+Done when all checks pass.
 
 ## 5. Ship
 

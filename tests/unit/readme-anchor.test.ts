@@ -2,19 +2,13 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { REPO_URL, RUN_YOUR_OWN_URL } from '~/utils/repo'
 
-/**
- * GitHub's heading anchors, as github-slugger derives them: lowercase, drop
- * everything but letters, digits, spaces, hyphens and underscores, turn each
- * space into a hyphen, and number repeats `-1`, `-2`, …
- */
-function readmeSlugs(): Set<string> {
+function githubAnchorsOfReadmeHeadings(): Set<string> {
   const readme = readFileSync(new URL('../../README.md', import.meta.url), 'utf8')
   const slugs = new Set<string>()
   const seen = new Map<string, number>()
   let inFence = false
 
   for (const line of readme.split('\n')) {
-    // Shell comments inside fenced blocks look like headings and are not.
     if (/^\s*(?:```|~~~)/.test(line)) {
       inFence = !inFence
       continue
@@ -51,6 +45,6 @@ describe('the README run-your-own link', () => {
   it('names a heading that exists in README.md', () => {
     const anchor = new URL(RUN_YOUR_OWN_URL).hash.slice(1)
 
-    expect(readmeSlugs()).toContain(anchor)
+    expect(githubAnchorsOfReadmeHeadings()).toContain(anchor)
   })
 })

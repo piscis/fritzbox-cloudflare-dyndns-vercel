@@ -4,12 +4,6 @@ import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { UButton } from '#components'
 
-/**
- * The bracket button's three tones are `ui.button.variants.variant` values in
- * app.config.ts. These pin what each one renders, including the stock Nuxt UI
- * classes that must not leak onto it, so a Nuxt UI update that changes how
- * app config merges shows up here rather than on the live page.
- */
 async function classesOf(props: ButtonProps): Promise<string[]> {
   const wrapper = await mountSuspended(defineComponent({
     render: () => h(UButton, props, () => 'press'),
