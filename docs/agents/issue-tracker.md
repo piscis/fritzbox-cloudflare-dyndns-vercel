@@ -77,6 +77,8 @@ The **`spec`** label marks a spec.
 
 ## Pull requests
 
+Why every change ships this way: [ADR 0010](../adr/0010-squash-merge-conventional-commit-prs.md).
+
 - **Open**: push the branch, then open the PR against `main`:
   `gh pr create --base main --title "<subject>" --body-file -`. The title is a
   conventional-commit subject (`feat(api): …`, `fix(web): …`, `chore(deps): …`) scoped to

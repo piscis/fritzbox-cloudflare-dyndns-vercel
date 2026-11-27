@@ -45,8 +45,8 @@ sides show, such as the DynDNS error messages, lives in `shared/`.
   `package.json`. How it gets on your `PATH` is your business — any version manager,
   or none. Check with `node -v` and `pnpm -v` in the repo root, then call plain
   `pnpm …`. Never add a manager-specific prefix to a documented command.
-- Ship each change as its own PR by following
-  `.agents/skills/commit-push-pr/SKILL.md` by hand (it is not model-invocable).
+- Ship each change as its own squash-merged PR, as described under Pull requests in
+  `docs/agents/issue-tracker.md`.
 
 ## Deploy
 

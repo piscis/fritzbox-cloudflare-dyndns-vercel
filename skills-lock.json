@@ -1,13 +1,6 @@
 {
   "version": 2,
   "skills": {
-    "conventional-commit": {
-      "source": "piscis/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/conventional-commit/SKILL.md",
-      "computedHash": "952e856268c4f5d8657484301a745a22781f1d98ca6d4217028d39ca85fa893e",
-      "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
     "orpc-api": {
       "source": "piscis/agent-skills",
       "sourceType": "github",
