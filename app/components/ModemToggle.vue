@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <BracketButton
+  <UButton
     type="button"
     :class="{ 'dialup-idle': !playing }"
     :aria-pressed="playing"
@@ -51,5 +51,5 @@ onBeforeUnmount(() => {
       :src="sound"
       @ended="stop"
     />
-  </BracketButton>
+  </UButton>
 </template>

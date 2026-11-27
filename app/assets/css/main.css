@@ -34,7 +34,8 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* Fluid type. The `--text-*--line-height` sub-key pairs each size with the
-     leading the design specifies, so `text-step-3` emits both. */
+     leading the design specifies, so `text-step-3` emits both. A new step
+     also goes in `ui.tv.twMergeConfig` in app/app.config.ts. */
   --text-step--1: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
   --text-step-0: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);
   --text-step-1: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
