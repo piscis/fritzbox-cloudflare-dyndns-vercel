@@ -54,10 +54,17 @@ async function showScreenshot(viewport: Viewport, shot: Shot, { hasTouch = false
   return { page, button }
 }
 
-/** Waits for the dialog to open and its open animation to finish, so boxes are measured at their final size. */
+/**
+ * Waits for the dialog to open, its images to load and its open animation to finish,
+ * so boxes are measured at their final size.
+ */
 async function openedDialog(page: Page) {
   const dialog = page.getByRole('dialog')
   await dialog.waitFor({ state: 'visible' })
+  // decode() also rejects on a broken image, so a missing screenshot fails here.
+  await dialog.evaluate(el => Promise.all([
+    ...el.querySelectorAll('img'),
+  ].map(img => img.decode())))
   // Only the dialog's own animations: the page behind it runs endless CRT animations.
   await dialog.evaluate(el => Promise.all(el.getAnimations({ subtree: true }).map(a => a.finished)))
   return dialog
