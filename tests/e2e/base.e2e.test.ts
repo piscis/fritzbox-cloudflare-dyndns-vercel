@@ -1,5 +1,6 @@
 import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
+import { MISSING_IP } from '~~/shared/dyndnsMessages'
 import pkg from '../../package.json'
 
 // One setup() for the whole file: each call builds and boots its own server.
@@ -233,7 +234,7 @@ describe('api', () => {
     const res = await fetch('/api/fritz-dyndns?token=x&zone=example.com&record=fritz.example.com')
 
     expect(res.status).toBe(400)
-    expect(await res.text()).toContain('Missing ipv4 or ipv6 URL parameter.')
+    expect(await res.text()).toContain(MISSING_IP)
   })
 
   it('rejects a DynDNS call with no parameters at all', async () => {

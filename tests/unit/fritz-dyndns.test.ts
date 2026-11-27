@@ -2,6 +2,7 @@ import type { ORPCError } from '@orpc/server'
 import { call } from '@orpc/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fritzDynDnsRoute } from '~~/server/router/procedures/fritz-dyndns'
+import { aaaaRecordNotFound, aRecordNotFound, zoneNotFound } from '~~/shared/dyndnsMessages'
 import {
   A_RECORD,
   AAAA_RECORD,
@@ -182,7 +183,7 @@ describe('fritz-dyndns · not found', () => {
 
     expect(error.code).toBe('NOT_FOUND')
     expect(error.status).toBe(404)
-    expect(error.message).toBe('Zone "example.com" not found.')
+    expect(error.message).toBe(zoneNotFound('example.com'))
     expect(cf.recordsList).not.toHaveBeenCalled()
   })
 
@@ -194,7 +195,7 @@ describe('fritz-dyndns · not found', () => {
     const error = await expectOrpcError(invoke({ ...BASE_QUERY, ipv4: '9.9.9.9' }).result)
 
     expect(error.code).toBe('NOT_FOUND')
-    expect(error.message).toBe('Zone "example.com" not found.')
+    expect(error.message).toBe(zoneNotFound('example.com'))
     // Regression guard: zoneId used to fall back to '' and issue a doomed list call.
     expect(cf.recordsList).not.toHaveBeenCalled()
   })
@@ -207,7 +208,7 @@ describe('fritz-dyndns · not found', () => {
 
     expect(error.code).toBe('NOT_FOUND')
     expect(error.status).toBe(404)
-    expect(error.message).toBe('A record for "fritz.example.com" does not exist.')
+    expect(error.message).toBe(aRecordNotFound('fritz.example.com'))
     expect(cf.recordsUpdate).not.toHaveBeenCalled()
   })
 
@@ -217,7 +218,7 @@ describe('fritz-dyndns · not found', () => {
     const error = await expectOrpcError(invoke({ ...BASE_QUERY, ipv6: '2001:db8::99' }).result)
 
     expect(error.code).toBe('NOT_FOUND')
-    expect(error.message).toBe('AAAA record for "fritz.example.com" does not exist.')
+    expect(error.message).toBe(aaaaRecordNotFound('fritz.example.com'))
     expect(cf.recordsUpdate).not.toHaveBeenCalled()
   })
 })
