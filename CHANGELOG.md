@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.11.39](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.38...2.11.39) (2026-11-27)
+
+### Dependencies
+
+* **deps:** update dependency @iconify-json/lucide to ^1.2.160 ([#386](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/386)) ([b8d0002](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b8d000217f849b62095154b5eb0e7064ae652f79))
+
 ## [2.11.38](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.37...2.11.38) (2026-11-27)
 
 ### Dependencies
