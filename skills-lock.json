@@ -1,13 +1,6 @@
 {
   "version": 2,
   "skills": {
-    "ai-review": {
-      "source": "piscis/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/ai-review/SKILL.md",
-      "computedHash": "4ea0ba909fb468f75b9428df072718a994f9c86229dd225eb0261a1761f3e253",
-      "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
     "ask-me": {
       "source": "piscis/agent-skills",
       "sourceType": "github",
