@@ -118,18 +118,18 @@ const trace = computed<LogLine[]>(() => (isNotFound.value
               that clears the error on any successful client navigation, so no
               clearError call and no `external` full reload are needed.
             -->
-            <BracketButton to="/" tone="primary">
+            <UButton to="/" variant="primary">
               ← Redial
-            </BracketButton>
+            </UButton>
             <!--
               `external` IS required here. /api is a Nitro route with no
               vue-router match, so without it NuxtLink hands the click to the
               router, which finds nothing and shows this very 404 — and it works
               on a hard reload, so typing the URL by hand never catches it.
             -->
-            <BracketButton to="/api/" external>
+            <UButton to="/api/" external>
               API docs
-            </BracketButton>
+            </UButton>
           </div>
         </div>
 

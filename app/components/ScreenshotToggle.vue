@@ -152,14 +152,14 @@ onBeforeUnmount(() => window.removeEventListener('resize', measure))
           @load="measure"
           @click="toggleView"
         >
-        <BracketButton
-          tone="quiet"
+        <UButton
+          variant="quiet"
           aria-label="Close"
           class="pointer-events-auto absolute top-2 right-2 min-w-11 min-h-11 justify-center bg-(--crt-void) hover:bg-(--crt-raise)"
           @click="close"
         >
           ×
-        </BracketButton>
+        </UButton>
       </template>
     </UModal>
   </details>

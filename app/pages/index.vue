@@ -48,21 +48,21 @@ const { state } = useHealthCheck()
           The guide is what most visitors came for, so it takes the one primary
           slot. A plain route, so no `external`: /setup is a page of this app.
         -->
-        <BracketButton to="/setup" tone="primary">
+        <UButton to="/setup" variant="primary">
           Setup FRITZ!Box DynDNS →
-        </BracketButton>
+        </UButton>
         <!--
           The live Scalar reference rather than the README: it is one path away
           and it is what a visitor actually came for. The clickdummy pointed both
           buttons at the repo only because /api was out of prototype scope.
         -->
-        <BracketButton to="/api/" external>
+        <UButton to="/api/" external>
           API docs →
-        </BracketButton>
-        <BracketButton :to="REPO_URL" target="_blank" rel="noopener noreferrer" external>
+        </UButton>
+        <UButton :to="REPO_URL" target="_blank" rel="noopener noreferrer" external>
           <UIcon name="i-lucide-github" class="size-[1.1em]" aria-hidden="true" />
           GitHub
-        </BracketButton>
+        </UButton>
         <ModemToggle />
       </div>
     </div>
