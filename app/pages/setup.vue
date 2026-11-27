@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Field } from '~/components/FieldList.vue'
-import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP, zoneNotFound } from '~~/shared/dyndnsMessages'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 
 /**
  * The FRITZ!Box setup guide: four steps on one scrolling page, so the visitor
@@ -188,7 +188,7 @@ const TROUBLE = [
     fix: 'Create the AAAA record from step 02. If your line has no IPv6, pick IPv4 only under IP families in step 02 and copy the Update URL again.',
   },
   {
-    message: MISSING_IP,
+    message: MISSING_IP_MESSAGE,
     fix: 'A placeholder got deleted from the Update URL. Copy it again from step 03.',
   },
 ] as const

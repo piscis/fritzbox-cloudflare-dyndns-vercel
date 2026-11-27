@@ -2,7 +2,7 @@ import type { ORPCError } from '@orpc/server'
 import { call } from '@orpc/server'
 import { describe, expect, it, vi } from 'vitest'
 import { fritzDynDnsRoute } from '~~/server/router/procedures/fritz-dyndns'
-import { MISSING_IP } from '~~/shared/dyndnsMessages'
+import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
 import { createNitroContextStub } from '../helpers/h3'
 
 const cf = vi.hoisted(() => ({
@@ -77,7 +77,7 @@ describe('fritz-dyndns · input validation', () => {
     const error = await expectBadRequest({ ...VALID })
     const issues = (error.data as { issues?: { message?: string }[] })?.issues ?? []
 
-    expect(issues.some(i => i.message === MISSING_IP)).toBe(true)
+    expect(issues.some(i => i.message === MISSING_IP_MESSAGE)).toBe(true)
   })
 
   it('rejects a non-string ipv4', async () => {

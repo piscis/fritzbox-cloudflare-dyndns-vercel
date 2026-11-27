@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import apiHandler from '~~/server/routes/api/[...]'
-import { MISSING_IP } from '~~/shared/dyndnsMessages'
+import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
 import { createH3Event } from '../helpers/h3'
 
 // Any request reaching the real SDK would hit api.cloudflare.com, so the module
@@ -113,7 +113,7 @@ describe('api catch-all handler', () => {
 
     expect((out as Response).status).toBe(400)
     expect(JSON.stringify(await (out as Response).json()))
-      .toContain(MISSING_IP)
+      .toContain(MISSING_IP_MESSAGE)
     expect(cf.ctor).not.toHaveBeenCalled()
   })
 

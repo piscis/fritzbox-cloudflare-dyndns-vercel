@@ -6,7 +6,7 @@ import { z } from 'zod'
 import noCacheHeaders from '~~/server/router/middlewares/noCacheHeaders'
 import redactToken from '~~/server/utils/redactToken'
 import useLogger from '~~/server/utils/useLogger'
-import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP, zoneNotFound } from '~~/shared/dyndnsMessages'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 
 const responseBodySchema = z.object({
   state: z.string(),
@@ -20,7 +20,7 @@ const querySchema = z.object({
   ipv4: z.string().optional().describe('IPv4 address.'),
   ipv6: z.string().optional().describe('ipv6 address.'),
 }).refine(data => data.ipv4 || data.ipv6, {
-  message: MISSING_IP,
+  message: MISSING_IP_MESSAGE,
 })
 
 export const fritzDynDnsRoute = os

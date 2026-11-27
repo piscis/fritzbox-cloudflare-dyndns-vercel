@@ -4,7 +4,7 @@
  * list, so both sides import them from here instead of keeping copies.
  */
 
-export const MISSING_IP = 'Missing ipv4 or ipv6 URL parameter.'
+export const MISSING_IP_MESSAGE = 'Missing ipv4 or ipv6 URL parameter.'
 
 export function zoneNotFound(zone: string): string {
   return `Zone "${zone}" not found.`

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   aaaaRecordNotFound,
   aRecordNotFound,
-  MISSING_IP,
+  MISSING_IP_MESSAGE,
   zoneNotFound,
 } from '~~/shared/dyndnsMessages'
 
@@ -22,6 +22,6 @@ describe('dyndns messages', () => {
   })
 
   it('asks for an address when none was sent', () => {
-    expect(MISSING_IP).toBe('Missing ipv4 or ipv6 URL parameter.')
+    expect(MISSING_IP_MESSAGE).toBe('Missing ipv4 or ipv6 URL parameter.')
   })
 })

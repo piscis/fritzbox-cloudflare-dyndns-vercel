@@ -2,7 +2,8 @@
 
 DynDNS endpoint a FRITZ!Box calls to keep Cloudflare A/AAAA records on the current
 home IP. Nuxt 4 + oRPC, deployed to Cloudflare Workers; Vercel is a secondary target.
-`app/` is a single joke landing page. All product logic lives in `server/`.
+`app/` is a single joke landing page. All product logic lives in `server/`; text both
+sides show, such as the DynDNS error messages, lives in `shared/`.
 
 ## Rules
 

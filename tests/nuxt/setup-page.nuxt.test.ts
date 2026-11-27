@@ -4,7 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 // Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler } from 'h3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP, zoneNotFound } from '~~/shared/dyndnsMessages'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 import SetupPage from '~/pages/setup.vue'
 
 type Page = Pick<VueWrapper, 'findAll' | 'get'>
@@ -212,7 +212,7 @@ describe('setup page', () => {
       zoneNotFound('example.com'),
       aRecordNotFound('home.example.com'),
       aaaaRecordNotFound('home.example.com'),
-      MISSING_IP,
+      MISSING_IP_MESSAGE,
     ])('quotes the server message %s', async (message) => {
       const page = await mountSuspended(SetupPage)
 
