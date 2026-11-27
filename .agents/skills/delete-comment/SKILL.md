@@ -93,5 +93,5 @@ last entry went.
 
 ## 5. Ship
 
-Ship it as a PR following `.agents/skills/commit-push-pr/SKILL.md`. The PR body lists the issues
-filed and the ADRs added or extended, and gives each category's count.
+Ship it as a PR, as described under Pull requests in `docs/agents/issue-tracker.md`. The PR body
+lists the issues filed and the ADRs added or extended, and gives each category's count.
