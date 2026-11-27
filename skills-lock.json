@@ -14,12 +14,6 @@
       "skillPath": "skills/orpc-api/SKILL.md",
       "computedHash": "80eac906bd0c5df8971e21e5f88b3f216d5660e328444197d8e9ccb5a129d211",
       "commit": "a04dba03feb7a24cd1ac764ba40a7a66644171e0"
-    },
-    "vitest": {
-      "source": "antfu/skills",
-      "sourceType": "github",
-      "skillPath": "skills/vitest/SKILL.md",
-      "computedHash": "fbe54c4c65d1e97c2fedc5c46381efc90d301a9d05b92690e2f577bfb907ab0c"
     }
   }
 }
