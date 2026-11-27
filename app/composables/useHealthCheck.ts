@@ -1,3 +1,6 @@
+import type { InferRouterOutputs } from '@orpc/server'
+import type { router } from '~~/server/router'
+
 export type HealthState = 'pending' | 'ok' | 'degraded' | 'down'
 
 /**
@@ -14,19 +17,18 @@ const SLOW_MS = 800
 const TIMEOUT_MS = 5000
 
 /**
+ * Read from the router registry, so the procedure file can move. Type-only
+ * imports are erased at build time, so this keeps the body in step with the
+ * procedure without shipping @orpc/server or zod to the client.
+ */
+type HealthCheckBody = InferRouterOutputs<typeof router>['api']['healthCheck']['body']
+
+/**
  * The endpoint only reports `ok | error`, so the design's third lamp has to be
  * synthesised from the transport. Deliberately one sample on mount, not a poll:
  * this is a landing page, and a repeating request per open tab is not worth a
  * live dot.
- *
- * Shape is redeclared rather than imported from the procedure — importing it
- * would pull @orpc/server and zod into the client bundle.
  */
-interface HealthCheckBody {
-  state: 'ok' | 'error'
-  timestamp: number
-}
-
 export function useHealthCheck() {
   const state = ref<HealthState>('pending')
 
