@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import pkg from '~~/package.json'
 import apiHandler from '~~/server/routes/api/[...]'
 import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
 import { createH3Event } from '../helpers/h3'
@@ -77,9 +78,7 @@ describe('api catch-all handler', () => {
 
     expect(spec.openapi).toMatch(/^3\./)
     expect(spec.info.title).toBe('Fritzbox Cloudflare DynDNS')
-    // tests/setup/nitro-globals.ts stubs useRuntimeConfig() with no config, so
-    // this is the fallback. tests/e2e pins the real version off a built app.
-    expect(spec.info.version).toBe('0.0.0')
+    expect(spec.info.version).toBe(pkg.version)
     expect(spec.paths['/fritz-dyndns']).toBeDefined()
     expect(spec.paths['/health-check']).toBeDefined()
   })

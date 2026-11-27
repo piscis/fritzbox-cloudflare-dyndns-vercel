@@ -12,6 +12,7 @@ import {
   setResponseStatus,
   toWebRequest,
 } from 'h3'
+import pkg from '~~/package.json'
 
 Object.assign(globalThis, {
   defineEventHandler,
@@ -21,8 +22,9 @@ Object.assign(globalThis, {
   toWebRequest,
   defineNitroPlugin: <T>(fn: T) => fn,
   // The `unit` project never builds Nuxt, so nuxt.config.ts's `runtimeConfig`
-  // is not in play. An empty object exercises the fallback in
-  // `server/routes/api/[...].ts`: with no `public.version`, the OpenAPI info
-  // reports 0.0.0. The real version is asserted in tests/e2e, which builds.
-  useRuntimeConfig: () => ({}),
+  // is not in play. Return the keys server code reads, in the shape it declares,
+  // so the handler reads them exactly as it does in production.
+  useRuntimeConfig: () => ({
+    public: { version: pkg.version },
+  }),
 })

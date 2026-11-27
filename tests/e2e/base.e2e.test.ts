@@ -1,7 +1,7 @@
 import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
+import pkg from '~~/package.json'
 import { MISSING_IP_MESSAGE } from '~~/shared/dyndnsMessages'
-import pkg from '../../package.json'
 
 // One setup() for the whole file: each call builds and boots its own server.
 await setup({
@@ -221,7 +221,7 @@ describe('api', () => {
 
     expect(spec.info.title).toBe('Fritzbox Cloudflare DynDNS')
     // Guards the regression that shipped 0.0.0 to every environment: the spec
-    // must report package.json's version, not the fallback literal.
+    // must report package.json's version from the built runtime config.
     expect(spec.info.version).toBe(pkg.version)
     expect(spec.paths['/fritz-dyndns']).toBeDefined()
     expect(spec.paths['/health-check']).toBeDefined()
