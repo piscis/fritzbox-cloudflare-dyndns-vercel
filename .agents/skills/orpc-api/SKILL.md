@@ -129,12 +129,12 @@ Server code imports through the `~~/server/...` root alias. Never relative
 
 ## Known traps
 
-- The OpenAPI `info.version` in `[...].ts` comes from `public.version`, which
-  `nuxt.config.ts` fills from `package.json`; `info.title` is a literal. The
-  `|| '0.0.0'` fallback is only reached by the `unit` project, whose
-  `useRuntimeConfig()` stub returns no config at all. The handler used to read
-  top-level `appName`/`appVersion`, which nothing ever declared, so every deployed
-  environment served `0.0.0` — do not reintroduce those keys. `tests/e2e` pins
-  `info.version` against `package.json` and will catch it.
+- The OpenAPI `info.version` in `[...].ts` is `useRuntimeConfig().public.version`,
+  which `nuxt.config.ts` fills from `package.json`; `info.title` is a literal.
+  There is no fallback: the `unit` stub returns the same `public.version`, so
+  never add an optional chain, a cast or a `'0.0.0'` default. The handler used to
+  read top-level `appName`/`appVersion`, which nothing ever declared, and a
+  fallback hid it, so every deployed environment served `0.0.0`. `tests/e2e` pins
+  `info.version` against `package.json` and will catch a regression.
 - Paginated Cloudflare list endpoints must be iterated with `for await`. Reading
   `.result` gives only the first page and silently misses later records.
