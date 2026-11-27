@@ -1,17 +1,4 @@
 <script setup lang="ts">
-/**
- * The terminal both screens live in: a fixed phosphor grid behind a centred CRT
- * card with a title bar, a body and a foot line.
- *
- * It is a UCard — header/body/footer is exactly the shape needed — but the stock
- * `outline` variant brings `bg-default ring ring-default divide-y`, and those
- * dividers would double up with the bar's own hairline. `ui.root` therefore uses
- * the replacer form to drop the defaults outright rather than leaving
- * tailwind-merge to arbitrate.
- *
- * `status` re-points `--frame-line` and the tint variables, so the whole card
- * recolours by HTTP status from one attribute.
- */
 const { status } = defineProps<{ status?: '404' | '5xx' }>()
 </script>
 

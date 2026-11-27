@@ -3,32 +3,12 @@ import type { router } from '~~/server/router'
 
 export type HealthState = 'pending' | 'ok' | 'degraded' | 'down'
 
-/**
- * Above this, the service answered but is not answering well. The request is
- * same-origin on a connection the page has already opened, `noCacheHeaders`
- * forces `no-store` so nothing short-circuits, and the handler itself does no
- * I/O — so this is roughly one round trip plus Worker dispatch. A healthy edge
- * is 10–60 ms and a poor mobile link 150–400 ms, which puts 800 ms above the
- * p99 of "healthy but far away" and below the point a person calls it broken.
- */
 const SLOW_MS = 800
 
-/** So the lamp cannot sit pending forever behind a captive portal. */
 const TIMEOUT_MS = 5000
 
-/**
- * Read from the router registry, so the procedure file can move. Type-only
- * imports are erased at build time, so this keeps the body in step with the
- * procedure without shipping @orpc/server or zod to the client.
- */
 type HealthCheckBody = InferRouterOutputs<typeof router>['api']['healthCheck']['body']
 
-/**
- * The endpoint only answers 200 `ok` or a 503 error, so the design's third lamp
- * has to be synthesised from the transport. Deliberately one sample on mount,
- * not a poll: this is a landing page, and a repeating request per open tab is
- * not worth a live dot.
- */
 export function useHealthCheck() {
   const state = ref<HealthState>('pending')
 
@@ -37,8 +17,6 @@ export function useHealthCheck() {
 
     try {
       const response = await $fetch.raw<HealthCheckBody>('/api/health-check', {
-        // Read the status ourselves rather than having ofetch throw on it: a
-        // 503 is "degraded", not "down".
         ignoreResponseError: true,
         retry: false,
         signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -53,7 +31,6 @@ export function useHealthCheck() {
           : 'ok'
       }
       else if (response.status === 503) {
-        // Reachable, and self-reporting upstream trouble.
         state.value = 'degraded'
       }
       else {
@@ -61,14 +38,10 @@ export function useHealthCheck() {
       }
     }
     catch {
-      // Offline, DNS, TLS, or the AbortSignal timeout.
       state.value = 'down'
     }
   }
 
-  // onMounted, never useFetch: '/' is prerendered, and useFetch({ server: false })
-  // schedules its first call in onBeforeMount and sets status synchronously —
-  // so the first client render would disagree with the static HTML.
   onMounted(check)
 
   return { state, check }

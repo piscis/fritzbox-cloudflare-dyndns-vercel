@@ -66,13 +66,10 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       const cf = new Cloudflare({ apiToken: token })
       const zones: Cloudflare.Zones.Zone[] = []
 
-      // Renamed from `zone`, which shadowed the query parameter of the same name.
       for await (const cfZone of cf.zones.list()) {
         zones.push(cfZone)
       }
 
-      // Previously fell back to '' and then issued a doomed
-      // records.list({ zone_id: '' }) instead of reporting the missing zone.
       const zoneId = first(zones.filter(z => z?.name === zone), undefined)?.id
 
       if (!zoneId) {
@@ -81,8 +78,6 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
         })
       }
 
-      // `dnsRecords.result` is only the first page. A zone with more records
-      // than fit on one page would silently hide the target record.
       const dnsRecords: Cloudflare.DNS.RecordResponse[] = []
 
       for await (const dnsRecord of cf.dns.records.list({ zone_id: zoneId })) {
@@ -101,10 +96,6 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
         r => r.type === 'AAAA' && r.name === record,
       ), undefined)
 
-      // Was `if (ipv4 && !aRecord && !zone)`. `zone` is a required non-empty
-      // string, so `!zone` was always false and this branch was unreachable —
-      // a request naming a record that does not exist returned 200 having
-      // updated nothing.
       if (ipv4 && !aRecord) {
         throw errors.NOT_FOUND({
           message: aRecordNotFound(record),
@@ -140,18 +131,12 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       }
     }
     catch (e) {
-      // Upstream Cloudflare errors can embed the request that carried the
-      // token. Only the copy handed to the logger is scrubbed; `e` is rethrown
-      // untouched below.
       logger.error(redactToken(e, query.token))
 
       if (e instanceof ORPCError) {
         throw e
       }
       else {
-        // Was `new ORPCError('INTERNAL_SERVER_ERROR', ...)`, which resolves to
-        // status 500 — the `.errors({ status: 503 })` declaration above is only
-        // applied through the injected `errors` constructor map.
         throw errors.INTERNAL_SERVER_ERROR({
           message: 'Service Unavailable',
         })

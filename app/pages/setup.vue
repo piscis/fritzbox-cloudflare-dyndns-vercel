@@ -2,49 +2,21 @@
 import type { Field } from '~/components/FieldList.vue'
 import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 
-/**
- * The FRITZ!Box setup guide: four steps on one scrolling page, so the visitor
- * can flip between the Cloudflare dashboard, the FRITZ!Box admin page and this
- * tab without losing their place.
- *
- * Step 02 opens with a small builder: hostname, zone and IP families. Steps 02
- * and 03 then show the visitor's own values, ready to copy. Until they type,
- * and without JS, every value is a placeholder (`home.example.com` in
- * `example.com`, both IP families), so the prerendered HTML reads correctly on
- * its own. The placeholders match the screenshots and the README. The token is never an input here: the Update URL keeps the
- * FRITZ!Box's own `<pass>`, and the visitor types the token into the FRITZ!Box
- * Password field. Nothing is sent anywhere or stored.
- *
- * Menu paths stay in text, because the FRITZ!Box admin UI moves between
- * firmware versions and text is the cheapest thing to update.
- */
 const HOSTNAME = 'home.example.com'
 const ZONE = 'example.com'
 
-/** The last two labels, the zone in the common case (`example.com`). */
 function guessZone(hostname: string): string {
   return hostname.split('.').slice(-2).join('.')
 }
 
-/**
- * The server compares names exactly, so a typed name is lowercased, trimmed
- * and loses one trailing dot (`Home.Example.com.` → `home.example.com`)
- * before it reaches an output, the zone guess or a check. The fields keep what
- * the visitor typed.
- */
 function normalizeName(name: string): string {
   return name.trim().toLowerCase().replace(/\.$/, '')
 }
 
-// Builder state lives in memory only: no localStorage, no cookies, no query
-// string. An empty field falls back to the placeholder, so the page reads the
-// same before any input as it does prerendered and without JS.
 const hostnameInput = ref('')
 const zoneEdit = ref<string | null>(null)
 
 const zoneInput = computed({
-  // Auto-filled from the hostname until the visitor edits it; then the edit
-  // sticks, for zones like `example.co.uk`.
   get: () => zoneEdit.value ?? (normalizeName(hostnameInput.value)
     ? guessZone(normalizeName(hostnameInput.value))
     : ''),
@@ -77,11 +49,6 @@ const STEPS = {
   check: { number: '04', title: 'Check it' },
 } as const
 
-/**
- * One closed "show screenshot" toggle per step, for a visitor unsure whether
- * they're on the right screen. The files live in `public/setup/`, where the
- * README renders them from too, and load only once a toggle opens.
- */
 const SCREENSHOTS = {
   token: [
     { src: '/setup/cloudflare-token.png', alt: 'Cloudflare\'s Create Custom Token form: the permissions Zone · Zone · Read and Zone · DNS · Edit, and Zone Resources set to Include · Specific zone' },
@@ -103,11 +70,8 @@ const tokenFields = computed<Field[]>(() => [
 
 const inZone = computed(() => hostname.value === zone.value || hostname.value.endsWith(`.${zone.value}`))
 
-// Letters, digits and hyphens per label, no hyphen at either end of a label.
-// Catches a pasted scheme or path, spaces and empty labels.
 const HOSTNAME_PATTERN = /^[a-z\d](?:[a-z\d-]*[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]*[a-z\d])?)*$/i
 
-// Warnings never hide the outputs: an unusual setup may still be right.
 const warnings = computed(() => [
   ...(HOSTNAME_PATTERN.test(hostname.value)
     ? []
@@ -117,7 +81,6 @@ const warnings = computed(() => [
     : [`${hostname.value} is not ${zone.value} and does not end in .${zone.value}, so Cloudflare will not find the record in that zone.`]),
 ])
 
-// Cloudflare's Name field takes the hostname minus the zone, `@` for the apex.
 const recordName = computed<Field>(() => {
   if (hostname.value === zone.value)
     return { label: 'Name', value: '@', note: `the zone apex, ${zone.value} itself` }
@@ -128,10 +91,6 @@ const recordName = computed<Field>(() => {
   return { label: 'Name', value: hostname.value, note: `${hostname.value} is not in ${zone.value}` }
 })
 
-/**
- * The Add record form for one IP family, with a documentation address as
- * placeholder: the same one the screenshots and the README show.
- */
 function recordFields(type: 'A' | 'AAAA', family: 'IPv4' | 'IPv6', placeholder: string): Field[] {
   return [
     { label: 'Type', value: type },
@@ -145,8 +104,6 @@ function recordFields(type: 'A' | 'AAAA', family: 'IPv4' | 'IPv6', placeholder: 
 const aRecord = computed(() => recordFields('A', 'IPv4', '192.0.2.1'))
 const aaaaRecord = computed(() => recordFields('AAAA', 'IPv6', '2001:0db8:85a3:0000:0000:8a2e:0370:7334'))
 
-// `<pass>`, `<ipaddr>` and `<ip6addr>` stay literal: the FRITZ!Box substitutes
-// them itself on every update.
 const updateUrl = computed(() =>
   `https://${host.value}/api/fritz-dyndns/?token=<pass>&record=${hostname.value}&zone=${zone.value}${
     wantsIpv4.value ? '&ipv4=<ipaddr>' : ''
@@ -170,10 +127,6 @@ const fritzboxFields = computed<Field[]>(() => [
   { label: 'Password (Kennwort)', value: '●●●●●●', note: 'your Cloudflare API token from step 01' },
 ])
 
-/**
- * The `fritz-dyndns` procedure's own messages, filled in with the example zone
- * and hostname, so the guide quotes exactly what the FRITZ!Box will log.
- */
 const TROUBLE = [
   {
     message: zoneNotFound(ZONE),
@@ -202,10 +155,6 @@ const TROUBLE = [
     </template>
 
     <div class="setup relative z-1 text-step-0 text-(--p-200)">
-      <!--
-        The foot line's "← home" sits below four long steps, so the way back
-        also opens the page.
-      -->
       <UButton to="/" variant="quiet" class="mb-(--sp-4)">
         ← home
       </UButton>
@@ -360,7 +309,6 @@ const TROUBLE = [
             <dt><code>{{ entry.message }}</code></dt>
             <dd>{{ entry.fix }}</dd>
           </template>
-          <!-- The FRITZ!Box's own message, copied from FRITZ!OS on a 7590 AX. -->
           <dt><code>DynDNS-Fehler: Der angegebene Domainname kann trotz erfolgreicher Aktualisierung nicht aufgelöst werden.</code></dt>
           <dd>
             The update worked, but the FRITZ!Box could not look up its own name afterwards. Make

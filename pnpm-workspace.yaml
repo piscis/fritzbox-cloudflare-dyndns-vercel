@@ -1,23 +1,7 @@
-# Minutes. Matches pnpm's default, set explicitly so it stays in step with
-# `minimumReleaseAge: "1 day"` in renovate.json. Change both together.
 minimumReleaseAge: 1440
-
-# minimumReleaseAgeExcludePrune, shellEmulator and trustPolicy are required by
-# @antfu/eslint-config, which pins them through `pnpm/yaml-enforce-settings`.
-# Removing any of them fails `pnpm lint`. The prune setting (pnpm 12+) makes
-# `pnpm add|update|remove` drop minimumReleaseAgeExclude entries the lockfile no
-# longer resolves, so none are needed right now.
 minimumReleaseAgeExcludePrune: true
 
 trustPolicy: no-downgrade
-
-# The cssnano monorepo packages below come in through Nuxt 4.6 (@nuxt/vite-builder ->
-# cssnano 9). Every release is published from github.com/cssnano/cssnano by GitHub
-# trusted publishing with provenance. The 8.0.3-8.0.10 releases also named a human
-# approver, and 9.x dropped that step, so no-downgrade flags every 9.x release as a
-# possible takeover. They are excluded by name, because each new release would
-# otherwise need another entry. Re-check the publisher before you widen this list.
-# Revisit on the Nuxt 5 upgrade: Nuxt 5 makes cssnano an optional peer, off by default.
 trustPolicyExclude:
   - cssnano
   - cssnano-preset-default
@@ -60,8 +44,5 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
-  # Pulled in by reka-ui -> @floating-ui/vue (a @nuxt/ui dependency). Its
-  # postinstall runs vue-demi-switch, which points the package at the Vue 3
-  # entry points; without it the Vue 2 shim is left in place.
   vue-demi: true
   workerd: true

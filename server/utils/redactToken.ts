@@ -1,36 +1,16 @@
-/**
- * Strips the caller-supplied Cloudflare token out of anything on its way to a
- * log sink.
- *
- * The token arrives in the query string (`?token=…`) because a FRITZ!Box cannot
- * send headers, and the Cloudflare SDK then forwards it as `Authorization:
- * Bearer …`. Either form can surface inside an upstream error — in its message,
- * its stack, or a nested request object — so redaction is pattern-based and
- * recursive rather than deleting one known field.
- *
- * Errors are cloned rather than mutated: the caller still rethrows the original,
- * and only the copy handed to the logger is scrubbed.
- */
-
 const PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
-  // `?token=…` / `&token=…` — the update URL a FRITZ!Box calls.
   [/([?&]token=)[^&\s"'`]+/gi, '$1***'],
-  // `"token": "…"` — the same value once a request body has been serialised.
   [/(["']token["']\s*:\s*["'])[^"']*/gi, '$1***'],
-  // `Authorization: Bearer …`, however the SDK has serialised the header.
   [/(bearer\s+)[^\s"',}\]]+/gi, '$1***'],
 ]
 
-/** Deep enough for an error wrapping a request wrapping headers; cheap to walk. */
 const MAX_DEPTH = 6
 
-/** Below this, an "exact value" match is more likely coincidence than the token. */
 const MIN_SECRET_LENGTH = 8
 
 function redactString(input: string, secret?: string): string {
   let output = input
 
-  // An exact-value pass first — it catches the token in shapes no pattern anticipates.
   if (secret && secret.length >= MIN_SECRET_LENGTH) {
     output = output.split(secret).join('***')
   }

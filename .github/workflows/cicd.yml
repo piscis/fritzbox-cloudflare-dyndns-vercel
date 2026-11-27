@@ -11,16 +11,12 @@ env:
 on:
   push:
     branches: [main, released]
-  # No branch filter: a stacked PR targets its predecessor rather than main, and
-  # would otherwise get no checks at all until it is retargeted.
   pull_request:
 jobs:
   setup-stage:
     timeout-minutes: 1
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
-      # Phase environment names are capitalised; the GitHub Environment names are
-      # not. Emit both so the deploy job never has to transform one into the other.
       phase-env: ${{ steps.env-name.outputs.phase_env }}
     runs-on: ubuntu-latest
     steps:
@@ -130,8 +126,6 @@ jobs:
         run: |
           echo "version=$(node -p "require('playwright-core/package.json').version")" >> $GITHUB_OUTPUT
 
-      # Keyed on the playwright-core version, because each release pins its own
-      # Chromium build. Only Renovate bumps then download it again.
       - name: Cache Chromium
         id: chromium-cache
         uses: actions/cache@v6
@@ -139,15 +133,12 @@ jobs:
           path: ~/.cache/ms-playwright
           key: chromium-${{ runner.os }}-playwright-core-${{ steps.playwright.outputs.version }}
 
-      # playwright-core's own installer, so the browser always matches the library.
-      # @nuxt/test-utils launches Chromium headless, which needs only the shell.
       - name: Install Chromium
         if: steps.chromium-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           pnpm exec playwright-core install --with-deps --only-shell chromium
 
-      # The cache holds the browser, not the apt packages it runs on.
       - name: Install Chromium system dependencies
         if: steps.chromium-cache.outputs.cache-hit == 'true'
         shell: bash
@@ -164,20 +155,9 @@ jobs:
     name: Build 🏗️ & Deploy 🚀 (${{ needs.setup-stage.outputs.env-name }})
     environment: ${{ needs.setup-stage.outputs.env-name }}
     needs: [setup-stage, lint, typecheck, test, browser]
-    # push to main -> staging, push to released -> production. Each stage has its
-    # own CF_WORKER_NAME and CF_ROUTE_PATTERN in Phase, so they deploy separate
-    # Workers and staging cannot overwrite production.
     if: contains(fromJson('["staging", "production"]'), needs.setup-stage.outputs.env-name)
     runs-on: ubuntu-latest
 
-    # Job-level so both phase invocations below are covered. Job containers do
-    # not inherit runner host env, so this mapping is required, not decorative.
-    #
-    # Both resolve from the GitHub Environment named above, so `staging` and
-    # `production` each supply their own scoped token. PHASE_HOST accepts either a
-    # variable or a secret -- an empty value would silently fall back to Phase's
-    # cloud host instead of the self-hosted one, which fails as an auth error far
-    # from its cause.
     env:
       PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
       PHASE_HOST: ${{ vars.PHASE_HOST || secrets.PHASE_HOST }}
@@ -197,23 +177,15 @@ jobs:
         run: curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version 2.3.1
 
       - name: Verify Phase credentials
-        # Fail here with a clear message rather than deep inside a build, where a
-        # missing token surfaces as an unrelated-looking auth or resolution error.
         run: |
           test -n "$PHASE_SERVICE_TOKEN" \
             || { echo "::error::PHASE_SERVICE_TOKEN is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
           test -n "$PHASE_HOST" \
             || { echo "::error::PHASE_HOST is not set on the '${{ needs.setup-stage.outputs.env-name }}' environment"; exit 1; }
-          # Deliberately not echoing the value: this repository is public, and a
-          # host sourced from `vars` would not be masked in the run log.
           echo "Phase credentials present."
 
       - name: Build & Deploy
         run: |
-          # --env overrides the Development default in .phase.json.
-          # `pnpm exec` is required because phase run spawns via `sh -c`, which
-          # does not have node_modules/.bin on PATH. The deploy command is quoted
-          # so phase does not parse --cwd as one of its own flags.
           phase run --env "$PHASE_ENV" pnpm exec nuxt build
           phase run --env "$PHASE_ENV" "pnpm exec wrangler --cwd .output deploy"
         env:

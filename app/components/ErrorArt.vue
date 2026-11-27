@@ -1,17 +1,8 @@
 <script setup lang="ts">
-/**
- * ~1 KB of inline SVG replacing a 4830 × 3213 px, 1.0 MB PNG that was served for
- * every error alike. Both quote the isometric grid of the original illustration,
- * in the palette sampled from it.
- *
- * `data-art` is the only stable hook for tests — these are decorative and
- * `aria-hidden`, so they carry no accessible name to select on.
- */
 const { variant } = defineProps<{ variant: '404' | '5xx' }>()
 </script>
 
 <template>
-  <!-- A dead link in the mesh: the near node lit, the far one struck out. -->
   <svg
     v-if="variant === '404'"
     data-art="404"
@@ -39,7 +30,6 @@ const { variant } = defineProps<{ variant: '404' | '5xx' }>()
     <circle cx="178" cy="62" r="9" fill="var(--crt-screen)" stroke="var(--sig-red)" stroke-width="2.5" />
   </svg>
 
-  <!-- A busy signal: the waveform live, the onward path dashed out. -->
   <svg
     v-else
     data-art="5xx"

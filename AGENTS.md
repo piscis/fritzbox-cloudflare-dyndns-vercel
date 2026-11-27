@@ -12,6 +12,11 @@ sides show, such as the DynDNS error messages, lives in `shared/`.
   `server/utils/redactToken.ts`.
 - Load the `orpc-api` skill before you touch `server/router/` or `server/routes/api/`.
 - Server code imports through `~~/server/...`.
+- Code carries no comments: the `local/no-comments` lint rule bans them. Put the *why* in
+  `docs/adr/` and a workaround in an issue. `eslint-suppressions.json` allows only the
+  comments already in `tests/`. When you delete one, run
+  `pnpm exec eslint . --prune-suppressions`, and never add an entry. `/delete-comment`
+  clears the rest.
 - The `unit` and `e2e` test projects do not boot Nuxt. If you use a new Nitro
   auto-import as a bare global in `server/`, also register it in
   `tests/setup/nitro-globals.ts`.
@@ -54,15 +59,15 @@ sides show, such as the DynDNS error messages, lives in `shared/`.
   via `sh -c`, so call `pnpm exec <bin>` inside it and quote commands that take flags.
 - The build generates the Worker config from `nitro.cloudflare` in `nuxt.config.ts`,
   so the `CF_*` variables must be set at build time. `wrangler.jsonc` exists only for
-  the README's Deploy button. The comments in both files explain every conditional
-  key, so read them before you edit either one.
+  the README's Deploy button. `docs/adr/0001-worker-config-generated-from-nuxt-config.md`
+  explains every conditional key, so read it before you edit either file.
 
 ## Skills
 
 Skills live in `.agents/skills/`; `.claude/skills` is a committed symlink to it, so edit and stage under `.agents/`. Vendored skills are tracked by `skills-lock.json` and changed only through `npx skills add/remove/update`; first-party skills sit alongside with no lock entry.
 
-Every skill here, including `orpc-api`, is vendored. Read `docs/agents/skills.md`
-before you add, update, remove or edit one.
+Every skill here except `delete-comment` is vendored, including `orpc-api`. Read
+`docs/agents/skills.md` before you add, update, remove or edit one.
 
 ## Agent skills
 

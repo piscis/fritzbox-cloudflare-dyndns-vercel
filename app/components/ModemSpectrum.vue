@@ -1,8 +1,4 @@
 <script setup lang="ts">
-/**
- * Phosphor frequency bars behind the CRT copy. Idle: a faint dormant baseline.
- * Playing: live AnalyserNode bins from the shared dial-up graph.
- */
 const { playing, getAnalyser } = useModemDialup()
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
@@ -38,7 +34,6 @@ function drawDormant(ctx: CanvasRenderingContext2D, w: number, h: number): void 
 
   for (let i = 0; i < bars; i++) {
     const t = i / (bars - 1)
-    // Soft hump in the middle — reads as a resting carrier, not a flat EQ.
     const hump = Math.sin(t * Math.PI)
     const barH = h * (0.04 + hump * 0.08)
     const x = i * gap + gap * 0.2
@@ -60,9 +55,6 @@ function drawLive(ctx: CanvasRenderingContext2D, w: number, h: number): void {
   const data = new Uint8Array(bins)
   node.getByteFrequencyData(data)
 
-  // Modem handshake energy sits in the lower-mid; skip the empty top of the FFT.
-  // Bars are mirrored (high → left, low → right) so the active carrier clears the
-  // copy on the left and reads in the open space on the right.
   const usable = Math.floor(bins * 0.55)
   const bars = 64
   const gap = w / bars
@@ -152,10 +144,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!--
-    Full-bleed behind the copy. Masked at the edges so bars dissolve into the
-    bezel; lower opacity under 820px so the denser mobile stack stays readable.
-  -->
   <canvas
     ref="canvas"
     aria-hidden="true"

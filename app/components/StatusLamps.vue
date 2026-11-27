@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import type { HealthState } from '~/composables/useHealthCheck'
 
-/**
- * Three lamps in the title bar. Which one lights carries the meaning, so the
- * other two stay idle rather than going dark — that is what `--p-400` is for,
- * and why it never carries text.
- *
- * The design conveyed state through a `title` attribute alone, which screen
- * readers do not reliably announce. The group is labelled instead.
- */
 type LampState = HealthState | 'notFound' | 'serverError'
 
 const { state } = defineProps<{ state: LampState }>()
@@ -22,7 +14,6 @@ const LABELS: Record<LampState, string> = {
   serverError: 'Upstream did not answer',
 }
 
-/** [first, second, third] — exactly one is ever lit. */
 const LAMPS: Record<LampState, [string, string, string]> = {
   pending: ['lamp', 'lamp', 'lamp'],
   ok: ['lamp lamp--on', 'lamp', 'lamp'],
