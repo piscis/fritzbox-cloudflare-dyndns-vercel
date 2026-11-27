@@ -73,8 +73,8 @@ PR and merge conventions. See [`docs/agents/issue-tracker.md`](docs/agents/issue
 
 ### Triage labels
 
-The five canonical roles, each label equal to its role; `spec` and `no-triage` are not
-roles. See [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md).
+The five canonical roles, each label equal to its role; `spec`, `no-triage` and
+`blocked` are not roles. See [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md).
 
 ### Domain docs
 
