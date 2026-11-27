@@ -6,6 +6,7 @@ import { z } from 'zod'
 import noCacheHeaders from '~~/server/router/middlewares/noCacheHeaders'
 import redactToken from '~~/server/utils/redactToken'
 import useLogger from '~~/server/utils/useLogger'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 
 const responseBodySchema = z.object({
   state: z.string(),
@@ -19,7 +20,7 @@ const querySchema = z.object({
   ipv4: z.string().optional().describe('IPv4 address.'),
   ipv6: z.string().optional().describe('ipv6 address.'),
 }).refine(data => data.ipv4 || data.ipv6, {
-  message: 'Missing ipv4 or ipv6 URL parameter.',
+  message: MISSING_IP_MESSAGE,
 })
 
 export const fritzDynDnsRoute = os
@@ -76,7 +77,7 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
 
       if (!zoneId) {
         throw errors.NOT_FOUND({
-          message: `Zone "${zone}" not found.`,
+          message: zoneNotFound(zone),
         })
       }
 
@@ -106,13 +107,13 @@ Please make sure to provide one value for **ipv4** or **ipv6**.
       // updated nothing.
       if (ipv4 && !aRecord) {
         throw errors.NOT_FOUND({
-          message: `A record for "${record}" does not exist.`,
+          message: aRecordNotFound(record),
         })
       }
 
       if (ipv6 && !aaaaRecord) {
         throw errors.NOT_FOUND({
-          message: `AAAA record for "${record}" does not exist.`,
+          message: aaaaRecordNotFound(record),
         })
       }
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Field } from '~/components/FieldList.vue'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 
 /**
  * The FRITZ!Box setup guide: four steps on one scrolling page, so the visitor
@@ -170,25 +171,24 @@ const fritzboxFields = computed<Field[]>(() => [
 ])
 
 /**
- * Copied from the `fritz-dyndns` procedure word for word, with the
- * placeholders filled in. The page test pins these copies and the procedure
- * tests pin the originals, so a reworded server message fails one of them.
+ * The `fritz-dyndns` procedure's own messages, filled in with the example zone
+ * and hostname, so the guide quotes exactly what the FRITZ!Box will log.
  */
 const TROUBLE = [
   {
-    message: `Zone "${ZONE}" not found.`,
+    message: zoneNotFound(ZONE),
     fix: 'The zone is misspelled, or the token is not scoped to it. Check the zone parameter against the domain name in Cloudflare, and the token\'s Zone Resources against step 01.',
   },
   {
-    message: `A record for "${HOSTNAME}" does not exist.`,
+    message: aRecordNotFound(HOSTNAME),
     fix: 'Create the A record from step 02. If your line has no IPv4, pick IPv6 only under IP families in step 02 and copy the Update URL again.',
   },
   {
-    message: `AAAA record for "${HOSTNAME}" does not exist.`,
+    message: aaaaRecordNotFound(HOSTNAME),
     fix: 'Create the AAAA record from step 02. If your line has no IPv6, pick IPv4 only under IP families in step 02 and copy the Update URL again.',
   },
   {
-    message: 'Missing ipv4 or ipv6 URL parameter.',
+    message: MISSING_IP_MESSAGE,
     fix: 'A placeholder got deleted from the Update URL. Copy it again from step 03.',
   },
 ] as const

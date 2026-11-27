@@ -4,6 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 // Nitro's auto-imports do not reach test files, so h3 is imported directly.
 import { defineEventHandler } from 'h3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { aaaaRecordNotFound, aRecordNotFound, MISSING_IP_MESSAGE, zoneNotFound } from '~~/shared/dyndnsMessages'
 import SetupPage from '~/pages/setup.vue'
 
 type Page = Pick<VueWrapper, 'findAll' | 'get'>
@@ -208,19 +209,19 @@ describe('setup page', () => {
     })
 
     it.each([
-      'Zone "example.com" not found.',
-      'A record for "home.example.com" does not exist.',
-      'AAAA record for "home.example.com" does not exist.',
-      'Missing ipv4 or ipv6 URL parameter.',
-    ])('quotes the server message %s word for word', async (message) => {
+      zoneNotFound('example.com'),
+      aRecordNotFound('home.example.com'),
+      aaaaRecordNotFound('home.example.com'),
+      MISSING_IP_MESSAGE,
+    ])('quotes the server message %s', async (message) => {
       const page = await mountSuspended(SetupPage)
 
       expect(page.text()).toContain(message)
     })
 
     it.each([
-      'A record for "home.example.com" does not exist.',
-      'AAAA record for "home.example.com" does not exist.',
+      aRecordNotFound('home.example.com'),
+      aaaaRecordNotFound('home.example.com'),
       'The record still holds the placeholder IP',
     ])('answers %s with the step 02 IP choice, not a hand-edited URL', async (message) => {
       const page = await mountSuspended(SetupPage)
