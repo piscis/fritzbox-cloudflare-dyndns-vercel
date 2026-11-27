@@ -16,7 +16,7 @@ Edit the "Label in our tracker" column to match whatever vocabulary you actually
 
 ## Labels that are not triage roles
 
-`no-triage` and `spec` are **not** triage roles, so never count them as one.
+`no-triage`, `spec` and `blocked` are **not** triage roles, so never count them as one.
 
 - **`no-triage`** takes an issue out of triage entirely: `/triage` skips it in every
   bucket and it never gets a role. See
@@ -24,3 +24,8 @@ Edit the "Label in our tracker" column to match whatever vocabulary you actually
 - **`spec`** says what an issue is, and sits next to its triage role (a spec from
   `/to-spec` carries `spec,ready-for-agent`). The tickets cut from a spec don't get it.
   See [Specs](./issue-tracker.md#specs).
+- **`blocked`** marks an issue that waits on an upstream release or on another issue, and
+  sits next to its triage role. Say what it waits on in the body or a comment, and remove
+  the label once that lands. An agent leaves a `blocked` issue alone, even one marked
+  `ready-for-agent`. For a blocker in this repo, also add GitHub's native blocked-by link
+  (see [Blocking](./issue-tracker.md#other-operations)).
