@@ -24,10 +24,10 @@ const TIMEOUT_MS = 5000
 type HealthCheckBody = InferRouterOutputs<typeof router>['api']['healthCheck']['body']
 
 /**
- * The endpoint only reports `ok | error`, so the design's third lamp has to be
- * synthesised from the transport. Deliberately one sample on mount, not a poll:
- * this is a landing page, and a repeating request per open tab is not worth a
- * live dot.
+ * The endpoint only answers 200 `ok` or a 503 error, so the design's third lamp
+ * has to be synthesised from the transport. Deliberately one sample on mount,
+ * not a poll: this is a landing page, and a repeating request per open tab is
+ * not worth a live dot.
  */
 export function useHealthCheck() {
   const state = ref<HealthState>('pending')
@@ -52,7 +52,7 @@ export function useHealthCheck() {
           ? 'degraded'
           : 'ok'
       }
-      else if (response.status === 503 || body?.state === 'error') {
+      else if (response.status === 503) {
         // Reachable, and self-reporting upstream trouble.
         state.value = 'degraded'
       }
