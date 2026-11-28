@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.11.40](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.39...2.11.40) (2026-11-28)
+
+### Bug Fixes
+
+* **web:** move the button tones into app.config variants ([#391](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/391)) ([cced5cb](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/cced5cba46b5818d04125517855c95d91d35756f))
+
+### Dependencies
+
+* **deps:** drop pnpm overrides and trust-policy exclusions that no longer apply ([#396](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/396)) ([b5c7550](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/b5c7550f969b8fd408544ec21b2560002dfa215d)), references [#385](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/385)
+* **deps:** lock file maintenance ([#372](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/issues/372)) ([85496cb](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/commit/85496cb71c32d98152f9e7403669f40a4330e1dd))
+
 ## [2.11.39](https://github.com/piscis/fritzbox-cloudflare-dyndns-vercel/compare/2.11.38...2.11.39) (2026-11-27)
 
 ### Dependencies
